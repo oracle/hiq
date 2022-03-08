@@ -1,0 +1,15 @@
+sphinx
+sphinx-rtd-theme
+sphinx-click
+sphinx-copybutton
+sphinxcontrib-spelling
+sphinx-markdown-tables
+sphinx-markdown-tables
+sphinxcontrib-images
+sphinx-bernard-theme
+sphinx-book-theme
+sphinx-press-theme
+sphinx-business-theme
+recommonmark
+rst2pdf
+hachibee-sphinx-theme

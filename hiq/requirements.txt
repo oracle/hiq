@@ -1,0 +1,13 @@
+PyYAML~=6.0
+cachetools~=4.2.4
+psutil~=5.8.0
+py-itree~=0.0.14
+prometheus-client~=0.12.0
+urllib3~=1.26.7
+py-zipkin~=0.20.2
+flask==2.0.3
+opentelemetry-sdk~=1.7.1
+tqdm==4.62.3
+pandas==1.1.5
+matplotlib==3.3.4
+numpy==1.19.5
