@@ -26,7 +26,7 @@ cd hiq && \
 ### Method 2 - install with pip
 
 ```bash
-pip install --force-reinstall py-hiq
+pip install py-hiq
 ```
 
 
