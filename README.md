@@ -29,8 +29,7 @@ cd hiq && \
 pip install py-hiq
 ```
 
-
-## Quick Start
+## Get Started
 
 To use HiQ, you need to have `target code` and `driver code`.
 
@@ -103,4 +102,14 @@ Line 12: call function `main()` in `main.py`.
 Line 13: print HiQ trees.
 
 
+## Usage examples
+
+Please check [🔗 examples](hiq/examples) for usage examples.
+
 For more advanced topics like `Log MonkeyKing`, `LumberJack`, `HiQ Distributed Tracing`, and `HiQ Service Mesh and K8S integration`, `HiQ vs cProfile/ZipKin/Jaeger/Skywalking`, please refer to the [official document](#).
+
+
+## How to Contribute
+
+Please check [🔗 CONTRIBUTING.md](CONTRIBUTING.md) for how to contribute to HiQ repo.
+
