@@ -19,8 +19,8 @@ import hiq
 
 # -- Project information -----------------------------------------------------
 
-project = "HiQ"
-copyright = "Apache 2.0, 2021, Henry Fuheng Wu @ Oracle Cloud Infrastructure"
+project = "HiQ - A Declarative, Non-intrusive, Dynamic, and Transparent Tracing System"
+copyright = "UPL 1.0, 2021, Henry Fuheng Wu @ Oracle Cloud Infrastructure"
 author = "Fuheng Wu"  # HiQ Library User Guide
 email = "fuheng.wu@oracle.com"
 version = hiq.__version__
@@ -187,15 +187,19 @@ latex_elements = {
 %%%%%%%%%%% Quote for all places except Chapter
 \newcommand{\sectionquote}[2]{{\quote{\textit{``#1''}}{\textbf {\textit{--#2}}}}}
 """,
-    "pointsize": "12pt",
-    "sphinxsetup": "hmargin={0.7in,0.7in}, vmargin={1in,1in}, \
-        verbatimwithframe=true, \
-        TitleColor={rgb}{0,0,0}, \
-        HeaderFamily=\\rmfamily\\bfseries, \
-        InnerLinkColor={rgb}{0,0,1}, \
-        OuterLinkColor={rgb}{0,0,1}",
+    'sphinxsetup': 'VerbatimColor={rgb}{0.95, 1.0, 0.8},verbatimwithframe=true,warningBgColor={rgb}{1, 0.86,0.86},warningborder=2pt,warningBorderColor={rgb}{0.86, 0.08, 0.24},VerbatimBorderColor={rgb}{0.5,0.6,0.0},VerbatimHighlightColor={rgb}{1,1,0.8},hmargin={0.8in,0.8in}, vmargin={1in,1in}, marginpar=0.5in',
+    'fontpkg': r'''
+\usepackage{fontspec}
+\setmainfont{Symbola}
+\setsansfont{Linux Biolinum O}
+\setmonofont[Color={0019D4}]{DejaVu Sans Mono}
+''',
+    'printindex': r'\footnotesize\raggedright\printindex',
+    'papersize': r'paper=7in:9.2in,pagesize=pdftex,headinclude=on,footinclude=on',
+    'pointsize': r'11pt',
     "fncychap": "\\usepackage[Conny]{fncychap}",
+    #"maketitle": "\\input{main.tex}"
     # ...
 }
 
-latex_logo = "_static/hiq.jpg"
+latex_logo = "_static/hiq.png"
