@@ -116,4 +116,4 @@ Please check [🔗 CONTRIBUTING.md](CONTRIBUTING.md) for how to contribute to Hi
 
 ## User Guide
 
-Please check [🔗 HiQ User Guide](docs/hiq.pdf).
+Please check [🔗 HiQ User Guide](hiq/docs/hiq.pdf).
