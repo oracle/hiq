@@ -111,14 +111,11 @@ Line 13: print HiQ trees.
 
 ## Documentation
 
-Please check [🔗 HiQ Documentation](hiq/docs/hiq.pdf).
+Please check [🔗 HiQ documentation](hiq/docs/hiq.pdf).
 
 ## Examples
 
 Please check [🔗 examples](hiq/examples) for usage examples.
-
-For more advanced topics like `Log MonkeyKing`, `LumberJack`, `HiQ Distributed Tracing`, and `HiQ Service Mesh and K8S integration`, `HiQ vs cProfile/ZipKin/Jaeger/Skywalking`, please refer to the [HiQ User Guide](hiq/docs/hiq.pdf).
-
 
 ## Contributing
 
@@ -129,7 +126,7 @@ HiQ welcomes contributions from the community. Before submitting a pull request,
 
 ## Security
 
-Please consult the [security guide](./SECURITY.md) for our responsible security vulnerability disclosure process.
+Please consult the [🔗 security guide](./SECURITY.md) for our responsible security vulnerability disclosure process.
 
 ## License
 
