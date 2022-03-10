@@ -198,6 +198,39 @@ latex_elements = {
     'papersize': r'paper=7in:9.2in,pagesize=pdftex,headinclude=on,footinclude=on',
     'pointsize': r'11pt',
     "fncychap": "\\usepackage[Conny]{fncychap}",
+    'tableofcontents': '''\\begin{center}
+
+\\includegraphics{hiq.png}
+
+\\vspace*{1cm}
+ 
+        \\textbf{Special Thanks To Oleksandra For Reviewing The Project While Fighting At The Same Time!}
+ 
+        \\vspace{0.5cm}
+
+        \\begin{center}
+        Imagine there's no countries.
+        
+        It isn't hard to do.
+        
+        Nothing to kill or die for.
+        
+        And no religion, too.
+        
+        Imagine all the people.
+        
+        Living life in peace...
+
+
+        --John Lennon
+        \\end{center}
+
+             
+        \\vspace{1.5cm}
+        
+        \\includegraphics{../../source/dove80.png}
+        
+    Fuheng Wu, 2022, CA, USA.\\end{center}\\clearpage\\tableofcontents''',
     #"maketitle": "\\input{main.tex}"
     # ...
 }
