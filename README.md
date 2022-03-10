@@ -25,7 +25,7 @@ git clone this repo and cd into the source code, and run:
 ```python
 cd hiq && \
   python setup.py bdist_wheel && \
-  pip install dist/hiq*.whl
+  pip install dist/py_hiq*.whl
 ```
 
 ### Method 2 - install with pip
@@ -123,8 +123,7 @@ For more advanced topics like `Log MonkeyKing`, `LumberJack`, `HiQ Distributed T
 ## Contributing
 
 
-HiQ welcomes contributions from the community. Before submitting a pull
-request, please [review our 🔗 contribution guide](./CONTRIBUTING.md).
+HiQ welcomes contributions from the community. Before submitting a pull request, please [review our 🔗 contribution guide](./CONTRIBUTING.md).
 
 
 

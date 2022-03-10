@@ -28,7 +28,7 @@ def read_file(filename: str):
 
 
 setup(
-    name="hiq",
+    name="py-hiq",
     version=VERSION,
     author="Henry Fuheng Wu; Kathan Patel",
     author_email="<fuheng.wu@oracle.com>",
