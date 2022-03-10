@@ -1,18 +1,22 @@
 ![](docs/../hiq/docs/source/_static/hiq.png)
-----
 
+# HiQ
+----
 HiQ is a `declarative`, `non-intrusive`, `dynamic` and `transparent` tracking system for both **monolithic** application and **distributed** system. It brings the runtime information tracking and optimization to a new level without compromising with speed and system performance, or hiding any tracking overhead information. HiQ applies for both I/O bound and CPU bound applications.
 
 To explain the four features, **declarative** means you can declare the things you want to track in a text file, which could be a json, yaml or even csv,and no need to change program code. **Non-intrusive** means HiQ doesn't requires to modify original python code. **Dynamic** means HiQ supports tracing metrics featuring at run time, which can be used for adaptive tracing. **Transparent** means HiQ provides the tracing overhead and doesn't hide it no matter it is huge or tiny.
 
 In addition to latency tracking, HiQ provides memory, disk I/O and Network I/O tracking out of the box. The output can be saved in form of normal line by line log file, or HiQ tree, or span graph.
 
-## Environment
+
+## Installation
+
+> Environment
 
 - Python 3.6+
 - Linux, MacOS
 
-## Installation
+
 
 ### Method 1 - build from source
 
@@ -29,6 +33,7 @@ cd hiq && \
 ```bash
 pip install py-hiq
 ```
+
 
 ## Get Started
 
@@ -103,17 +108,32 @@ Line 12: call function `main()` in `main.py`.
 Line 13: print HiQ trees.
 
 
-## Usage examples
+
+## Documentation
+
+Please check [🔗 HiQ Documentation](hiq/docs/hiq.pdf).
+
+## Examples
 
 Please check [🔗 examples](hiq/examples) for usage examples.
 
-For more advanced topics like `Log MonkeyKing`, `LumberJack`, `HiQ Distributed Tracing`, and `HiQ Service Mesh and K8S integration`, `HiQ vs cProfile/ZipKin/Jaeger/Skywalking`, please refer to the [official document](#).
+For more advanced topics like `Log MonkeyKing`, `LumberJack`, `HiQ Distributed Tracing`, and `HiQ Service Mesh and K8S integration`, `HiQ vs cProfile/ZipKin/Jaeger/Skywalking`, please refer to the [HiQ User Guide](hiq/docs/hiq.pdf).
 
 
-## How to Contribute
+## Contributing
 
-Please check [🔗 CONTRIBUTING.md](CONTRIBUTING.md) for how to contribute to HiQ repo.
 
-## User Guide
+HiQ welcomes contributions from the community. Before submitting a pull
+request, please [review our 🔗 contribution guide](./CONTRIBUTING.md).
 
-Please check [🔗 HiQ User Guide](hiq/docs/hiq.pdf).
+
+
+## Security
+
+Please consult the [security guide](./SECURITY.md) for our responsible security vulnerability disclosure process.
+
+## License
+
+Copyright (c) 2022 Oracle and/or its affiliates. Released under the Universal Permissive License v1.0 as shown at <https://oss.oracle.com/licenses/upl/>.
+
+
