@@ -1,6 +1,4 @@
 ![](docs/../hiq/docs/source/_static/hiq.png)
-
-# HiQ
 ----
 HiQ is a `declarative`, `non-intrusive`, `dynamic` and `transparent` tracking system for both **monolithic** application and **distributed** system. It brings the runtime information tracking and optimization to a new level without compromising with speed and system performance, or hiding any tracking overhead information. HiQ applies for both I/O bound and CPU bound applications.
 
