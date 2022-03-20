@@ -194,7 +194,7 @@ We can easily send metrics data to APM inside an OCI function like below:
 OCI Function is normally memory constrained. So you can use `HiQMemory` to replace `HiQLatency` above to get the memory consumption details.
 
 
-## OCI Telemetry(T2) [Internal]
+## OCI Telemetry(T2)
 
 The Oracle Telemetry (T2) system provides REST APIs to help with gathering metrics, creating alarms, and sending notifications to monitor services built on the OCI platform. HiQ integrates with T2 seamlessly.
 
