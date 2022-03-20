@@ -4,5 +4,5 @@ python:
   install:
     - requirements: hiq/requirements.txt
     - method: pip
-      path: .
+      path: hiq
 
