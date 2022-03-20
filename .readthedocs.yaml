@@ -1,8 +1,8 @@
 version: 2
 python:
-  version: 3.8
+  version: "3.8"
   install:
-    - requirements: requirements.txt
+    - requirements: hiq/requirements.txt
     - method: pip
       path: .
 
