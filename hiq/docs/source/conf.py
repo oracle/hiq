@@ -19,7 +19,7 @@ import hiq
 
 # -- Project information -----------------------------------------------------
 
-project = "HiQ - A Declarative, Non-intrusive, Dynamic, and Transparent Tracing System"
+project = "HiQ"
 copyright = "UPL 1.0, 2021, Henry Fuheng Wu @ Oracle Cloud Infrastructure"
 author = "Fuheng Wu"  # HiQ Library User Guide
 email = "fuheng.wu@oracle.com"
