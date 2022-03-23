@@ -18,7 +18,7 @@ The following is the demo code:
    :linenos:
 ```
 
-Run it you will get:
+Run it and you will get:
 
 ```
 ℹ️  python examples/hiq_global_status/demo.py

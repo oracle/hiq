@@ -99,7 +99,7 @@ Driver Code:
    :linenos:
 ```
 
-At line 15, we set `LMK` equals to `1`, which enables log monkey king. Run the code we can get:
+At line 15, we set `LMK` equals to `1`, which enables log monkey king. Run the code and we can get:
 
 ```
 ℹ️  python examples/lmk/stdio/main_driver.py
@@ -144,7 +144,8 @@ Driver Code:
 
 - Explanation
 
-Line 9-15: set up logging format, log file path and name  
+Line 9-15: set up logging format, log file path and name
+
 Line 19: pass `logger` as `lmk_logger` when constructing HiQLatency Object
 
 
@@ -200,7 +201,7 @@ The same information is also stored in the log file:
 
 ![Lumberjack](img/lumberjack.jpg)
 
-Different form LMK, which writes log entry for each span, LumberJack is to handle an entire HiQ tree. For simplicity, we call it Jack. Jack is very useful in use cases where the overhead for processing metrics is so big that you cannot process each entry one by one. Kafaka is one Exmaple. Due to message encoding, network latency and response validation, a call to a Kafaka producer's `send_message` can easily take more than 1 second. Jack is a good way to handle Kafka message. We can send metrics tree to Kafka and process it later with an analytics server. This will be described in details in section [Integration with OCI Streaming](7_integration.html#oci-streaming).
+Different from LMK, which writes log entry for each span, LumberJack is to handle an entire HiQ tree. For simplicity, we call it Jack. Jack is very useful in use cases where the overhead for processing metrics is so big that you cannot process each entry one by one. Kafaka is one Exmaple. Due to message encoding, network latency and response validation, a call to a Kafaka producer's `send_message` can easily take more than 1 second. Jack is a good way to handle Kafka message. We can send metrics tree to Kafka and process it later with an analytics server. This will be described in details in section [Integration with OCI Streaming](7_integration.html#oci-streaming).
 
 
 Jack also writes a 500MB-rotated log in `~/.hiq/log_jack.log` unless you set environmental variable `NO_JACK_LOG`.
