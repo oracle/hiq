@@ -41,7 +41,7 @@ pip install py-hiq
 
 To use HiQ, you need to have `target code` and `driver code`.
 
-![](hiq/docs/source/img/driver.jpg)
+![](img/driver.jpg)
 
 Let start with a simplest example by running HiQ against a monolithic application. The target code is `main.py`:
 
@@ -112,8 +112,8 @@ Line 13: print HiQ trees.
 
 ## Documentation
 
-**HTML**: [🔗 HiQ Online Documents](https://hiq.readthedocs.io/en/latest/index.html)  
-**PDF**: Please check [🔗 HiQ User Guide](https://github.com/oracle-samples/hiq/blob/main/hiq/docs/hiq.pdf).
+| **HTML**: [🔗 HiQ Online Documents](https://hiq.readthedocs.io/en/latest/index.html)  
+| **PDF**: Please check [🔗 HiQ User Guide](https://github.com/oracle-samples/hiq/blob/main/hiq/docs/hiq.pdf).
 
 ## Examples
 
