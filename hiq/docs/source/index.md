@@ -112,8 +112,7 @@ Line 13: print HiQ trees.
 
 ## Documentation
 
-| **HTML**: [🔗 HiQ Online Documents](https://hiq.readthedocs.io/en/latest/index.html)  
-| **PDF**: Please check [🔗 HiQ User Guide](https://github.com/oracle-samples/hiq/blob/main/hiq/docs/hiq.pdf).
+**HTML**: [🔗 HiQ Online Documents](https://hiq.readthedocs.io/en/latest/index.html) | **PDF**: Please check [🔗 HiQ User Guide](https://github.com/oracle-samples/hiq/blob/main/hiq/docs/hiq.pdf).
 
 ## Examples
 
