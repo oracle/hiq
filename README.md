@@ -34,16 +34,12 @@ cd hiq && \
 pip install py-hiq
 ```
 
-
 ## Get Started
 
-To use HiQ, you need to have `target code` and `driver code`.
-
-![](hiq/docs/source/img/driver.jpg)
-
-Let start with a simplest example by running HiQ against a monolithic application. The target code is `main.py`:
+Let start with a simplest example by running HiQ against a simple monolithic python code [📄 `main.py`](hiq/examples/quick_start/main.py):
 
 ```python
+# this is the main.py python source code
 import time
 
 def func1():
@@ -62,56 +58,35 @@ if __name__ == "__main__":
     main()
 ```
 
-In this target code, there is a simple chain of function calls: `main()` -> `func1` -> `func2`. We can actually run the target code:
+In this code, there is a simple chain of function calls: `main()` -> `func1` -> `func2`.
+
+Now we want to trace the functions without modifying its code. Let's run the following:
+
 
 ```python
-cd examples
-python main.py
+git clone https://github.com/oracle-samples/hiq.git
+cd hiq/examples/quick_start
+python main_driver.py
 ```
 
-And the output should be:
-
-```
-func1
-func2
-```
-
-Now let's run the driver code, and if everything is fine, you should be able to see the output like this:
+If everything is fine, you should be able to see the output like this:
 
 ![HiQ Simplest Example](hiq/docs/source/img/main_driver.jpg)
 
-- Explanation of driver code
-
-```python
-import hiq
+From the screenshot we can see the timestamp and the latency of each function:
 
 
-def run_main():
-    driver = hiq.HiQLatency(
-        hiq_table_or_path=[
-            ["main", "", "main", "main"],
-            ["main", "", "func1", "func1"],
-            ["main", "", "func2", "func2"],
-        ]
-    )
-    hiq.mod("main").main()
-    driver.show()
+|   | main  | func1  |  func2 |  tracing overhead |
+|---|---|---|---|---|
+| latency(second)  | 4.0045  | 4.0044  | 2.5026  | 0.0000163  |
 
 
-if __name__ == "__main__":
-    run_main()
-```
-
-Line 1: import python module `hiq`.  
-Line 5-11: create an object of class `hiq.HiQLatency` and declare we want to trace function `main()`, `func1()`, `func2()` in `main.py`.  
-Line 12: call function `main()` in `main.py`.  
-Line 13: print HiQ trees.
-
-
+HiQ just traced the `main.py` file running without touching one line of its code.
 
 ## Documentation
 
-Please check [🔗 HiQ documentation](hiq/docs/hiq.pdf).
+**HTML**: [🔗 HiQ Online Documents](https://hiq.readthedocs.io/en/latest/index.html)  
+**PDF**: Please check [🔗 HiQ User Guide](hiq/docs/hiq.pdf).
 
 ## Examples
 
