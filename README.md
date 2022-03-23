@@ -1,6 +1,10 @@
 ![](docs/../hiq/docs/source/_static/hiq.png)
 ----
 [![Documentation Status](https://readthedocs.org/projects/hiq/badge/?version=latest)](https://hiq.readthedocs.io/en/latest/?badge=latest)
+[![CodeCov][cov-img]][cov]
+[![Github release][release-img]][release]
+[![lic][license-img]][license]
+
 
 HiQ is a `declarative`, `non-intrusive`, `dynamic` and `transparent` tracking system for both **monolithic** application and **distributed** system. It brings the runtime information tracking and optimization to a new level without compromising with speed and system performance, or hiding any tracking overhead information. HiQ applies for both I/O bound and CPU bound applications.
 
@@ -11,24 +15,6 @@ In addition to latency tracking, HiQ provides memory, disk I/O and Network I/O t
 
 ## Installation
 
-> Environment
-
-- Python 3.6+
-- Linux, MacOS
-
-
-
-### Method 1 - build from source
-
-git clone this repo and cd into the source code, and run:
-
-```python
-cd hiq && \
-  python setup.py bdist_wheel && \
-  pip install dist/py_hiq*.whl
-```
-
-### Method 2 - install with pip
 
 ```bash
 pip install py-hiq
@@ -107,4 +93,18 @@ Please consult the [🔗 security guide](./SECURITY.md) for our responsible secu
 
 Copyright (c) 2022 Oracle and/or its affiliates. Released under the Universal Permissive License v1.0 as shown at <https://oss.oracle.com/licenses/upl/>.
 
+
+[cov-img]: https://codecov.io/gh/uber/athenadriver/branch/master/graph/badge.svg
+[cov]: https://hiq.readthedocs.io/en/latest/index.html
+
+[release-img]: https://img.shields.io/badge/release-v1.0.0-red
+[release]: https://github.com/uber/athenadriver/releases
+
+[report-card-img]: https://goreportcard.com/badge/github.com/uber/athenadriver
+[report-card]: https://goreportcard.com/report/github.com/uber/athenadriver
+
+[license-img]: https://img.shields.io/badge/License-UPL--1.0-red
+[license]: https://github.com/uber/athenadriver/blob/master/LICENSE
+
+[release-policy]: https://golang.org/doc/devel/release.html#policy
 
