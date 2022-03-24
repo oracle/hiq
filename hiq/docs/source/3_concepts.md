@@ -10,21 +10,21 @@ HiQ driver code is like agent in most APM applications, but there is a little di
 
 ## HiQ Tracing Class/Object
 
-HiQ provides two Tracing Class out of the box: `HiQLatency` for latency tracing and `HiQMemory` for memory tracing. You can derive from `HiQSimple` to have you own customized tracing. These classes are called `HiQ Tracing Class` and the object is called `HiQ Tracing Object`.
+HiQ provides two Tracing Class out of the box: `HiQLatency` for latency tracing and `HiQMemory` for memory tracing. You can derive from `HiQSimple` to have your own customized tracing. These classes are called `HiQ Tracing Class` and the object is called `HiQ Tracing Object`.
 
 ## LumberJack/Jack
 
-LumberJack is a process to collect traces, HiQ trees in this case, to send to HiQ server. To enable LumberJack, set environment variables `JACK` to 1.
+LumberJack is a process to collect traces, HiQ trees in this case, to send to HiQ server. To enable LumberJack, set environment variable `JACK` to 1.
 
 ## Log Monkey King
 
-Log Monkey King is a process to write traditional semi-structured, append-only log into log files. To enable Log Monkey King, set environment variables `LMK` to 1.
+Log Monkey King is a process to write traditional semi-structured, append-only log into log files. To enable Log Monkey King, set environment variable `LMK` to 1.
 
 ## HiQ Tree
 
-HiQ tree is a nary tree, plus a stack and dictionary/map. Different from the traditional BST, AVL, RB Tree, the tree is a strictly insertion-time-ordered tree from top to bottom and from left to right, so you can not switch the order of the nodes. The purpose of the tree is not for searching, or sorting. It is for visualizing program execution and facilitating code optimization. The values inserted into the tree doesn't need to be monotonically increasing.
+HiQ tree is a n-ary tree, plus a stack and dictionary/map. Different from the traditional BST, AVL, RB Tree, the tree is a strictly insertion-time-ordered tree from top to bottom and from left to right, so you can not switch the order of the nodes. The purpose of the tree is not for searching, or sorting. It is for visualizing program execution and facilitating code optimization. The values inserted into the tree doesn't need to be monotonically increasing.
 
-Every node in an HiQ tree has a start value and a end value. `end` value minus `start` value is equal to the span of the node, or sometimes you can just call the node itself as a `span` to conform with OpenTracing conventions.
+Every node in an HiQ tree has a start value and a end value. `end` value minus `start` value is equal to the span of the node, or sometimes you can just call the node itself as a `span` to confirm with OpenTracing conventions.
 
 
 HiQ tree has three `mode`s. When HiQ tree is in `concise` mode, which is the default mode, HiQ tree will not contain ZSP(zero-span node). When the mode is `verbose` mode, HiQ tree can have ZSP if there is no extra information in the node, like exception information. When the mode is `debug`, all the zero span node will be recorded as well.
@@ -113,7 +113,7 @@ HIQ Conf:
    :linenos:
 ```
 
-Run the driver code you will get something like:
+Run the driver code and you will get something like:
 
 ```
 ℹ️  python hiq/examples/conf/main_driver.py

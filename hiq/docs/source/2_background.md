@@ -60,7 +60,7 @@ A *abs* metric, in which the value measures a specific instant in time. For exam
 
 A *delta* metric, aka relative metric, in which the value measures the change since it was last recorded. For example, metrics measuring request counts are delta metrics; each value records how many requests were received since the last data point was recorded. The delta is always the end value minus start value. Please be noted delta metric could be **negative**. Some other examples of a delta metric are the latency, memory cost, and network I/O traffic.
 
-> Compared with Google and Prometheus' definition, HiQ abs metric is equivalent to Google and Prometheus's gauge metric, and HiQ's deta metric is equivalent to Google's delta and cumulative metrics and Prometheus's counter.
+> Compared with Google and Prometheus' definition, HiQ abs metric is equivalent to Google and Prometheus's gauge metric, and HiQ's delta metric is equivalent to Google's delta and cumulative metrics and Prometheus's counter.
 
 | HiQ   | Google            | Prometheus |
 | ----- | ----------------- | ---------- |
@@ -74,7 +74,7 @@ Ref:
 
 ## Application Performance Monitoring
 
-**APM** (Application Performance Monitoring) provides a comprehensive set of features to monitor applications and diagnose performance issues. It has a very long history and covers very broad areas like including hardware performance monitoring. Although the name has word *monitoring* inside, it is more like an observability tool. It has become a profitable business for many companies and used frequently in slaes and marketing context, like this one: [Application Performance Monitoring Tools Reviews 2021](https://www.gartner.com/reviews/market/application-performance-monitoring) by Gartner. In early times, APM is more for monolitic applications, but now it has expanded to distributed systems.
+**APM** (Application Performance Monitoring) provides a comprehensive set of features to monitor applications and diagnose performance issues. It has a very long history and covers very broad areas like including hardware performance monitoring. Although the name has word *monitoring* inside, it is more like an observability tool. It has become a profitable business for many companies and used frequently in sales and marketing context, like this one: [Application Performance Monitoring Tools Reviews 2021](https://www.gartner.com/reviews/market/application-performance-monitoring) by Gartner. In early times, APM is more for monolitic applications, but now it has expanded to distributed systems.
 
 ## Distributed Tracing
 

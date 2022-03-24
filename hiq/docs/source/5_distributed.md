@@ -12,7 +12,7 @@ Distributed tracing is the capability for a tracing solution to track and observ
     :height: 100px
 ```
 
-OpenTelemetry is a set of APIs, SDKs, tooling and integrations that are designed for the creation and management of telemetry data such as traces, metrics, and logs. It is vendor neutral, so It doesn't specify implementation details like Jaeger or Zipkin. OpenTelemetry provides default implementations for all the tracing backends and vendors, while allowing users to choose a different implementation for vendor specific features.
+OpenTelemetry is a set of APIs, SDKs, tooling and integrations that are designed for the creation and management of telemetry data such as traces, metrics, and logs. It is vendor neutral, so it doesn't specify implementation details like Jaeger or Zipkin. OpenTelemetry provides default implementations for all the tracing backends and vendors, while allowing users to choose a different implementation for vendor specific features.
 
 
 ```eval_rst
@@ -54,7 +54,7 @@ https://www.jaegertracing.io/
 
 ### Set Up
 
-The following is an example which assume you have jager server/agent running locally. If you don't have, you can run the command to start a docker instance for jager server:
+The following is an example which assume you have jaeger server/agent running locally. If you don't have, you can run the command to start a docker instance for jaeger server:
 
 
 ```bash
@@ -203,6 +203,8 @@ pip install ray
 ```
 
 ## Dask
+
+- Installation
 
 ```
 pip install dask
