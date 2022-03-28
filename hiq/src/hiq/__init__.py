@@ -10,6 +10,13 @@ __doc__ = "HiQ is a declarative, non-intrusive, dynamic and transparent tracking
 __version__ = "1.0.0"
 __credits__ = "Henry Wu, Ivan Davchev, Jun Qian"
 
+import sys
+
+vinfo = sys.version_info
+if vinfo.major < 3 or (vinfo.major == 3 and vinfo.minor < 8):
+    print(f"HiQ supports Python version 3.8 and higher. Your version is {vinfo.major}.{vinfo.minor}.")
+    sys.exit(1)
+
 from .hiq_utils import (
     set_global_hiq_status,
     get_global_hiq_status,
