@@ -4,7 +4,7 @@ import os
 here = os.path.dirname(os.path.realpath(__file__))
 
 VERSION = (
-    "1.0.1"
+    "1.0.1a"
     if "PKG_VERSION" not in os.environ or not os.environ["PKG_VERSION"]
     else os.environ["PKG_VERSION"]
 )
@@ -25,7 +25,7 @@ def read_file(filename: str):
     except:
         pass
 
-LONG_DESCRIPTION = read_file("README.rst")
+LONG_DESCRIPTION = read_file(f"{here}/README.rst")
 
 
 setup(
