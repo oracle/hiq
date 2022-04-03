@@ -70,7 +70,7 @@ the following:
 
 If everything is fine, you should be able to see the output like this:
 
-.. figure:: hiq/docs/source/img/main_driver.jpg
+.. figure:: https://raw.githubusercontent.com/oracle-samples/hiq/main/hiq/docs/source/img/main_driver.jpg
    :alt: HiQ Simplest Example
 
    HiQ Simplest Example
