@@ -8,7 +8,7 @@ VERSION = (
     if "PKG_VERSION" not in os.environ or not os.environ["PKG_VERSION"]
     else os.environ["PKG_VERSION"]
 )
-DESCRIPTION = "HiQ"
+DESCRIPTION = "HiQ - A Modern Observability System"
 LONG_DESCRIPTION = "HiQ - A Declarative, Non-intrusive, Dynamic and Transparent System to Track Python Program Runtime Information"
 
 packages = [
@@ -21,7 +21,7 @@ def read_file(filename: str):
         lines = []
         with open(filename) as file:
             lines = file.readlines()
-            lines = [line.rstrip() for line in lines]
+            lines = [line.rstrip() for line in lines if not line.startswith('#')]
         return lines
     except:
         pass
@@ -48,5 +48,5 @@ setup(
     packages=packages,
     package_dir={"": "src"},
     package_data={"hiq": ["data/*.pk"]},
-    url="http://www.oracle.com",
+    url="https://github.com/oracle-samples/hiq",
 )

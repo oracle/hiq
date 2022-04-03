@@ -1,0 +1,21 @@
+# integration
+###############################################
+
+# oracle cloud
+oci~=2.62.0
+
+# loguru
+loguru~=0.6.0
+
+# torch
+torch~=1.11.0
+
+# dask
+#dask~=2022.4.0
+#distributed~=2022.4.0
+
+# opentelemetry, jaeger, zipkin
+opentelemetry-api~=1.10.0
+opentelemetry-sdk~=1.10.0
+opentelemetry-exporter-jaeger~=1.10.0
+opentelemetry-exporter-zipkin~=1.10.0
