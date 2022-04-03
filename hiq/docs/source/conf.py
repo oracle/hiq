@@ -19,7 +19,7 @@ import hiq
 
 # -- Project information -----------------------------------------------------
 
-project = "HiQ"
+project = "HiQ - A Modern Observability System"
 copyright = "UPL 1.0, 2021, Henry Fuheng Wu @ Oracle Cloud Infrastructure"
 author = "Fuheng Wu"  # HiQ Library User Guide
 email = "fuheng.wu@oracle.com"
@@ -182,12 +182,12 @@ latex_elements = {
 \\includegraphics{hiq.png}
 
 \\vspace*{1cm}
- 
-        \\textbf{Special Thanks To Oleksandra For Reviewing The Project While Fighting At The Same Time!}
- 
-        \\vspace{0.5cm}
 
-        \\begin{center}
+\\textbf{HiQ is named after Henry Fuheng Wu, Ivan Davchev, Qian Jun.}
+
+\\vspace{0.5cm}
+
+\\begin{center}
         Imagine there's no countries.
         
         It isn't hard to do.
@@ -202,16 +202,19 @@ latex_elements = {
 
 
         --John Lennon
-        \\end{center}
+\\end{center}
 
-             
-        \\vspace{1.5cm}
-        
-        \\includegraphics{../../source/dove80.png}
-        
-    Fuheng Wu, 2022, CA, USA.\\end{center}\\clearpage\\tableofcontents''',
-    #"maketitle": "\\input{main.tex}"
-    # ...
+\\vspace{1.5cm}
+
+\\textbf{Thanks List: Kathan Patel, Wei Gao, Karunakar Chinnabathini, Kulbhushan Pachauri, Tiger Deng, Pingbo Zhang, Simo Lin, Jinguo Zhang}
+
+\\textbf{Special Thanks To Oleksandra For Reviewing The Project While Fighting The War And Helping Others.}
+
+\\vspace{1.5cm}
+
+\\includegraphics{../../source/img/dove80.png}
+
+Henry Fuheng Wu, Fremont CA, USA 2022\\end{center}\\clearpage\\tableofcontents''',
 }
 
 latex_logo = "_static/hiq.png"
