@@ -5,9 +5,9 @@ py-itree~=0.0.14
 prometheus-client~=0.13.1
 urllib3~=1.26.9
 py-zipkin~=0.20.2
-flask==2.0.3
+flask~=2.1.1
 opentelemetry-sdk~=1.10.0
-tqdm==4.63.0
-pandas==1.4.1
-matplotlib==3.5.1
-numpy==1.22.3
+tqdm~=4.63.1
+pandas~=1.4.2
+matplotlib~=3.5.1
+numpy~=1.22.3
