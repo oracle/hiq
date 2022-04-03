@@ -5,9 +5,9 @@
 #
 
 __author__ = "Fuheng Wu<fuheng.wu@oralce.com>"
-__date__ = "2021-10-24"
+__date__ = "2022-04-03"
 __doc__ = "HiQ is a declarative, non-intrusive, dynamic and transparent tracking and optimization system"
-__version__ = "1.0.0"
+__version__ = "1.0.1"
 __credits__ = "Henry Wu, Ivan Davchev, Jun Qian"
 
 import sys
