@@ -17,7 +17,7 @@ In addition to latency tracking, HiQ provides memory, disk I/O and Network I/O t
 
 
 ```bash
-pip install py-hiq
+pip install hiq-python
 ```
 
 ## Get Started
