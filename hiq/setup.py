@@ -4,7 +4,7 @@ import os
 here = os.path.dirname(os.path.realpath(__file__))
 
 VERSION = (
-    "1.0.1b"
+    "1.0.2"
     if "PKG_VERSION" not in os.environ or not os.environ["PKG_VERSION"]
     else os.environ["PKG_VERSION"]
 )
@@ -26,7 +26,7 @@ def read_file(filename: str):
         pass
 
 LONG_DESCRIPTION = """
-|image0|
+HiQ - A Modern Observability System
 *************************************************
 
 |Documentation Status| |CodeCov| |Github release| |lic|
@@ -99,9 +99,8 @@ the following:
 If everything is fine, you should be able to see the output like this:
 
 .. figure:: https://raw.githubusercontent.com/oracle-samples/hiq/main/hiq/docs/source/img/main_driver.jpg
-   :alt: HiQ Simplest Example
 
-   HiQ Simplest Example
+   An HiQ Simplest Example
 
 From the screenshot we can see the timestamp and the latency of each
 function:
@@ -118,9 +117,7 @@ of its code.
 Documentation
 -------------
 
-| **HTML**: `🔗 HiQ Online
-  Documents <https://hiq.readthedocs.io>`__
-| **PDF**: Please check `🔗 HiQ User Guide <https://github.com/oracle-samples/hiq/raw/main/hiq/docs/hiq.pdf>`__.
+**HTML**: `🔗 HiQ Online Document <https://hiq.readthedocs.io>`__, **PDF**: `🔗 HiQ PDF Document <https://github.com/oracle-samples/hiq/raw/main/hiq/docs/hiq.pdf>`__.
 
 Examples
 --------
