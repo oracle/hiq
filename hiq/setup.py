@@ -9,7 +9,6 @@ VERSION = (
     else os.environ["PKG_VERSION"]
 )
 DESCRIPTION = "HiQ - A Modern Observability System"
-LONG_DESCRIPTION = "HiQ - A Declarative, Non-intrusive, Dynamic and Transparent System to Track Python Program Runtime Information"
 
 packages = [
     "hiq",
@@ -25,6 +24,8 @@ def read_file(filename: str):
         return lines
     except:
         pass
+
+LONG_DESCRIPTION = read_file("../README.md")
 
 
 setup(
