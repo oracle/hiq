@@ -1,33 +1,5 @@
-from setuptools import setup
-import os
-
-here = os.path.dirname(os.path.realpath(__file__))
-
-VERSION = (
-    "1.0.1"
-    if "PKG_VERSION" not in os.environ or not os.environ["PKG_VERSION"]
-    else os.environ["PKG_VERSION"]
-)
-DESCRIPTION = "HiQ - A Modern Observability System"
-
-packages = [
-    "hiq",
-]
-
-
-def read_file(filename: str):
-    try:
-        lines = []
-        with open(filename) as file:
-            lines = file.readlines()
-            lines = [line.rstrip() for line in lines if not line.startswith('#')]
-        return lines
-    except:
-        pass
-
-LONG_DESCRIPTION = """
-HiQ - A Modern Observability System
-*************************************************
+|image0|
+--------
 
 |Documentation Status| |CodeCov| |Github release| |lic|
 
@@ -62,7 +34,7 @@ Get Started
 
 Let start with a simplest example by running HiQ against a simple
 monolithic python code `📄
-main.py <https://github.com/oracle-samples/hiq/blob/main/hiq/examples/quick_start/main.py>`__:
+``main.py`` <https://github.com/oracle-samples/hiq/blob/main/hiq/examples/quick_start/main.py>`__:
 
 .. code:: python
 
@@ -99,8 +71,9 @@ the following:
 If everything is fine, you should be able to see the output like this:
 
 .. figure:: https://raw.githubusercontent.com/oracle-samples/hiq/main/hiq/docs/source/img/main_driver.jpg
+   :alt: HiQ Simplest Example
 
-   An HiQ Simplest Example
+   HiQ Simplest Example
 
 From the screenshot we can see the timestamp and the latency of each
 function:
@@ -117,7 +90,9 @@ of its code.
 Documentation
 -------------
 
-**HTML**: `🔗 HiQ Online Document <https://hiq.readthedocs.io>`__, **PDF**: `🔗 HiQ PDF Document <https://github.com/oracle-samples/hiq/raw/main/hiq/docs/hiq.pdf>`__.
+| **HTML**: `🔗 HiQ Online
+  Documents <https://hiq.readthedocs.io/en/latest/index.html>`__
+| **PDF**: Please check `🔗 HiQ User Guide <https://github.com/oracle-samples/hiq/docs/hiq.pdf>`__.
 
 Examples
 --------
@@ -152,29 +127,3 @@ https://oss.oracle.com/licenses/upl/.
    :target: https://github.com/uber/athenadriver/releases
 .. |lic| image:: https://img.shields.io/badge/License-UPL--1.0-red
    :target: https://github.com/uber/athenadriver/blob/master/LICENSE
-"""
-
-
-setup(
-    name="hiq-python",
-    version=VERSION,
-    author="Henry Fuheng Wu; Kathan Patel",
-    author_email="<fuheng.wu@oracle.com>",
-    description=DESCRIPTION,
-    long_description=LONG_DESCRIPTION,
-    install_requires=read_file(f"{here}/requirements.txt"),
-    keywords=[
-        "hiq",
-    ],
-    classifiers=[
-        "Development Status :: 3 - Alpha",
-        "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.8",
-        "Programming Language :: Python :: 3.9",
-        "Programming Language :: Python :: 3.10",
-    ],
-    packages=packages,
-    package_dir={"": "src"},
-    package_data={"hiq": ["data/*.pk"]},
-    url="https://github.com/oracle-samples/hiq",
-)
