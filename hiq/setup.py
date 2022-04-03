@@ -62,7 +62,7 @@ Get Started
 
 Let start with a simplest example by running HiQ against a simple
 monolithic python code `📄
-``main.py`` <https://github.com/oracle-samples/hiq/blob/main/hiq/examples/quick_start/main.py>`__:
+main.py <https://github.com/oracle-samples/hiq/blob/main/hiq/examples/quick_start/main.py>`__:
 
 .. code:: python
 
@@ -119,8 +119,8 @@ Documentation
 -------------
 
 | **HTML**: `🔗 HiQ Online
-  Documents <https://hiq.readthedocs.io/en/latest/index.html>`__
-| **PDF**: Please check `🔗 HiQ User Guide <https://github.com/oracle-samples/hiq/docs/hiq.pdf>`__.
+  Documents <https://hiq.readthedocs.io>`__
+| **PDF**: Please check `🔗 HiQ User Guide <https://github.com/oracle-samples/hiq/raw/main/hiq/docs/hiq.pdf>`__.
 
 Examples
 --------
