@@ -138,4 +138,4 @@ class HiQOciApmContext(zipkin_span):
         return self
 
     def __exit__(self, exc_type, exc_value, exc_traceback):
-        super().__exit__(self, exc_type, exc_value, exc_traceback)
+        super().__exit__(exc_type, exc_value, exc_traceback)

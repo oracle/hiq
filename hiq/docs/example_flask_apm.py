@@ -37,27 +37,3 @@ if __name__ == "__main__":
     port = int(os.getenv("PORT", "8080"))
     debug = False
     app.run(host=host, port=port, debug=debug)
-
-
-"""
-    HHHHHHHHH     HHHHHHHHH  iiii       QQQQQQQQQ      
-    H:::::::H     H:::::::H i::::i    QQ:::::::::QQ    
-    H:::::::H     H:::::::H  iiii   QQ:::::::::::::QQ  
-    HH::::::H     H::::::HH        Q:::::::QQQ:::::::Q 
-      H:::::H     H:::::H  iiiiiii Q::::::O   Q::::::Q 
-      H:::::H     H:::::H  i:::::i Q:::::O     Q:::::Q 
-      H::::::HHHHH::::::H   i::::i Q:::::O     Q:::::Q 
-      H:::::::::::::::::H   i::::i Q:::::O     Q:::::Q 
-      H:::::::::::::::::H   i::::i Q:::::O     Q:::::Q 
-      H::::::HHHHH::::::H   i::::i Q:::::O     Q:::::Q 
-      H:::::H     H:::::H   i::::i Q:::::O  QQQQ:::::Q 
-      H:::::H     H:::::H   i::::i Q::::::O Q::::::::Q 
-    HH::::::H     H::::::HHi::::::iQ:::::::QQ::::::::Q 
-    H:::::::H     H:::::::Hi::::::i QQ::::::::::::::Q  
-    H:::::::H     H:::::::Hi::::::i   QQ:::::::::::Q   
-    HHHHHHHHH     HHHHHHHHHiiiiiiii     QQQQQQQQ::::QQ 
-                                                Q:::::Q
-                                                 QQQQQQ
-
-
-"""
