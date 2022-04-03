@@ -118,7 +118,7 @@ Copyright (c) 2022 Oracle and/or its affiliates. Released under the
 Universal Permissive License v1.0 as shown at
 https://oss.oracle.com/licenses/upl/.
 
-.. |image0| image:: docs/source/_static/hiq.png
+.. |image0| image:: https://raw.githubusercontent.com/oracle-samples/hiq/main/hiq/docs/source/_static/hiq.png
 .. |Documentation Status| image:: https://readthedocs.org/projects/hiq/badge/?version=latest
    :target: https://hiq.readthedocs.io/en/latest/?badge=latest
 .. |CodeCov| image:: https://codecov.io/gh/uber/athenadriver/branch/master/graph/badge.svg
