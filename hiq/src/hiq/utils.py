@@ -161,7 +161,8 @@ def _get_args_spec(args_spec) -> Tuple[str, str]:
     y = list(args_spec.defaults)
     y = ["^"] * (len(x) - len(y)) + y
     z = list(zip(x, y))
-    r = list(map(lambda x: f"{x[0]}={x[1]}" if x[1] != "^" else x[0], z))
+    r = list(map(lambda e: e[0] if e[1] == "^" else (
+        f"{e[0]}='{e[1]}'" if isinstance(e[1], str) else f"{e[0]}={e[1]}"), z))
     if varkw:
         r.append(f"**{varkw}")
         x.append(f"**{varkw}")
