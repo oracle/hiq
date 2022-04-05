@@ -1,0 +1,3 @@
+paddlepaddle~=2.2.2
+paddleocr~=2.4.0.4
+PIL~=1.1.6
