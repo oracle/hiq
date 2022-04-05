@@ -513,7 +513,9 @@ class HiQBase(itree.ForestStats, LogMonkeyKing):
                     d = d.replace("🐚", "")
                 itree.exe(d, locals())
         except Exception as e:
-            print(traceback.format_exc())
+            print(f"🦉 {module_name}.{class_name}.{func_name} is not traced({e})")
+            if s.verbose:
+                print(traceback.format_exc())
             # sys.exit(0)
         finally:
             s.count += 1
