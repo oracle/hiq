@@ -3,7 +3,7 @@ import hiq
 
 here = os.path.dirname(os.path.realpath(__file__))
 
-class PaddleHiQLatency(hiq.HiQMemory):
+class PaddleHiQ(hiq.HiQMemory):
     def custom(s):
         s.o_paddle_run = hiq.mod('paddle.fluid.core_avx').PaddleInferPredictor.run
 
@@ -17,6 +17,6 @@ class PaddleHiQLatency(hiq.HiQMemory):
         hiq.mod('paddle.fluid.core_avx').PaddleInferPredictor.run = s.o_paddle_run
 
 
-driver = PaddleHiQLatency(f"{here}/paddleocr.conf")
+driver = PaddleHiQ(f"{here}/paddleocr.conf")
 hiq.mod("main").main()
 driver.show()
