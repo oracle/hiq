@@ -1,6 +1,6 @@
 import os
+import hiq
 
 here = os.path.dirname(os.path.realpath(__file__))
 
-with open(f"{here}/paddleocr.conf") as file:
-    HIQ_PADDLEOCR_CONF = file.readlines()
+HIQ_PADDLEOCR_CONF = hiq.hiq_utils.read_csv_to_list(f"{here}/paddleocr.conf")

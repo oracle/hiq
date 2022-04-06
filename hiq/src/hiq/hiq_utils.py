@@ -154,6 +154,27 @@ class HiQStatusContext(object):
             set_global_hiq_status(self.original_hiq_status, debug=self.debug)
 
 
+def read_csv_to_list(file_path):
+    res = []
+    # CSV
+    import csv
+
+    try:
+        with open(file_path, mode="r", encoding="utf-8") as csvfile:
+            spamreader = csv.reader(
+                csvfile,
+                delimiter=",",
+                quotechar='"',
+                doublequote=True,
+                skipinitialspace=True,
+            )
+            for row in spamreader:
+                res.append(row)
+        return res
+    except Exception as e:
+        return []
+
+
 def get_hiq_table(hiq_table_or_path):
     if isinstance(hiq_table_or_path, str):
         if not os.path.exists(hiq_table_or_path):
@@ -167,24 +188,7 @@ def get_hiq_table(hiq_table_or_path):
             return res
         except ValueError as e:
             pass
-
-        # CSV
-        import csv
-
-        try:
-            with open(hiq_table_or_path, mode="r", encoding="utf-8") as csvfile:
-                spamreader = csv.reader(
-                    csvfile,
-                    delimiter=",",
-                    quotechar='"',
-                    doublequote=True,
-                    skipinitialspace=True,
-                )
-                for row in spamreader:
-                    res.append(row)
-            return res
-        except Exception as e:
-            return []
+        return read_csv_to_list(hiq_table_or_path)
     elif isinstance(hiq_table_or_path, list):
         return hiq_table_or_path
     else:

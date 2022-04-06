@@ -1,22 +1,8 @@
 import os
 import hiq
+from hiq.framework.paddleocr import HIQ_PADDLEOCR_CONF
+from hiq.framework.paddle import PaddleHiQLatency
 
-here = os.path.dirname(os.path.realpath(__file__))
-
-class PaddleHiQ(hiq.HiQMemory):
-    def custom(s):
-        s.o_paddle_run = hiq.mod('paddle.fluid.core_avx').PaddleInferPredictor.run
-
-        @s.inserter
-        def paddle_run(self) -> bool:
-            return s.o_paddle_run(self)
-
-        hiq.mod('paddle.fluid.core_avx').PaddleInferPredictor.run = paddle_run
-
-    def custom_disable(s):
-        hiq.mod('paddle.fluid.core_avx').PaddleInferPredictor.run = s.o_paddle_run
-
-
-driver = PaddleHiQ(f"{here}/paddleocr.conf")
+driver = PaddleHiQLatency(HIQ_PADDLEOCR_CONF)
 hiq.mod("main").main()
 driver.show()
