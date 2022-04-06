@@ -1,4 +1,4 @@
-from paddleocr import PaddleOCR,draw_ocr
+from paddleocr import PaddleOCR, draw_ocr
 from PIL import Image
 
 def main():
