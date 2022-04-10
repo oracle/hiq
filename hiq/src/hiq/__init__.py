@@ -62,7 +62,7 @@ try:
 except ImportError:
     pass
 from .base import HiQLatency, HiQSimple, HiQMemory
-from .hiq_flask import HiQFlaskLatency, HiQFlaskMemory
+from .server_flask import HiQFlaskLatency, HiQFlaskMemory, HiQFlaskLatencyOtel
 from .constants import *
 from .ddict import *
 
@@ -74,6 +74,8 @@ except ImportError:
 __all__ = [
     "HiQLatency",
     "HiQFlaskLatency",
+    "HiQFlaskMemory",
+    "HiQFlaskLatencyOtel",
     "HiQSimple",
     "HiQMemory",
     "HiQStatusContext",
