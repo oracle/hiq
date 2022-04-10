@@ -94,6 +94,13 @@ Documentation
   Documents <https://hiq.readthedocs.io/en/latest/index.html>`__
 | **PDF**: Please check `🔗 HiQ User Guide <https://github.com/oracle-samples/hiq/docs/hiq.pdf>`__.
 
+Jupyter NoteBook
+-----------------
+
+| `Add Observability to AlexNet <https://github.com/oracle-samples/hiq/examples/onnxruntime/demo.ipynb>`__
+| `Add Observability to PaddleOCR <https://github.com/oracle-samples/hiq/examples/paddle/demo.ipynb>`__
+
+
 Examples
 --------
 
