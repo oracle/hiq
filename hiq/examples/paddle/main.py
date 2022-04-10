@@ -8,8 +8,6 @@ def main():
     ocr = PaddleOCR(use_angle_cls=True, lang='en')
     img_path = f'{here}/img_12.jpg'
     result = ocr.ocr(img_path, cls=True, rec=True)
-    for line in result:
-        print(line)
     image = Image.open(img_path).convert('RGB')
     boxes = [line[0] for line in result]
     txts = [line[1][0] for line in result]

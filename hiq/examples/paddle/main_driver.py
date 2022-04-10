@@ -1,7 +1,6 @@
 import hiq
-from hiq.framework.paddleocr import HIQ_PADDLEOCR_CONF
-from hiq.framework.paddle import PaddleHiQLatency
+from hiq.framework.paddleocr import PaddleOcrHiQLatency
 
-driver = PaddleHiQLatency(HIQ_PADDLEOCR_CONF)
+driver = PaddleOcrHiQLatency()
 hiq.mod("main").main()
 driver.show()

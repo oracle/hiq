@@ -1,5 +1,5 @@
-import os
 import hiq
+import os
 from typing import *
 import time
 from hiq.memory import get_memory_mb
@@ -9,12 +9,27 @@ from hiq.hiq_utils import (
 )
 from hiq.utils import get_env_int
 
-here = os.path.dirname(os.path.realpath(__file__))
+TAU_ORT = "onnxruntime.capi.onnxruntime_inference_collection"
 
-HIQ_PADDLEOCR_CONF = hiq.hiq_utils.read_csv_to_list(f"{here}/paddleocr.conf")
+TAU_TBL_ORT = [
+    (TAU_ORT, "Session", "run", "ort_run"),
+    (TAU_ORT, "Session", "__init__", "sess_init"),
+    (TAU_ORT, "Session", "run_with_ort_values", "run_with_ort_values"),
+    (TAU_ORT, "Session", "run_with_iobinding", "run_with_iobinding"),
+    (TAU_ORT, "InferenceSession", "_create_inference_session", "create_inference_session"),
+    (TAU_ORT, "InferenceSession", "_reset_session", "reset_session"),
+]
 
-class PaddleOcrHiQLatency(hiq.HiQSimple):
-  
+def get_ort_session(sess_options):
+    if "HIQ_ORT_INTRA_OPS_THREAD" in os.environ:
+        import onnxruntime as ort
+        if sess_options is None:
+            sess_options = ort.SessionOptions()
+        sess_options.intra_op_num_threads = get_env_int("HIQ_ORT_INTRA_OPS_THREAD")
+    return sess_options
+
+class OrtHiQLatency(hiq.HiQSimple):
+    
     def __init__(
         sf,
         hiq_table_or_path: Union[str, list] = [],
@@ -33,7 +48,7 @@ class PaddleOcrHiQLatency(hiq.HiQSimple):
         lmk_handler=None,
         lmk_logger=None,
     ):
-        extra_hiq_table += HIQ_PADDLEOCR_CONF
+        extra_hiq_table += TAU_TBL_ORT
         hiq.HiQSimple.__init__(
             sf,
             hiq_table_or_path=hiq_table_or_path,
@@ -52,21 +67,28 @@ class PaddleOcrHiQLatency(hiq.HiQSimple):
             lmk_handler=lmk_handler,
             lmk_logger=lmk_logger,
         )
-  
+        
+    
     def custom(s):
-        s.o_paddle_run = hiq.mod('paddle.fluid.core_avx').PaddleInferPredictor.run
+        s.o_ort_session = hiq.mod(TAU_ORT).InferenceSession.__init__
 
         @s.inserter
-        def paddle_run(self) -> bool:
-            return s.o_paddle_run(self)
-
-        hiq.mod('paddle.fluid.core_avx').PaddleInferPredictor.run = paddle_run
+        def ort_session(self,
+                path_or_bytes,
+                sess_options=None,
+                providers=None,
+                provider_options=None):
+            return s.o_ort_session(
+                    self, path_or_bytes, get_ort_session(sess_options), providers, provider_options
+                )
+        hiq.mod(TAU_ORT).InferenceSession.__init__ = ort_session
 
     def custom_disable(s):
-        hiq.mod('paddle.fluid.core_avx').PaddleInferPredictor.run = s.o_paddle_run
+        hiq.mod(TAU_ORT).InferenceSession.__init__ = s.o_ort_session
 
 
-class PaddleOcrHiQMemory(hiq.HiQMemory):
+class OrtHiQMemory(hiq.HiQMemory):
+    
     def __init__(
         sf,
         hiq_table_or_path: Union[str, list] = [],
@@ -85,7 +107,7 @@ class PaddleOcrHiQMemory(hiq.HiQMemory):
         lmk_handler=None,
         lmk_logger=None,
     ):
-        extra_hiq_table += HIQ_PADDLEOCR_CONF
+        extra_hiq_table += TAU_TBL_ORT
         hiq.HiQSimple.__init__(
             sf,
             hiq_table_or_path=hiq_table_or_path,
@@ -104,15 +126,20 @@ class PaddleOcrHiQMemory(hiq.HiQMemory):
             lmk_handler=lmk_handler,
             lmk_logger=lmk_logger,
         )
-
+    
     def custom(s):
-        s.o_paddle_run = hiq.mod('paddle.fluid.core_avx').PaddleInferPredictor.run
+        s.o_ort_session = hiq.mod(TAU_ORT).InferenceSession.__init__
 
         @s.inserter
-        def paddle_run(self) -> bool:
-            return s.o_paddle_run(self)
-
-        hiq.mod('paddle.fluid.core_avx').PaddleInferPredictor.run = paddle_run
+        def ort_session(self,
+                path_or_bytes,
+                sess_options=None,
+                providers=None,
+                provider_options=None):
+            return s.o_ort_session(
+                    self, path_or_bytes, get_ort_session(sess_options), providers, provider_options
+                )
+        hiq.mod(TAU_ORT).InferenceSession.__init__ = ort_session
 
     def custom_disable(s):
-        hiq.mod('paddle.fluid.core_avx').PaddleInferPredictor.run = s.o_paddle_run
+        hiq.mod(TAU_ORT).InferenceSession.__init__ = s.o_ort_session
