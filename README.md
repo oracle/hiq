@@ -74,6 +74,14 @@ HiQ just traced the `main.py` file running without touching one line of its code
 **HTML**: [🔗 HiQ Online Documents](https://hiq.readthedocs.io/en/latest/index.html)  
 **PDF**: Please check [🔗 HiQ User Guide](hiq/docs/hiq.pdf).
 
+
+## Jupyter NoteBook
+
+
+- [Add Observability to AlexNet](https://github.com/oracle-samples/hiq/examples/onnxruntime/demo.ipynb)
+- [Add Observability to PaddleOCR](https://github.com/oracle-samples/hiq/examples/paddle/demo.ipynb)
+
+
 ## Examples
 
 Please check [🔗 examples](hiq/examples) for usage examples.
