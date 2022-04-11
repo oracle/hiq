@@ -1,4 +1,5 @@
 ![](docs/../hiq/docs/source/_static/hiq.png)
+> A Modern Observability System
 ----
 [![Documentation Status](https://readthedocs.org/projects/hiq/badge/?version=latest)](https://hiq.readthedocs.io/en/latest/?badge=latest)
 [![CodeCov][cov-img]][cov]
@@ -102,6 +103,17 @@ HiQ welcomes contributions from the community. Before submitting a pull request,
 ## Security
 
 Please consult the [🔗 security guide](./SECURITY.md) for our responsible security vulnerability disclosure process.
+
+
+## Change Log
+
+### dev
+
+- add non-intrusive auto instrumentation for flask: HiQFlaskLatencyOtel ([🔗 example](https://github.com/oracle-samples/hiq/tree/main/hiq/examples/flask))
+
+### v1.0.2
+
+- add non-intrusive auto instrumentation for Onnxruntime, Paddlepaddle, PaddleOCR
 
 ## License
 
