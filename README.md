@@ -12,9 +12,10 @@ To explain the four features, **declarative** means you can declare the things y
 
 In addition to latency tracking, HiQ provides memory, disk I/O and Network I/O tracking out of the box. The output can be saved in form of normal line by line log file, or HiQ tree, or span graph.
 
+HiQ's philosophy is to **decouple `observability logic` from `business logic`**. We don't have to enter the black hole to observe it.
 
+[![Observability of Blackhole, NASA 2019](https://news.artnet.com/app/news-upload/2021/03/m87_lo_april11_polarimetric_average_image_ml_deband-cc-8bit-srgb-256x256.jpg)](https://www.nasa.gov/mission_pages/chandra/news/black-hole-image-makes-history)
 ## Installation
-
 
 ```bash
 pip install hiq-python
