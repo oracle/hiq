@@ -1,5 +1,4 @@
-![](docs/../hiq/docs/source/_static/hiq.png)
-> A Modern Observability System
+![](docs/../hiq/docs/source/_static/hiq.png) 🦉  A Modern Observability System
 ----
 [![Documentation Status](https://readthedocs.org/projects/hiq/badge/?version=latest)](https://hiq.readthedocs.io/en/latest/?badge=latest)
 [![CodeCov][cov-img]][cov]
