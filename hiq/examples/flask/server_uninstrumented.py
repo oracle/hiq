@@ -1,3 +1,9 @@
+# HiQ version 1.0.
+#
+# Copyright (c) 2022, Oracle and/or its affiliates.
+# Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl/ 
+#
+
 # Copyright The OpenTelemetry Authors
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -11,6 +17,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
+# https://github.com/open-telemetry/opentelemetry-python/tree/main/docs/examples/auto-instrumentation
 
 from flask import Flask, request
 

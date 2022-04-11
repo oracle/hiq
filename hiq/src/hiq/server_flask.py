@@ -132,6 +132,11 @@ class HiQFlaskLatencyOtel(hiq.HiQSimple):
         exporter=None,
         endpoints=None,
     ):
+        """In addition to arguments of normal HiQLatency, there are several new arguments for OpenTelemetry:
+        trace, trace_provider, tracer_name, span_processor, exporter, endpoints
+        
+        endpoints - server endpoints on which metrics will be sent
+        """
         hiq.HiQSimple.__init__(
             sf,
             hiq_table_or_path=hiq_table_or_path,
