@@ -78,12 +78,12 @@ HiQ just traced the `main.py` file running without touching one line of its code
 
 ## Jupyter NoteBook
 
-### Add Observability to PaddleOCR
+### Add Observability to PaddlePaddle (PaddleOCR)
 
 - [Latency](https://github.com/oracle-samples/hiq/blob/henry_dev/hiq/examples/paddle/demo.ipynb)
 - [Memory](https://github.com/oracle-samples/hiq/blob/main/hiq/examples/paddle/demo_memory.ipynb)
 
-### Add Observability to AlexNet
+### Add Observability to Onnxruntime (AlexNet)
 
 - [Latency](https://github.com/oracle-samples/hiq/blob/main/hiq/examples/onnxruntime/demo.ipynb)
 - [Intrusive](https://github.com/oracle-samples/hiq/blob/main/hiq/examples/onnxruntime/demo_intrusive.ipynb)
