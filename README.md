@@ -134,7 +134,7 @@ Copyright (c) 2022 Oracle and/or its affiliates. Released under the Universal Pe
 
 ## Presentation and Demos
 
-- [Introduction to Observability with HiQ](docs/Introduction-To-Observability-With-HiQ.pdf)
+- [Introduction to Observability with HiQ](https://github.com/oracle-samples/hiq/blob/main/hiq/docs/Introduction-To-Observability-With-HiQ.pdf)
 
 [cov-img]: https://codecov.io/gh/uber/athenadriver/branch/master/graph/badge.svg
 [cov]: https://hiq.readthedocs.io/en/latest/index.html
