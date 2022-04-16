@@ -12,9 +12,10 @@ To explain the four features, **declarative** means you can declare the things y
 
 In addition to latency tracking, HiQ provides memory, disk I/O and Network I/O tracking out of the box. The output can be saved in form of normal line by line log file, or HiQ tree, or span graph.
 
-HiQ's philosophy is to **decouple `observability logic` from `business logic`**. We don't have to enter the black hole to observe it.
+HiQ's philosophy is to **decouple `observability logic` from `business logic`**. We don't have to enter the black hole to observe it. Do you like the idea? Leave a ⭐ if you enjoy the project and welcome to say Hi to us on [Slack 👋](https://join.slack.com/t/hiq-myo2317/shared_invite/zt-17ejh6ybo-51IX6G1lHMXgLbq2HKIO_Q)
 
 [![Observability of Blackhole, NASA 2019](https://news.artnet.com/app/news-upload/2021/03/m87_lo_april11_polarimetric_average_image_ml_deband-cc-8bit-srgb-256x256.jpg)](https://www.nasa.gov/mission_pages/chandra/news/black-hole-image-makes-history)
+
 ## Installation
 
 ```bash
@@ -72,8 +73,20 @@ HiQ just traced the `main.py` file running without touching one line of its code
 
 ## Documentation
 
-**HTML**: [🔗 HiQ Online Documents](https://hiq.readthedocs.io/en/latest/index.html)  
-**PDF**: Please check [🔗 HiQ User Guide](hiq/docs/hiq.pdf).
+**HTML**: [🔗 HiQ Online Documents](https://hiq.readthedocs.io/en/latest/index.html)  | **PDF**: Please check [🔗 HiQ User Guide](hiq/docs/hiq.pdf).
+
+----
+
+Logging: https://hiq.readthedocs.io/en/latest/4_o_advanced.html#log-monkey-king  
+Tracing: https://hiq.readthedocs.io/en/latest/5_distributed.html  
+- Zipkin: https://hiq.readthedocs.io/en/latest/5_distributed.html#zipkin   
+- Jaeger: https://hiq.readthedocs.io/en/latest/5_distributed.html#jaeger   
+
+Metrics:  
+- Prometheus: https://hiq.readthedocs.io/en/latest/7_integration.html#prometheus  
+
+Streaming:  
+- Kafka: https://hiq.readthedocs.io/en/latest/7_integration.html#oci-streaming 
 
 
 ## Jupyter NoteBook
@@ -119,6 +132,9 @@ Please consult the [🔗 security guide](./SECURITY.md) for our responsible secu
 
 Copyright (c) 2022 Oracle and/or its affiliates. Released under the Universal Permissive License v1.0 as shown at <https://oss.oracle.com/licenses/upl/>.
 
+## Presentation and Demos
+
+- [Introduction to Observability with HiQ](docs/Introduction-To-Observability-With-HiQ.pdf)
 
 [cov-img]: https://codecov.io/gh/uber/athenadriver/branch/master/graph/badge.svg
 [cov]: https://hiq.readthedocs.io/en/latest/index.html
