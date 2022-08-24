@@ -134,3 +134,4 @@ https://oss.oracle.com/licenses/upl/.
    :target: https://github.com/uber/athenadriver/releases
 .. |lic| image:: https://img.shields.io/badge/License-UPL--1.0-red
    :target: https://github.com/uber/athenadriver/blob/master/LICENSE
+
