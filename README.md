@@ -141,13 +141,10 @@ Copyright (c) 2022 Oracle and/or its affiliates. Released under the Universal Pe
 [cov]: https://hiq.readthedocs.io/en/latest/index.html
 
 [release-img]: https://img.shields.io/badge/release-v1.0.3-red
-[release]: https://github.com/uber/athenadriver/releases
-
-[report-card-img]: https://goreportcard.com/badge/github.com/uber/athenadriver
-[report-card]: https://goreportcard.com/report/github.com/uber/athenadriver
+[release]: https://github.com/oracle-samples/hiq
 
 [license-img]: https://img.shields.io/badge/License-UPL--1.0-red
-[license]: https://github.com/uber/athenadriver/blob/master/LICENSE
+[license]: https://github.com/oracle-samples/hiq/blob/main/LICENSE.txt
 
 [release-policy]: https://golang.org/doc/devel/release.html#policy
 
