@@ -120,9 +120,10 @@ Please consult the [🔗 security guide](./SECURITY.md) for our responsible secu
 
 ## Change Log
 
-### dev
+### v1.0.3
 
 - add non-intrusive auto instrumentation for flask: HiQFlaskLatencyOtel ([🔗 example](https://github.com/oracle-samples/hiq/tree/main/hiq/examples/flask))
+- upgrade dependencies
 
 ### v1.0.2
 
@@ -139,7 +140,7 @@ Copyright (c) 2022 Oracle and/or its affiliates. Released under the Universal Pe
 [cov-img]: https://codecov.io/gh/uber/athenadriver/branch/master/graph/badge.svg
 [cov]: https://hiq.readthedocs.io/en/latest/index.html
 
-[release-img]: https://img.shields.io/badge/release-v1.0.0-red
+[release-img]: https://img.shields.io/badge/release-v1.0.3-red
 [release]: https://github.com/uber/athenadriver/releases
 
 [report-card-img]: https://goreportcard.com/badge/github.com/uber/athenadriver
