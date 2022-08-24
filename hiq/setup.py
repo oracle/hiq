@@ -145,13 +145,13 @@ https://oss.oracle.com/licenses/upl/.
 
 .. |image0| image:: https://raw.githubusercontent.com/oracle-samples/hiq/main/hiq/docs/source/_static/hiq.png
 .. |Documentation Status| image:: https://readthedocs.org/projects/hiq/badge/?version=latest
-   :target: https://hiq.readthedocs.io/en/latest/?badge=latest
+   :target: https://hiq.readthedocs.io/en/latest/
 .. |CodeCov| image:: https://codecov.io/gh/uber/athenadriver/branch/master/graph/badge.svg
-   :target: https://hiq.readthedocs.io/en/latest/index.html
+   :target: https://github.com/oracle-samples/hiq
 .. |Github release| image:: https://img.shields.io/badge/release-v1.0.3-red
-   :target: https://github.com/uber/athenadriver/releases
+   :target: https://github.com/oracle-samples/hiq
 .. |lic| image:: https://img.shields.io/badge/License-UPL--1.0-red
-   :target: https://github.com/uber/athenadriver/blob/master/LICENSE
+   :target: https://github.com/oracle-samples/hiq/blob/main/LICENSE.txt
 """
 
 
