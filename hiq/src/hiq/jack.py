@@ -56,7 +56,7 @@ class Jack(object):
 
     @staticmethod
     def consumer_func(queue, lock):
-        if os.cpu_count() >= 2:
+        if os.cpu_count() >= 2 and os.uname().sysname=='Linux':
             affinity_list = list(os.sched_getaffinity(0))
             os.sched_setaffinity(0, set(affinity_list[len(affinity_list) // 2 :]))
 
