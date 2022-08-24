@@ -52,7 +52,7 @@ class LogMonkeyKing(object):
 
     @staticmethod
     def consumer_func(log_queue, lock, lmk_path, lmk_handler, logger):
-        if os.cpu_count() >= 2:
+        if os.cpu_count() >= 2 and os.uname().sysname=='Linux':
             affinity_list = list(os.sched_getaffinity(0))
             os.sched_setaffinity(0, set(affinity_list[len(affinity_list) // 2 :]))
         # Synchronize access to the console

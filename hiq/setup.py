@@ -175,6 +175,6 @@ setup(
     ],
     packages=packages,
     package_dir={"": "src"},
-    package_data={"hiq": ["data/*.pk"]},
+    package_data={"hiq": ["data/*.pk", "framework/*"]},
     url="https://github.com/oracle-samples/hiq",
 )
