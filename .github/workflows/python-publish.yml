@@ -1,111 +1,37 @@
-name: Build
+name: HIQBuild
 
 on: [push, pull_request]
 
 jobs:
-  build_wheels:
-    name: Build wheels on ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest, macos-latest]
+  deploy:
+
+    runs-on: [ubuntu-latest, macos-latest]
     defaults:
       run:
         working-directory: ./hiq
 
     steps:
-      - uses: actions/checkout@v2.1.0
-      - uses: dorny/paths-filter@v2
-        id: filter
-        with:
-          filters: |
-            hiq:
-              - 'hiq/**'
+    - uses: actions/checkout@v2
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install build
+    - name: Build package
+      run: python -m build
+    - name: Publish package
+      uses: pypa/gh-action-pypi-publish@master
+      with:
+        verbose: true
+        skip_existing: true
+        verify_metadata: true
+        user: __token__
+        password: ${{ secrets.TEST_PYPI_API_TOKEN }}
+        repository_url: https://test.pypi.org/legacy/
 
-      - uses: actions/setup-python@v2
-        with:
-          python-version: '3.9'
-      
-      - name: Install cibuildwheel
-        if: steps.filter.outputs.hiq == 'true'
-        run: |
-          python -m pip --disable-pip-version-check install cibuildwheel==2.9.0 twine==4.0.1
-      
-      - uses: docker/setup-qemu-action@v1
-        if: runner.os == 'Linux'
-        name: Set up QEMU
-
-      - name: Build wheels
-        if: steps.filter.outputs.hiq == 'true'
-        run: |
-          python setup.py bdist_wheel
-          twine check ./dist/*.whl
-
-      - uses: actions/upload-artifact@v2
-        if: steps.filter.outputs.hiq == 'true'
-        with:
-          name: dist
-          path: ./dist/*.whl
-
-
-  release:
-    name: create release
-    needs: [build_wheels]
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./hiq
-    steps:
-      - uses: actions/checkout@v2.1.0
-      - uses: dorny/paths-filter@v2
-        id: filter
-        with:
-          filters: |
-            hiq:
-              - 'hiq/**'
-      - name: Download artifact
-        if: steps.filter.outputs.hiq == 'true'
-        uses: actions/download-artifact@v2
-        with:
-          name: dist
-          path: dist
-      - name: Release
-        if: steps.filter.outputs.hiq == 'true'
-        # https://github.com/actions/upload-release-asset/issues/47
-        uses: actions/github-script@v2
-        with:
-          github-token: ${{secrets.GITHUB_TOKEN}}
-          script: |
-            const fs = require('fs').promises;
-            const { repo: { owner, repo }, sha } = context;
-            console.log('environment', process.versions);
-            console.log({ owner, repo, sha });
-            const release = await github.repos.createRelease({
-              owner, repo,
-              // if GITHUB_REF just appears to be a branch, use tag-{commit} as the tag
-              tag_name: process.env.GITHUB_REF.includes("refs/heads/") ? "tag-" + sha : process.env.GITHUB_REF.split("/").pop(),
-              target_commitish: sha
-            });
-            console.log('created release', { release });
-            for (let file of await fs.readdir('dist')) {
-              console.log('uploading', file);
-              await github.repos.uploadReleaseAsset({
-                owner, repo,
-                release_id: release.data.id,
-                name: file,
-                data: await fs.readFile(`./dist/${file}`)
-              });
-            }
-      - name: Publish distribution 📦 to Test PyPI
-        if: steps.filter.outputs.hiq == 'true'
-        uses: pypa/gh-action-pypi-publish@master
-        with:
-          verbose: true
-          skip_existing: true
-          verify_metadata: true
-          user: __token__
-          password: ${{ secrets.TEST_PYPI_API_TOKEN }}
-          repository_url: https://test.pypi.org/legacy/
 
       #- name: Publish distribution 📦 to PyPI
       #  if: steps.filter.outputs.hiq == 'true'
