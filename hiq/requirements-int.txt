@@ -2,20 +2,20 @@
 ###############################################
 
 # oracle cloud
-oci~=2.62.0
+oci~=2.80.0
 
 # loguru
 loguru~=0.6.0
 
 # torch
-torch~=1.11.0
+torch~=1.12.1
 
 # dask
 #dask~=2022.4.0
 #distributed~=2022.4.0
 
 # opentelemetry, jaeger, zipkin
-opentelemetry-api~=1.10.0
-opentelemetry-sdk~=1.10.0
-opentelemetry-exporter-jaeger~=1.10.0
-opentelemetry-exporter-zipkin~=1.10.0
+opentelemetry-api~=1.12.0
+opentelemetry-sdk~=1.12.0
+opentelemetry-exporter-jaeger~=1.12.0
+opentelemetry-exporter-zipkin~=1.12.0
