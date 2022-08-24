@@ -38,7 +38,7 @@ jobs:
       - name: Build wheels
         if: steps.filter.outputs.hiq == 'true'
         run: |
-          python -m cibuildwheel --output-dir dist
+          python setup.py bdist_wheel
           twine check ./dist/*.whl
 
       - uses: actions/upload-artifact@v2
