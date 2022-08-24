@@ -23,6 +23,7 @@ jobs:
     - name: Build package
       run: python setup.py sdist bdist_wheel
     - name: Publish package
+      working-directory: ./hiq
       uses: pypa/gh-action-pypi-publish@master
       with:
         verbose: true
