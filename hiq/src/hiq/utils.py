@@ -74,6 +74,7 @@ def execute_cmd(
     stderr_log=None,
     debug=False,
     keep_delim=False,
+    env=None,
 ) -> Union[str, List[str]]:
     """
     If verbose is true, print out input.
@@ -90,14 +91,25 @@ def execute_cmd(
         if verbose:
             print(f"🏃‍♂️ command: {' '.join(commands)}, error_file: {error_file}")
             print(f"🏃‍♂️ commands: {commands}")
-        result = subprocess.run(
-            commands,
-            stdout=subprocess.PIPE,
-            stderr=stderr_log,
-            check=check,
-            shell=shell,
-            timeout=timeout,
-        )
+        if env is None:
+            result = subprocess.run(
+                commands,
+                stdout=subprocess.PIPE,
+                stderr=stderr_log,
+                check=check,
+                shell=shell,
+                timeout=timeout,
+            )
+        else:
+            result = subprocess.run(
+                commands,
+                stdout=subprocess.PIPE,
+                stderr=stderr_log,
+                check=check,
+                shell=shell,
+                timeout=timeout,
+                env=env,
+            )
         if os.path.exists(error_file) and os.path.getsize(error_file) and debug:
             print("☠️ error:", read_file(error_file, binary_mode=True, by_line=False))
         if split:
