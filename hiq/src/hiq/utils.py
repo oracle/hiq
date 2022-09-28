@@ -75,6 +75,8 @@ def execute_cmd(
     debug=False,
     keep_delim=False,
     env=None,
+    error_file=None,
+    append_error=False,
 ) -> Union[str, List[str]]:
     """
     If verbose is true, print out input.
@@ -83,7 +85,7 @@ def execute_cmd(
     stderr_log could be: stderr_log=open("/tmp/gamma.error.log", "a+")
     https://docs.python.org/3/library/subprocess.html#subprocess.run
     """
-    error_file = f"/tmp/error.{random_str()}.log"
+    error_file = error_file or f"/tmp/error.{random_str()}.log"
     if stderr_log is None:
         stderr_log = open(error_file, "w", encoding="utf8")
     try:
@@ -113,9 +115,15 @@ def execute_cmd(
         if os.path.exists(error_file) and os.path.getsize(error_file) and debug:
             print("☠️ error:", read_file(error_file, binary_mode=True, by_line=False))
         if split:
-            return result.stdout.decode("utf-8").strip().split("\n")
+            ret = result.stdout.decode("utf-8").strip().split("\n")
         else:
-            return result.stdout.decode("utf-8").strip()
+            ret = result.stdout.decode("utf-8").strip()
+        if append_error and os.path.exists(error_file) and os.path.getsize(error_file) > 0:
+            if isinstance(ret, str):
+                ret += read_file(error_file, by_line=False)
+            else:
+                ret.append(read_file(error_file, by_line=False))
+        return ret
     except subprocess.TimeoutExpired:
         print(f"🏃‍♂️ command timed-out after {timeout} seconds: {command}")
     finally:
