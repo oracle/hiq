@@ -132,7 +132,8 @@ def execute_cmd(
         if os.path.exists(error_file) and not debug:
             if os.path.getsize(error_file) == 0:
                 os.unlink(error_file)
-                print(f"{error_file} is empty and removed")
+                if verbose:
+                    print(f"{error_file} is empty and removed")
             elif verbose:
                 print("*" * 80)
                 print(read_file(error_file, by_line=False))

@@ -100,8 +100,6 @@ class HiQBase(itree.ForestStats, LogMonkeyKing):
         hiq_quadruple += extra_hiq_table
         sf._verify_input(hiq_quadruple)
         sf.get_tau_id = hiq_id_func
-        if sf.get_tau_id() is None:
-            sf.get_tau_id = HiQIdGenerator()
         sf.get_func_args = func_args_handler
         sf.verbose = verbose
         sf.fast_fail = fast_fail
@@ -523,11 +521,14 @@ class HiQBase(itree.ForestStats, LogMonkeyKing):
     def empty(s):
         return not s.tau
 
-    def get_metrics(s, metrics_key):
+    def get_metrics(s, metrics_key=KEY_LATENCY) -> List[Tree]:
         r = []
         for k0 in s.tau:
             r.append(s.tau[k0][metrics_key])
         return r
+
+    def get_metrics_by_k0(s, k0=None, metrics_key=KEY_LATENCY) -> Union[Tree, None]:
+        return s.tau[k0][metrics_key] if k0 in s.tau else None
 
     def show(s, ignore_empty_tree=False, show_key=False, time_format=FORMAT_DATETIME):
         for k0 in s.tau:
