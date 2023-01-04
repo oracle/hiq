@@ -1,4 +1,4 @@
-# HiQ version 1.0.
+# HiQ version 1.1.2
 #
 # Copyright (c) 2022, Oracle and/or its affiliates.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl/
@@ -156,8 +156,12 @@ def ts_to_dt(timestamp: float) -> str:
     if timestamp < 1633279464 // 2:
         # print(f"warning: {timestamp} is not a timestamp")
         return str(timestamp)
-    dt_object = datetime.fromtimestamp(timestamp)
-    return dt_object.strftime(r"%Y-%m-%d %H:%M:%S.%f")
+    try:
+        dt_object = datetime.fromtimestamp(timestamp)
+        return dt_object.strftime(r"%Y-%m-%d %H:%M:%S.%f")
+    except OverflowError as e:
+        print(f"error: timestamp {timestamp} cased overflow")
+        return ""
 
 
 def ts_pair_to_dt(t1: float, t2: float) -> str:
