@@ -1,4 +1,4 @@
-# HiQ version 1.1.2
+# HiQ version 1.1.6
 #
 # Copyright (c) 2022, Oracle and/or its affiliates.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl/ 
@@ -7,7 +7,7 @@
 __author__ = "Fuheng Wu<fuheng.wu@oralce.com>"
 __date__ = "2023-01-01"
 __doc__ = "HiQ is a declarative, non-intrusive, dynamic and transparent tracking and optimization system"
-__version__ = "1.1.2"
+__version__ = "1.1.6"
 __credits__ = "Henry Wu, Ivan Davchev, Jun Qian"
 
 import sys
@@ -45,7 +45,13 @@ from .utils import (
     execute_cmd,
     get_home,
     create_gantt_chart_time,
-    create_gantt_chart_memory
+    create_gantt_chart_memory,
+    get_files_by_type,
+    post_http,
+    get_average_loss,
+    get_percentage_loss,
+    get_time_str_with_tz,
+    down_sample
 )
 from .tree import (
     get_duration_from_hiq_string,
@@ -55,15 +61,18 @@ from .tree import (
 
 try:
     from .memory import (
+        get_memory_gb,
         get_memory_mb,
         get_memory_kb,
         get_memory_b,
+        get_system_peak_memory,
+        get_system_memory_usage
     )
 except ImportError:
     pass
 from .base import HiQLatency, HiQSimple, HiQMemory
 from .server_flask import HiQFlaskLatency, HiQFlaskMemory, HiQFlaskLatencyOtel
-from .server_fastapi import HiQFastAPILatency, HiQFastAPILatencyMixin, HiQFastAPIMemory, run_fastapi
+from hiq.framework.fastapi import HiQFastAPILatency, HiQFastAPILatencyMixin, HiQFastAPIMemory, run_fastapi
 from .constants import *
 from .ddict import *
 
@@ -114,5 +123,11 @@ __all__ = [
     "get_graph_from_string",
     "Tree",
     "create_gantt_chart_time",
-    "create_gantt_chart_memory"
+    "create_gantt_chart_memory",
+    "get_files_by_type",
+    "post_http",
+    "get_average_loss",
+    "get_percentage_loss",
+    "get_time_str_with_tz",
+    "down_sample"
 ]

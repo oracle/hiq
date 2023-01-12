@@ -1,4 +1,4 @@
-# HiQ version 1.1.2
+# HiQ version 1.1.6
 #
 # Copyright (c) 2022, Oracle and/or its affiliates.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl/ 
@@ -224,27 +224,31 @@ def __value_to_str(i, depth=1):
     s = ""
     if i is None:
         s += "None"
+    elif isinstance(i, str):
+        s += f"str({i[:100]})"
+        if len(i) > 100:
+            s += "..."
     elif isinstance(i, bytes):
         s += f"bytes({len(i)})"
     elif np and isinstance(i, np.ndarray):
-        s += f"ndarry{str(i.shape).replace(' ','')}"
+        s += f"ndarry{str(i.shape).replace(' ', '')}"
     elif isinstance(i, dict):
         tmp = []
         for k, v in i.items():
-            tmp.append(__value_to_str(v, depth+1))
+            tmp.append(__value_to_str(v, depth + 1))
         s += f"dict(k:{list(i.keys())},v:{tmp})"
     elif isinstance(i, list):
         tmp = []
         for idx, e in enumerate(i):
-            tmp.append(__value_to_str(e, depth+1))
+            tmp.append(__value_to_str(e, depth + 1))
             if idx == 10:
                 tmp.append('...')
                 break
         s += f"list({len(i)},{','.join(tmp)})"
     elif torch and isinstance(i, torch.Tensor):
-        s += f"tensor({str(i.shape).replace(' ','')})"
+        s += f"tensor({str(i.shape).replace(' ', '')})"
     elif pandas and isinstance(i, pandas.core.frame.DataFrame):
-        s += f"pandas({str(i.shape).replace(' ','')})"
+        s += f"pandas({str(i.shape).replace(' ', '')})"
     else:
         if hasattr(i, "__len__"):
             s += f"{type(i).__name__}({str(len(i))})"

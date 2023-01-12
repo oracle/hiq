@@ -4,8 +4,8 @@ PyYAML
 cachetools
 psutil
 py-itree
-asgi-correlation-id
 urllib3
+requests
 
 # basic libs
 ###############################################
@@ -14,5 +14,5 @@ urllib3
 #matplotlib
 #numpy
 #prometheus-client
-#fastapi, uvicorn, pandas
+#fastapi, uvicorn, pandas, Jinja2
 #flask
