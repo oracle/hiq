@@ -1,4 +1,3 @@
 fastapi
 uvicorn
-asgi-correlation-id
 py-cpuinfo
