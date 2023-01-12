@@ -130,7 +130,7 @@ https://oss.oracle.com/licenses/upl/.
    :target: https://hiq.readthedocs.io/en/latest/?badge=latest
 .. |CodeCov| image:: https://codecov.io/gh/uber/athenadriver/branch/master/graph/badge.svg
    :target: https://hiq.readthedocs.io/en/latest/index.html
-.. |Github release| image:: https://img.shields.io/badge/release-v1.1.6rc1-red
+.. |Github release| image:: https://img.shields.io/badge/release-v1.1.6-red
    :target: https://github.com/uber/athenadriver/releases
 .. |lic| image:: https://img.shields.io/badge/License-UPL--1.0-red
    :target: https://github.com/uber/athenadriver/blob/master/LICENSE
