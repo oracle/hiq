@@ -4,7 +4,7 @@ import os
 here = os.path.dirname(os.path.realpath(__file__))
 
 VERSION = (
-    "1.0.4"
+    "1.1.6"
     if "PKG_VERSION" not in os.environ or not os.environ["PKG_VERSION"]
     else os.environ["PKG_VERSION"]
 )
@@ -148,11 +148,23 @@ https://oss.oracle.com/licenses/upl/.
    :target: https://hiq.readthedocs.io/en/latest/
 .. |CodeCov| image:: https://codecov.io/gh/uber/athenadriver/branch/master/graph/badge.svg
    :target: https://github.com/oracle-samples/hiq
-.. |Github release| image:: https://img.shields.io/badge/release-v1.0.3-red
+.. |Github release| image:: https://img.shields.io/badge/release-v1.1.6-red
    :target: https://github.com/oracle-samples/hiq
 .. |lic| image:: https://img.shields.io/badge/License-UPL--1.0-red
    :target: https://github.com/oracle-samples/hiq/blob/main/LICENSE.txt
 """
+
+
+def package_files(ds):
+    paths = []
+    for d in ds:
+        for (path, directories, filenames) in os.walk(d):
+            for filename in filenames:
+                if '__pycache__' not in str(filename):
+                    paths.append(str(os.path.join(path, filename))[len('src/hiq/'):])
+    return paths
+
+extra_files = package_files(['src/hiq/'])
 
 
 setup(
@@ -175,6 +187,7 @@ setup(
     ],
     packages=packages,
     package_dir={"": "src"},
-    package_data={"hiq": ["data/*.pk", "framework/*"]},
+    package_data={"hiq": extra_files
+                },
     url="https://github.com/oracle-samples/hiq",
 )

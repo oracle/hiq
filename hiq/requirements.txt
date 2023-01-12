@@ -1,17 +1,18 @@
-# basic
+# core libs
 ###############################################
-PyYAML~=6.0
-cachetools~=5.2.0
-psutil~=5.9.0
-py-itree~=0.0.15
-urllib3~=1.26.12
-py-zipkin~=1.0.0
-flask~=2.2.2
+PyYAML
+cachetools
+psutil
+py-itree
+urllib3
+requests
 
-tqdm~=4.64.0
-pandas~=1.4.3
-matplotlib~=3.5.3
-numpy~=1.23.2
-
-# prometheus
-prometheus-client~=0.14.1
+# basic libs
+###############################################
+#py-zipkin
+#tqdm
+#matplotlib
+#numpy
+#prometheus-client
+#fastapi, uvicorn, pandas, Jinja2
+#flask

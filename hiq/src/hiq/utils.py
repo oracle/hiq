@@ -1,4 +1,4 @@
-# HiQ version 1.0.
+# HiQ version 1.1.6
 #
 # Copyright (c) 2022, Oracle and/or its affiliates.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl/
@@ -8,6 +8,7 @@ import ast
 import builtins
 import inspect
 import io
+import itertools
 import json
 import os
 import shutil
@@ -65,18 +66,18 @@ def __gamma_split(s: str, keep_delim=False) -> List[str]:
 
 
 def execute_cmd(
-    command: str,
-    split=True,
-    verbose=True,
-    check=False,
-    shell=False,
-    timeout=600,
-    stderr_log=None,
-    debug=False,
-    keep_delim=False,
-    env=None,
-    error_file=None,
-    append_error=False,
+        command: str,
+        split=True,
+        verbose=True,
+        check=False,
+        shell=False,
+        timeout=600,
+        stderr_log=None,
+        debug=False,
+        keep_delim=False,
+        env=None,
+        error_file=None,
+        append_error=False,
 ) -> Union[str, List[str]]:
     """
     If verbose is true, print out input.
@@ -132,7 +133,8 @@ def execute_cmd(
         if os.path.exists(error_file) and not debug:
             if os.path.getsize(error_file) == 0:
                 os.unlink(error_file)
-                print(f"{error_file} is empty and removed")
+                if verbose:
+                    print(f"{error_file} is empty and removed")
             elif verbose:
                 print("*" * 80)
                 print(read_file(error_file, by_line=False))
@@ -155,8 +157,12 @@ def ts_to_dt(timestamp: float) -> str:
     if timestamp < 1633279464 // 2:
         # print(f"warning: {timestamp} is not a timestamp")
         return str(timestamp)
-    dt_object = datetime.fromtimestamp(timestamp)
-    return dt_object.strftime(r"%Y-%m-%d %H:%M:%S.%f")
+    try:
+        dt_object = datetime.fromtimestamp(timestamp)
+        return dt_object.strftime(r"%Y-%m-%d %H:%M:%S.%f")
+    except OverflowError as e:
+        print(f"error: timestamp {timestamp} cased overflow")
+        return ""
 
 
 def ts_pair_to_dt(t1: float, t2: float) -> str:
@@ -169,6 +175,20 @@ def ts_pair_to_dt(t1: float, t2: float) -> str:
     if p1[0] == p2[0]:
         return f"{p1[0]} {p1[1]} - {p2[1]}"
     return f"{s1} - {s2}"
+
+
+def get_time_by_time_zone(time_zone="US/Pacific") -> datetime:
+    import pytz
+    return datetime.now(tz=pytz.utc).astimezone(pytz.timezone(time_zone))
+
+
+def get_time_str_with_tz(time_zone="US/Pacific") -> str:
+    import pytz
+    date_format = "%Y-%m-%d %H:%M:%S.%Z"
+    date = datetime.now(tz=pytz.utc)
+    date = date.astimezone(pytz.timezone(time_zone))
+    pst_datetime = date.strftime(date_format)
+    return pst_datetime
 
 
 def _get_args_spec(args_spec) -> Tuple[str, str]:
@@ -199,14 +219,14 @@ def _get_args_spec(args_spec) -> Tuple[str, str]:
 
 
 def read_file(
-    file_path: str,
-    binary_mode: bool = False,
-    by_line: bool = True,
-    filter_func: Callable = None,
-    as_json=False,
-    bytes_as_string=True,
-    raise_=False,
-    strip=False,
+        file_path: str,
+        binary_mode: bool = False,
+        by_line: bool = True,
+        filter_func: Callable = None,
+        as_json=False,
+        bytes_as_string=True,
+        raise_=False,
+        strip=False,
 ) -> Union[List[str], bytes]:
     """A handy function to read file
 
@@ -315,12 +335,12 @@ def ensure_folder(path_str: str):
             os.makedirs(path_str)
         return path_str
     except PermissionError as e:
-        print(f"permission error: {path_str}")
+        print(f"🦉 Warning: you have no permission to access path: {path_str}")
         raise e
 
 
 def download_from_http(
-    uri, local_file_path, display=False, enable_proxy=True, auth=None
+        uri, local_file_path, display=False, enable_proxy=True, auth=None
 ) -> str:
     """auth=(user, password)"""
     import requests
@@ -353,7 +373,7 @@ def download_from_http(
             if total_size_in_bytes > 0:
                 block_size = 1024 * 500  # 500 KiB
                 with tqdm(
-                    total=total_size_in_bytes, unit="iB", unit_scale=True
+                        total=total_size_in_bytes, unit="iB", unit_scale=True
                 ) as progress_bar:
                     file_obj = io.BytesIO()
                     for data in response.iter_content(block_size):
@@ -483,9 +503,9 @@ def is_hiqed(fun: Callable, fun_name: str) -> bool:
     full_qualified_name = str(fun)
     # print(f"🐵 {full_qualified_name=}, {fun_name=}")
     return (
-        f"{fun_name} at" not in full_qualified_name
-        and f"<method '{fun_name}' of" not in full_qualified_name
-        and not full_qualified_name.startswith("<built-in function")
+            f"{fun_name} at" not in full_qualified_name
+            and f"<method '{fun_name}' of" not in full_qualified_name
+            and not full_qualified_name.startswith("<built-in function")
     )
 
 
@@ -584,14 +604,14 @@ def pretty_time_delta(seconds):
         return "%s%ds" % (sign_string, seconds)
 
 
-def create_gantt_chart_time(data: List[str], fig_path=None):
+def create_gantt_chart_time(data: List[str], fig_path=None, return_as_stream=False, fig_size=(24, 24)):
     """Plot Gantt-chart for HiQ Latency Tree"""
     from hiq import tree
     import pandas as pd
     import matplotlib.pyplot as plt
+    from matplotlib.patches import Patch
     import numpy as np
     import random
-    from matplotlib.patches import Patch
 
     if isinstance(data, str):
         data = [data]
@@ -721,7 +741,7 @@ def create_gantt_chart_time(data: List[str], fig_path=None):
 
     #### Create Plots ####
     fl = len(all_dfs)
-    fig, ax_plots = plt.subplots(1, fl, figsize=(fl * 10, 7))
+    fig, ax_plots = plt.subplots(1, fl, figsize=(fl * fig_size[0], fig_size[1]))
 
     for i in range(fl):
         if fl == 1:
@@ -759,12 +779,19 @@ def create_gantt_chart_time(data: List[str], fig_path=None):
         ax.grid()
 
     fig.tight_layout()
+    if return_as_stream:
+        buf = io.BytesIO()
+        plt.savefig(buf, format='png')
+        buf.seek(0)
+        return buf.read()
     if fig_path is None:
         fig_path = f"/tmp/tim_{random_str()}.png"
     ensure_folder(fig_path)
     plt.savefig(fig_path)
     if os.path.exists(fig_path):
         return fig_path
+    print("could not save file")
+    return None
 
 
 def create_gantt_chart_memory(data: List[str], fig_path=None):
@@ -890,6 +917,7 @@ def create_gantt_chart_memory(data: List[str], fig_path=None):
             c_dict = {}
             for i in df["Group"].unique():
                 c_dict[i] = get_color()
+
             # Attach color to the group
             def color(row, cc_dict=c_dict):
                 return cc_dict[row["Group"]]
@@ -958,6 +986,153 @@ def create_gantt_chart_memory(data: List[str], fig_path=None):
     plt.savefig(fig_path)
     if os.path.exists(fig_path):
         return fig_path
+
+
+def down_sample(a_list: list, k: int, debug=False):
+    import numpy as np
+
+    if len(a_list) < k:
+        print("💀" * 80)
+        print(
+            f"🦉 warning: k={k} is too big for a length-{len(a_list)} list in downsampling, return original list"
+        )
+        return a_list
+    idx = list(map(int, list(np.linspace(0, len(a_list) - 1, k, endpoint=True))))
+    if debug:
+        print(
+            f"👻 original list size: {len(a_list)}, new list size:{len(idx)}, idx: {idx}"
+        )
+    return [a_list[i] for i in idx]
+
+
+DEFAULT_IMG_TYPES = ["*.jpg", "*.jpeg", "*.png", "*.bmp", '*.tiff']
+ALL_IMG_DOC_TYPES = DEFAULT_IMG_TYPES + ["*.webp", "*.pdf"]
+
+
+def get_files_by_type(
+        folder_path=os.getcwd(),
+        types=ALL_IMG_DOC_TYPES,
+        include_folder_name=False,
+        sorting=True,
+        sort_by=0,
+        ascending=True,
+        sample_num=None,
+        topk=None,
+        recursive=True,
+        verbose=True,
+) -> list:
+    """Get file dataset as a list of (fsize, file, file_name )
+
+    ```
+    for fsize, image_name, image_file in image_files:
+        ...
+    ```
+    Args:
+        folder_path (str, optional): [description]. Defaults to "img".
+        types (tuple, optional): [description]. Defaults to ALL_IMG_DOC_TYPES.
+
+    Returns:
+        List[Tuple(str)]: a list of file information tuple
+    """
+    import glob
+    files_grabbed = []
+    for ts in types:
+        for t in map(''.join, itertools.product(*zip(ts.upper(), ts.lower()))):
+            files_grabbed.extend(glob.glob(f"{folder_path}/**/{t}", recursive=recursive))
+
+    res = []
+    for file_path in set(files_grabbed):
+        file_size = os.path.getsize(file_path)
+        tmp = file_path.split("/")
+        if len(tmp) < 2:
+            raise ValueError(f"file path is too short: {file_path}")
+        file_name = tmp[-1]
+        folder_name = tmp[-2] if len(tmp) > 2 else None
+        if include_folder_name:
+            res.append((file_size, file_name, file_path, folder_name))
+        else:
+            res.append((file_size, file_name, file_path))
+    if sorting:
+        res = sorted(res, reverse=not ascending, key=lambda x: x[sort_by])
+    if len(res) > 2 and verbose:
+        print(f"🦶 res[0]:{res[0]}, res[-1]:{res[-1]}")
+    if topk:
+        return res[:topk]
+    if sample_num:
+        return down_sample(res, sample_num)
+    if len(res) > 1000 and verbose:
+        print(f"😱 big number of files: {len(res)}")
+    return res
+
+
+HEADERS = {"client-id": "hiq-client", "Content-Type": "application/json"}
+
+
+def __send_http(
+        url,
+        data,
+        auth=None,
+        headers=HEADERS,
+        timeout=60,
+        trust_env=True,
+        enable_proxy=True,
+        method="get",
+):
+    try:
+        import requests
+
+        session = requests.Session()
+        session.trust_env = trust_env
+        if isinstance(data, dict):
+            data = json.dumps(data)
+        payload = {"data": data, "headers": headers, "timeout": timeout}
+        if auth:
+            payload["auth"] = auth
+        proxies = get_proxies() if enable_proxy else dict()
+        resp = getattr(session, method)(url, proxies=proxies, **payload)
+        return resp
+    except Exception as e:
+        print(f"🦉 error: {str(e)}")
+        traceback.print_exc(file=sys.stdout)
+        raise e
+
+
+def post_http(
+        url,
+        data,
+        auth=None,
+        headers=HEADERS,
+        timeout=60,
+        trust_env=True,
+        enable_proxy=True,
+):
+    return __send_http(
+        url, data, auth, headers, timeout, trust_env, enable_proxy, method='post'
+    )
+
+
+def get_average_loss(a, b):
+    import numpy as np
+
+    if isinstance(a, list):
+        r = 0.0
+        for i in range(len(a)):
+            r += get_average_loss(a[i], b[i])
+            return r
+    delta = np.abs(a - b)
+    return np.average(delta)
+
+
+def get_percentage_loss(a, b):
+    import numpy as np
+
+    if isinstance(a, list):
+        r = 0.0
+        for i in range(len(a)):
+            r += get_percentage_loss(a[i], b[i])
+            return r
+    delta = np.abs(a - b)
+    return np.abs(np.sum(delta) / np.sum(a))
 
 
 if __name__ == "__main__":

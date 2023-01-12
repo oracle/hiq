@@ -1,4 +1,4 @@
-# HiQ version 1.0.
+# HiQ version 1.1.6
 #
 # Copyright (c) 2022, Oracle and/or its affiliates.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl/ 
@@ -100,8 +100,6 @@ class HiQBase(itree.ForestStats, LogMonkeyKing):
         hiq_quadruple += extra_hiq_table
         sf._verify_input(hiq_quadruple)
         sf.get_tau_id = hiq_id_func
-        if sf.get_tau_id() is None:
-            sf.get_tau_id = HiQIdGenerator()
         sf.get_func_args = func_args_handler
         sf.verbose = verbose
         sf.fast_fail = fast_fail
@@ -162,7 +160,7 @@ class HiQBase(itree.ForestStats, LogMonkeyKing):
                 else i[3]
             )
             if i[3] in tag_names:
-                raise ValueError("🦉 duplicated tag: {i[3]} in tau input!")
+                raise ValueError(f"🦉 duplicated tag: {i[3]} in tau input!")
             if not re.match(r"^\w+$", i[3]):
                 raise ValueError(
                     "🦉 only alpha numerics are allowed in tag but got: {i[3]}!"
@@ -523,11 +521,26 @@ class HiQBase(itree.ForestStats, LogMonkeyKing):
     def empty(s):
         return not s.tau
 
-    def get_metrics(s, metrics_key):
+    def get_metrics(s, metrics_key=KEY_LATENCY) -> List[Tree]:
         r = []
         for k0 in s.tau:
             r.append(s.tau[k0][metrics_key])
         return r
+
+    def get_k0s(s) -> List[str]:
+        return s.tau.keys()
+
+    def get_k0s_summary(s, metrics_key=KEY_LATENCY) -> List[Tuple]:
+        ks = s.tau.keys()
+        r = []
+        for k0 in ks:
+            t = s.tau[k0][metrics_key]
+            t.consolidate()
+            r.append((k0, t.root.span(), t.root.start, t.root.end))
+        return r
+
+    def get_metrics_by_k0(s, k0=None, metrics_key=KEY_LATENCY) -> Union[Tree, None]:
+        return s.tau[k0][metrics_key] if k0 in s.tau else None
 
     def show(s, ignore_empty_tree=False, show_key=False, time_format=FORMAT_DATETIME):
         for k0 in s.tau:

@@ -1,4 +1,4 @@
-# HiQ version 1.0.
+# HiQ version 1.1.6
 #
 # Copyright (c) 2022, Oracle and/or its affiliates.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl/ 
@@ -6,23 +6,37 @@
 
 import os
 from multiprocessing import Process, Queue, Lock
-import itree
-from hiq.tree import Tree
 from hiq.utils import _check_overhead, get_env_bool, ensure_folder, get_home
 import time
 
 
+def get_jack_log_file():
+    log_file = f"{get_home()}/.hiq/log_jack.log"
+    try:
+        ensure_folder(log_file)
+        return log_file
+    except PermissionError as e:
+        pass
+    try:
+        log_file = f"{os.getcwd()}/.hiq/log_jack.log"
+        ensure_folder(log_file)
+        return log_file
+    except PermissionError as e:
+        pass
+    log_file = f"/tmp/.hiq/log_jack.log"
+    ensure_folder(log_file)
+    return log_file
+
+
 def log_jack_rotated(
-    log_file=f"{get_home()}/.hiq/log_jack.log",
-    max_bytes=500 * 1024 * 1024,
-    backup_count=20,
+        log_file=get_jack_log_file(),
+        max_bytes=500 * 1024 * 1024,
+        backup_count=20,
 ):
     if get_env_bool("NO_JACK_LOG"):
         return None
     import logging
     from logging.handlers import RotatingFileHandler
-
-    ensure_folder(log_file)
 
     my_handler = RotatingFileHandler(
         log_file,
@@ -56,9 +70,9 @@ class Jack(object):
 
     @staticmethod
     def consumer_func(queue, lock):
-        if os.cpu_count() >= 2 and os.uname().sysname=='Linux':
+        if os.cpu_count() >= 2 and os.uname().sysname == 'Linux':
             affinity_list = list(os.sched_getaffinity(0))
-            os.sched_setaffinity(0, set(affinity_list[len(affinity_list) // 2 :]))
+            os.sched_setaffinity(0, set(affinity_list[len(affinity_list) // 2:]))
 
         pid = os.getpid()
         logger = log_jack_rotated()

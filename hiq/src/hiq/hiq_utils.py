@@ -1,4 +1,4 @@
-# HiQ version 1.0.
+# HiQ version 1.1.6
 #
 # Copyright (c) 2022, Oracle and/or its affiliates.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl/ 
@@ -206,36 +206,54 @@ def _is_callable(a_: str):
 
 
 def silent_import(module_name: str):
-    import itree
+    try:
+        import importlib
+        return importlib.import_module(module_name)
+    except:
+        return None
 
-    return itree.mod(module_name)
+
+np = silent_import("numpy")
+torch = silent_import("torch")
+pandas = silent_import("pandas")
 
 
-def __value_to_str(i):
-    np = silent_import("numpy")
-    torch = silent_import("torch")
-    pandas = silent_import("pandas")
-
+def __value_to_str(i, depth=1):
+    if depth == 3:
+        return "..."
     s = ""
     if i is None:
         s += "None"
+    elif isinstance(i, str):
+        s += f"str({i[:100]})"
+        if len(i) > 100:
+            s += "..."
     elif isinstance(i, bytes):
-        s += f"[bytes]({len(i)})"
+        s += f"bytes({len(i)})"
     elif np and isinstance(i, np.ndarray):
-        s += f"[ndarry]({i.shape})"
+        s += f"ndarry{str(i.shape).replace(' ', '')}"
     elif isinstance(i, dict):
-        s += f"[dict]({list(i.keys())})"
+        tmp = []
+        for k, v in i.items():
+            tmp.append(__value_to_str(v, depth + 1))
+        s += f"dict(k:{list(i.keys())},v:{tmp})"
     elif isinstance(i, list):
-        s += f"[list<{type(i[0]).__name__ if len(i) > 0 else ''}>]({len(i)})"
+        tmp = []
+        for idx, e in enumerate(i):
+            tmp.append(__value_to_str(e, depth + 1))
+            if idx == 10:
+                tmp.append('...')
+                break
+        s += f"list({len(i)},{','.join(tmp)})"
     elif torch and isinstance(i, torch.Tensor):
-        s += f"[tensor]({i.shape})"
+        s += f"tensor({str(i.shape).replace(' ', '')})"
     elif pandas and isinstance(i, pandas.core.frame.DataFrame):
-        s += f"[pandas]({i.shape})"
+        s += f"pandas({str(i.shape).replace(' ', '')})"
     else:
         if hasattr(i, "__len__"):
-            s += f"[{type(i).__name__}]({str(len(i))})"
+            s += f"{type(i).__name__}({str(len(i))})"
         else:
-            s += f"[{type(i).__name__}]({i})"
+            s += f"{type(i).__name__}({i})"
     return s
 
 
@@ -296,8 +314,8 @@ def call_decorated(f: Callable, args=None, kwargs=None, tracing_type=TRACING_TYP
         from py_zipkin.zipkin import zipkin_span
 
         with zipkin_span(
-            service_name=os.environ.get("SERVICE_NAME", "hiq"),
-            span_name=f.__name__,
+                service_name=os.environ.get("SERVICE_NAME", "hiq"),
+                span_name=f.__name__,
         ):
             return f(*args, **kwargs)
     elif tracing_type == TRACING_TYPE_OTM:
@@ -370,7 +388,7 @@ if __name__ == "__main__":
     start = time.perf_counter()
     tau_on = get_global_hiq_status()
     end = time.perf_counter()
-    print(f"time cost: {(end-start)*1e6}us, {tau_on}")
+    print(f"time cost: {(end - start) * 1e6}us, {tau_on}")
     for i in range(20):
         o = HiQIdGenerator()
         print(o())
