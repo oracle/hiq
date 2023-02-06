@@ -11,6 +11,7 @@ Welcome to HiQ's documentation!
    3_concepts
    4_basics
    4_o_advanced
+   5_ui
    5_distributed
    7_integration
    8_faq
