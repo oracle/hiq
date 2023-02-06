@@ -1,4 +1,4 @@
-# HiQ version 1.1.6
+# HiQ version 1.1
 #
 # Copyright (c) 2022, Oracle and/or its affiliates.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl/ 
@@ -217,6 +217,18 @@ np = silent_import("numpy")
 torch = silent_import("torch")
 pandas = silent_import("pandas")
 
+nnmodule_to_params = {}
+
+
+def nnmodule_to_str(a):
+    global nnmodule_to_params
+    if id(a) in nnmodule_to_params:
+        num_params = nnmodule_to_params[id(a)]
+    else:
+        num_params = sum(p.numel() for p in a.parameters())
+        nnmodule_to_params[id(a)] = num_params
+    return f"{a._get_name()}({num_params})"
+
 
 def __value_to_str(i, depth=1):
     if depth == 3:
@@ -247,6 +259,8 @@ def __value_to_str(i, depth=1):
         s += f"list({len(i)},{','.join(tmp)})"
     elif torch and isinstance(i, torch.Tensor):
         s += f"tensor({str(i.shape).replace(' ', '')})"
+    elif torch and isinstance(i, torch.nn.Module):
+        s += f"nn({nnmodule_to_str(i)})"
     elif pandas and isinstance(i, pandas.core.frame.DataFrame):
         s += f"pandas({str(i.shape).replace(' ', '')})"
     else:

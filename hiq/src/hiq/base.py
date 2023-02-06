@@ -1,4 +1,4 @@
-# HiQ version 1.1.6
+# HiQ version 1.1
 #
 # Copyright (c) 2022, Oracle and/or its affiliates.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl/ 
@@ -450,7 +450,7 @@ class HiQBase(itree.ForestStats, LogMonkeyKing):
             else:
                 itree.exe(f"s.o_{tag} = m_", locals())
                 spec_with_default, spec_wo_default = _get_args_spec(
-                    inspect.getfullargspec(locals()["m_"])
+                    inspect.getfullargspec(inspect.unwrap(locals()["m_"]))
                 )
                 assert (
                     re.match(r"^[\w\.]+$", tag)

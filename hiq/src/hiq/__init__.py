@@ -1,13 +1,13 @@
-# HiQ version 1.1.6
+# HiQ version 1.1
 #
 # Copyright (c) 2022, Oracle and/or its affiliates.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl/ 
 #
 
 __author__ = "Fuheng Wu<fuheng.wu@oralce.com>"
-__date__ = "2023-01-01"
+__date__ = "2023-02-01"
 __doc__ = "HiQ is a declarative, non-intrusive, dynamic and transparent tracking and optimization system"
-__version__ = "1.1.6"
+__version__ = "1.1.7"
 __credits__ = "Henry Wu, Ivan Davchev, Jun Qian"
 
 import sys
@@ -51,7 +51,8 @@ from .utils import (
     get_average_loss,
     get_percentage_loss,
     get_time_str_with_tz,
-    down_sample
+    down_sample,
+    bfloat16_supported
 )
 from .tree import (
     get_duration_from_hiq_string,
