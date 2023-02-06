@@ -4,7 +4,7 @@ import os
 here = os.path.dirname(os.path.realpath(__file__))
 
 VERSION = (
-    "1.1.6"
+    "1.1.7"
     if "PKG_VERSION" not in os.environ or not os.environ["PKG_VERSION"]
     else os.environ["PKG_VERSION"]
 )
@@ -148,7 +148,7 @@ https://oss.oracle.com/licenses/upl/.
    :target: https://hiq.readthedocs.io/en/latest/
 .. |CodeCov| image:: https://codecov.io/gh/uber/athenadriver/branch/master/graph/badge.svg
    :target: https://github.com/oracle-samples/hiq
-.. |Github release| image:: https://img.shields.io/badge/release-v1.1.6-red
+.. |Github release| image:: https://img.shields.io/badge/release-v1.1.7-red
    :target: https://github.com/oracle-samples/hiq
 .. |lic| image:: https://img.shields.io/badge/License-UPL--1.0-red
    :target: https://github.com/oracle-samples/hiq/blob/main/LICENSE.txt

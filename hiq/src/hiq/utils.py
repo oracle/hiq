@@ -1,4 +1,4 @@
-# HiQ version 1.1.6
+# HiQ version 1.1
 #
 # Copyright (c) 2022, Oracle and/or its affiliates.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl/
@@ -191,6 +191,32 @@ def get_time_str_with_tz(time_zone="US/Pacific") -> str:
     return pst_datetime
 
 
+def parse_lambda(l):
+    try:
+        c = inspect.getsource(l).lstrip()
+        source_ast = ast.parse(c)
+        n = next((node for node in ast.walk(source_ast) if isinstance(node, ast.Lambda)), None)
+        if n.end_lineno == n.lineno and n.lineno==1:
+            return c[n.col_offset:n.end_col_offset]
+        else:
+            r = []
+            start = False
+            s = c.split('\n')
+            for i, v in enumerate(s):
+                if start:
+                    if n.end_lineno == i + 1:
+                        r.append(s[i][:n.end_col_offset])
+                        break
+                    else:
+                        r.append(v)
+                elif n.lineno == i + 1:
+                    r.append(s[i][n.col_offset:])
+                    start = True
+            return '\n'.join(r)
+    except OSError:
+        return None
+
+
 def _get_args_spec(args_spec) -> Tuple[str, str]:
     x = args_spec.args
     varkw = args_spec.varkw
@@ -203,9 +229,10 @@ def _get_args_spec(args_spec) -> Tuple[str, str]:
     z = list(zip(x, y))
     r = list(
         map(
-            lambda e: e[0]
-            if e[1] == "^"
-            else (f"{e[0]}='{e[1]}'" if isinstance(e[1], str) else f"{e[0]}={e[1]}"),
+            lambda e: e[0] if e[1] == "^"
+            else (f"{e[0]}='{e[1]}'" if isinstance(e[1], str)
+                  else f"{e[0]}={parse_lambda(e[1])}" if '<function <lambda> at' in str(e[1])
+            else f"{e[0]}={e[1]}"),
             z,
         )
     )
@@ -1133,6 +1160,15 @@ def get_percentage_loss(a, b):
             return r
     delta = np.abs(a - b)
     return np.abs(np.sum(delta) / np.sum(a))
+
+
+def bfloat16_supported(device_type='cuda'):
+    import torch
+    try:
+        with torch.amp.autocast(device_type=device_type, dtype=torch.bfloat16):
+            return True
+    except:
+        return False
 
 
 if __name__ == "__main__":

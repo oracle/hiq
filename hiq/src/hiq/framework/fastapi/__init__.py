@@ -1,4 +1,4 @@
-# HiQ version 1.1.6
+# HiQ version 1.1
 #
 # Copyright (c) 2022, Oracle and/or its affiliates.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl/
@@ -105,6 +105,8 @@ def run_fastapi(driver,
     @app.middleware("http")
     async def add_latency_header(request: Request, call_next):
         ep = '/' + str(request.url).split('/')[-1]
+        if '?' in ep:
+            ep = ep.split('?')[0]
         if ep in endpoints or ep in custom.keys():
             cid = request.headers.get(header_name) if header_name in request.headers else generator()
             correlation_id.set(cid)
