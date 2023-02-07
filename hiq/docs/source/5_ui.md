@@ -1,6 +1,6 @@
 # HiQ UI
 
-HiQ provides an integrated UI if you use popular Python web frameworks such as FastAPI, Flask etc.
+HiQ provides an integrated UI for popular Python web frameworks such as FastAPI, Flask etc.
 
 Take FastAPI as an example, where can find it at [here](https://github.com/oracle-samples/hiq/tree/main/hiq/examples/fastapi).
 
