@@ -87,7 +87,7 @@ From the screenshot we can see the timestamp and the latency of each function:
 
 HiQ just traced the `main.py` file running without touching one line of its code.
 
-To showcase HiQ's features, we have the following two examples for offline program and online program respectively.
+To showcase HiQ's features, we have the following two examples for offline program and online web server respectively.
 
 ## Example 1 - Offline Tracing: Bring Observability to PaddleOCR
 
@@ -222,7 +222,7 @@ Then you can go back to the HiQ page(http://localhost:8080/hiq), and click the r
 
 This gives you the text graph of the HiQ tree.
 
-In our testing, the latency of HiQ tracing is less than 1% so it can be safely used in production environment.
+In our testing, the latency overhead of HiQ tracing is less than 0.1% so negligible. With HiQ, we bring the observability to production without sacrificing the latency.
 
 ----
 
