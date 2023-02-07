@@ -16,7 +16,7 @@ For online tracing, since Google published its Dapper paper in 2010, there have 
  
 The existing technologies cannot meet our information tracing requirements in many cases. Sometimes, modifying the original code is not allowed due to various constraints. In some other cases, after tracing code is inserted into the original code, it inevitably has a negative impact on system performance, but the problem is how to quantitatively measure the impact. Furthermore, once the tracing code is written and running, another problem is, how can we tune or modify the tracing logic on the fly so that we can get the best system performance without losing insight of the system. To solve all the problems above, we developed a tracing system called `HiQ` which is declarative, non-intrusive, dynamic and transparent. The system has been open-sourced as a Python Library at Github: [here](https://github.com/oracle-samples/hiq).
 
-## HiQ
+## HiQ's Philosophy
 
 Below is the first black hole image in history which NASA took in 2019. NASA brought observability to blackhole from outside, which tells us that we don't have to enter the black hole to observe it.
 
@@ -30,7 +30,9 @@ In addition to latency tracking, HiQ provides memory, disk I/O and Network I/O t
 
 HiQ was originally developed to help our high-performance deep learning model serving, so it has good support for deep learning model development ecosystem such as onnxruntime, FastAPI, flask etc.
 
-## Installation
+## Install HiQ
+
+You can use the following command to install HiQ. At the time of this writing, the latest version is `1.1.7`.
 
 ```bash
 pip install hiq-python
@@ -87,7 +89,7 @@ HiQ just traced the `main.py` file running without touching one line of its code
 
 To showcase HiQ's features, we have the following two examples for offline program and online program respectively.
 
-## Example 1 - Offline Tracing Example: Bring Observability to PaddleOCR
+## Example 1 - Offline Tracing: Bring Observability to PaddleOCR
 
 > The following `main.py` code is from PaddleOCR's official website [chinese-english-model-and-multilingual-model](https://github.com/PaddlePaddle/PaddleOCR/blob/release/2.4/doc/doc_en/quickstart_en.md#221-chinese--english-model-and-multilingual-model)
 
@@ -175,7 +177,7 @@ create_gantt_chart_time(t.repr())
 You can see the jupyter notebook at [here](https://github.com/oracle/hiq/blob/main/hiq/examples/paddle/demo.ipynb).
 
 
-## Example 2 - Online Tracing Example: Bring Observability to FastAPI
+## Example 2 - Online Tracing: Bring Observability to FastAPI in Production
 
 HiQ provides an integrated UI for the popular Python web framework like FastAPI, Flask etc. In Example 2, we will demo how to trace FastAPI web server which is widely used to serve machine learning models in practice.
 
@@ -222,7 +224,9 @@ This gives you the text graph of the HiQ tree.
 
 In our testing, the latency of HiQ tracing is less than 1% so it can be safely used in production environment.
 
+----
 
-The two examples above...
+There are many features such as `Dynamic Tracing`, `Memory Tracing`, `Disk/System/Network I/O Tracing` supported by HiQ. You can also integreate `HiQ` into existing observability solutions like `Prometheus`, `OpenTelemetry`, `Jaeger`, `ZipKin`, `OCI APM`, `OCI Functions` and `OCI Streaming`. For the details, please refer to the online document [here](https://hiq.readthedocs.io/en/latest/index.html) and its PDF version [here](https://github.com/oracle-samples/hiq/blob/main/hiq/docs/hiq.pdf).
 
-There are so many advanced features including
+
+
