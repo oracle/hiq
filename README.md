@@ -103,7 +103,7 @@ Streaming:
 
 ### Add Observability to PaddlePaddle (PaddleOCR)
 
-- [Latency](https://github.com/oracle-samples/hiq/blob/henry_dev/hiq/examples/paddle/demo.ipynb)
+- [Latency](https://github.com/oracle-samples/hiq/blob/main/hiq/examples/paddle/demo.ipynb)
 - [Memory](https://github.com/oracle-samples/hiq/blob/main/hiq/examples/paddle/demo_memory.ipynb)
 
 ### Add Observability to Onnxruntime (AlexNet)
