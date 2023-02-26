@@ -19,6 +19,7 @@ from datetime import datetime
 from functools import wraps
 from time import monotonic
 from typing import Callable, List, Tuple, Union
+from types import FunctionType, MethodType
 
 
 class Singleton(type):
@@ -196,7 +197,7 @@ def parse_lambda(l):
         c = inspect.getsource(l).lstrip()
         source_ast = ast.parse(c)
         n = next((node for node in ast.walk(source_ast) if isinstance(node, ast.Lambda)), None)
-        if n.end_lineno == n.lineno and n.lineno==1:
+        if n.end_lineno == n.lineno and n.lineno == 1:
             return c[n.col_offset:n.end_col_offset]
         else:
             r = []
@@ -215,6 +216,18 @@ def parse_lambda(l):
             return '\n'.join(r)
     except OSError:
         return None
+
+
+def _get_full_argspecs(x) -> Tuple[str, str]:
+    try:
+        return _get_args_spec(inspect.getfullargspec(inspect.unwrap(x)))
+    except TypeError:
+        import re
+        docstring = x.__doc__
+        match = re.search(r"\(([^)]*)\)", docstring)
+        signature_with_default = str(match.group(1)).replace(', ', ',')
+        signature_without_default = re.sub(r'=[^,]+', '', signature_with_default)
+        return signature_with_default, signature_without_default
 
 
 def _get_args_spec(args_spec) -> Tuple[str, str]:
@@ -269,6 +282,8 @@ def read_file(
     .. highlight:: python
     .. code-block:: python
 
+        >>> from pprint import pprint as pp
+        >>> here = os.path.dirname(os.path.realpath(__file__))
         >>> data = read_file(f"{here}/o.json")
         >>> pp(data)
         ['{',
@@ -519,6 +534,8 @@ def is_hiqed(fun: Callable, fun_name: str) -> bool:
         full_qualified_name='<function main at 0x7f7f2eaf6040>', fun_name='main'
 
         full_qualified_name='<built-in function read>', fun_name='read'
+        
+        full_qualified_name="<bound method BaseModel.from_pretrained of <class ..." (static class method)
 
     Args:
         fun (Callable): original function
@@ -533,6 +550,7 @@ def is_hiqed(fun: Callable, fun_name: str) -> bool:
             f"{fun_name} at" not in full_qualified_name
             and f"<method '{fun_name}' of" not in full_qualified_name
             and not full_qualified_name.startswith("<built-in function")
+            and not full_qualified_name.startswith("<bound method")
     )
 
 
@@ -1171,8 +1189,25 @@ def bfloat16_supported(device_type='cuda'):
         return False
 
 
+def __extract_wrapped(decorated):
+    if decorated.__closure__ is None:
+        return None
+    closure = (c.cell_contents for c in decorated.__closure__)
+    return next((c for c in closure if isinstance(c, FunctionType)), None)
+
+
+def signature(obj, *, follow_wrapped=True):
+    if not isinstance(obj, MethodType):
+        return inspect.Signature.from_callable(obj, follow_wrapped=follow_wrapped)
+    z_arg = __extract_wrapped(obj)
+    z = None if z_arg is None else inspect.Signature.from_callable(z_arg, follow_wrapped=follow_wrapped)
+    return inspect.Signature.from_callable(inspect.unwrap(obj), follow_wrapped=follow_wrapped) if z is None else z
+
+
 if __name__ == "__main__":
     import requests
+
+    print(total_gpu_memory_mb())
 
     print(pretty_time_delta(730.2312341))
     args = _get_args_spec(inspect.getfullargspec(requests.get))

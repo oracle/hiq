@@ -1,0 +1,4 @@
+torch>=1.13.1
+transformer>=4.26.1
+protobuf~=3.20.2
+importlib-metadata>=6.0.0

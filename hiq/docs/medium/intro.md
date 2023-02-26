@@ -32,7 +32,7 @@ HiQ was originally developed to help our high-performance deep learning model se
 
 ## Install HiQ
 
-You can use the following command to install HiQ. At the time of this writing, the latest version is `1.1.7`.
+You can use the following command to install HiQ. At the time of this writing, the latest version is `1.1.8`.
 
 ```bash
 pip install hiq-python
