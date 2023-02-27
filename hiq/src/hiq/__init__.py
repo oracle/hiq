@@ -7,7 +7,7 @@
 __author__ = "Fuheng Wu<fuheng.wu@oralce.com>"
 __date__ = "2023-02-01"
 __doc__ = "HiQ is a declarative, non-intrusive, dynamic and transparent tracking and optimization system"
-__version__ = "1.1.7"
+__version__ = "1.1.8"
 __credits__ = "Henry Wu, Ivan Davchev, Jun Qian"
 
 import sys
@@ -74,6 +74,7 @@ except ImportError:
 from .base import HiQLatency, HiQSimple, HiQMemory
 from .server_flask import HiQFlaskLatency, HiQFlaskMemory, HiQFlaskLatencyOtel
 from hiq.framework.fastapi import HiQFastAPILatency, HiQFastAPILatencyMixin, HiQFastAPIMemory, run_fastapi
+from hiq.framework.transformers import HiQTransformerMemory, HiQTransformerLatency, HiQTransformerGPUMemory, HiQTransformerFullMemory
 from .constants import *
 from .ddict import *
 
@@ -90,6 +91,10 @@ __all__ = [
     "HiQFastAPILatency",
     "HiQFastAPIMemory",
     "HiQFastAPILatencyMixin",
+    "HiQTransformerLatency",
+    "HiQTransformerMemory",
+    "HiQTransformerGPUMemory",
+    "HiQTransformerFullMemory"
     "run_fastapi",
     "HiQSimple",
     "HiQMemory",
