@@ -17,7 +17,7 @@ import sys
 import traceback
 from datetime import datetime
 from functools import wraps
-from time import monotonic
+from time import monotonic, sleep
 from typing import Callable, List, Tuple, Union
 from types import FunctionType, MethodType
 
@@ -79,7 +79,8 @@ def execute_cmd(
         env=None,
         error_file=None,
         append_error=False,
-) -> Union[str, List[str]]:
+        runtime_output=False,
+) -> Union[str, List[str], int]:
     """
     If verbose is true, print out input.
     If check is true, and the process exits with a non-zero exit code, a CalledProcessError exception will be raised.
@@ -92,10 +93,26 @@ def execute_cmd(
         stderr_log = open(error_file, "w", encoding="utf8")
     try:
         commands = __gamma_split(command, keep_delim)
+        cmd = ' '.join(commands)
         if verbose:
-            print(f"🏃‍♂️ command: {' '.join(commands)}, error_file: {error_file}")
-            print(f"🏃‍♂️ commands: {commands}")
-        if env is None:
+            print(f"🏃‍♂️ command: {cmd}, error_file: {error_file}")
+        start = monotonic()
+        if runtime_output:
+            proc = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=env if env else {})
+            # Loop over the subprocess output and print it immediately
+            while True:
+                output = proc.stdout.readline().decode().rstrip()
+                if output == '' and proc.poll() is not None:
+                    break
+                sleep(0.2)
+                if monotonic()-start > timeout:
+                    print(f"Command timeout after {timeout} seconds. command: {cmd}")
+                    break
+                print(output)
+            # Wait for the subprocess to complete and get the return code
+            ret = proc.wait()
+            return ret
+        elif env is None:
             result = subprocess.run(
                 commands,
                 stdout=subprocess.PIPE,
