@@ -5,7 +5,7 @@
 [![Github release][release-img]][release]
 [![lic][license-img]][license]
 
-> 🔥 HiQ(v1.1.8) supports GPU tracing, and supports DNN libraries like pyTorch, `transformers`, LAVIS, and LLM like T5 and GPT2 in addition to Onnxruntime, FastAPI and Flask.
+> 🔥 HiQ now supports GPU tracing, and supports DNN libraries like pyTorch, `transformers`, LAVIS, and LLM like T5 and GPT2 in addition to Onnxruntime, FastAPI and Flask.
 
 HiQ is a `declarative`, `non-intrusive`, `dynamic` and `transparent` tracking system for both **monolithic** application and **distributed** system. It brings the runtime information tracking and optimization to a new level without compromising with speed and system performance, or hiding any tracking overhead information. HiQ applies for both I/O bound and CPU bound applications.
 
@@ -164,7 +164,7 @@ Copyright (c) 2022 Oracle and/or its affiliates. Released under the Universal Pe
 [cov-img]: https://codecov.io/gh/uber/athenadriver/branch/master/graph/badge.svg
 [cov]: https://hiq.readthedocs.io/en/latest/index.html
 
-[release-img]: https://img.shields.io/badge/release-v1.1.8-red
+[release-img]: https://img.shields.io/badge/release-v1.1.9-red
 [release]: https://github.com/oracle-samples/hiq
 
 [license-img]: https://img.shields.io/badge/License-UPL--1.0-red

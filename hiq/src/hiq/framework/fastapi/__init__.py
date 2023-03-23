@@ -157,7 +157,8 @@ def run_fastapi(driver,
         import cpuinfo
 
         if not g_cpu_info:
-            g_cpu_info = cpuinfo.get_cpu_info()["brand_raw"]
+            cio = cpuinfo.get_cpu_info()
+            g_cpu_info = cio["brand_raw"] if 'brand_raw' in cio else cio['arch']
         if not driver:
             return ""
         r = driver.get_k0s_summary()

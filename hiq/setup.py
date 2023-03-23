@@ -5,7 +5,7 @@ here = os.path.dirname(os.path.realpath(__file__))
 HAS_CUDA = os.system("nvidia-smi > /dev/null 2>&1") == 0
 
 VERSION = (
-    "1.1.8"
+    "1.1.9"
     if "PKG_VERSION" not in os.environ or not os.environ["PKG_VERSION"]
     else os.environ["PKG_VERSION"]
 )
@@ -56,7 +56,6 @@ setup(
         "hiq",
     ],
     classifiers=[
-        "Development Status :: 3 - Alpha",
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
