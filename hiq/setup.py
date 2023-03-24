@@ -5,15 +5,13 @@ here = os.path.dirname(os.path.realpath(__file__))
 HAS_CUDA = os.system("nvidia-smi > /dev/null 2>&1") == 0
 
 VERSION = (
-    "1.1.9"
+    "1.1.10"
     if "PKG_VERSION" not in os.environ or not os.environ["PKG_VERSION"]
     else os.environ["PKG_VERSION"]
 )
 DESCRIPTION = "HiQ - A Modern Observability System"
 
-packages = [
-    "hiq",
-]
+packages = ['hiq']
 
 
 def read_file(filename: str):
@@ -62,6 +60,7 @@ setup(
         "Programming Language :: Python :: 3.10",
     ],
     packages=packages,
+    include_package_data=True,
     package_dir={"": "src"},
     package_data={"hiq": extra_files},
     url="https://github.com/oracle/hiq",
@@ -71,5 +70,5 @@ setup(
         'lavis': r_lavis,
         'gpu': r_gpu,
         'full': r_fastapi + r_transformers + r_lavis + r_gpu,
-    }
+    },
 )
