@@ -23,7 +23,7 @@ def get_jack_log_file():
         return log_file
     except PermissionError as e:
         pass
-    log_file = f"/tmp/.hiq/log_jack.log"
+    log_file = f".hiq/log_jack.log"
     ensure_folder(log_file)
     return log_file
 

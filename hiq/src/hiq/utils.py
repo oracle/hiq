@@ -85,10 +85,10 @@ def execute_cmd(
     If verbose is true, print out input.
     If check is true, and the process exits with a non-zero exit code, a CalledProcessError exception will be raised.
     Attributes of that exception hold the arguments, the exit code, and stdout and stderr if they were captured.
-    stderr_log could be: stderr_log=open("/tmp/gamma.error.log", "a+")
+    stderr_log could be: stderr_log=open("gamma.error.log", "a+")
     https://docs.python.org/3/library/subprocess.html#subprocess.run
     """
-    error_file = error_file or f"/tmp/error.{random_str()}.log"
+    error_file = error_file or f".error.{random_str()}.log"
     if stderr_log is None:
         stderr_log = open(error_file, "w", encoding="utf8")
     try:
@@ -847,7 +847,7 @@ def create_gantt_chart_time(data: List[str], fig_path=None, return_as_stream=Fal
         buf.seek(0)
         return buf.read()
     if fig_path is None:
-        fig_path = f"/tmp/tim_{random_str()}.png"
+        fig_path = f"hiq.tim_{random_str()}.png"
     ensure_folder(fig_path)
     plt.savefig(fig_path)
     if os.path.exists(fig_path):
@@ -1043,7 +1043,7 @@ def create_gantt_chart_memory(data: List[str], fig_path=None):
 
     fig.tight_layout()
     if fig_path is None:
-        fig_path = f"/tmp/mem_{random_str()}.png"
+        fig_path = f"hiq.mem_{random_str()}.png"
     ensure_folder(fig_path)
     plt.savefig(fig_path)
     if os.path.exists(fig_path):
