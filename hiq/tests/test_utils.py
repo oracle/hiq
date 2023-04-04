@@ -1,7 +1,7 @@
 # HiQ version 1.0.
 #
 # Copyright (c) 2022, Oracle and/or its affiliates.
-# Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl/ 
+# Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl/
 #
 
 import os
@@ -25,7 +25,7 @@ def test_execute_cmd():
         f"rm {file_name}",
         verbose=False,
         check=True,
-        stderr_log=open('data/error.log', 'a+'),
+        stderr_log=open("data/error.log", "a+"),
         debug=True,
     )
     assert os.path.exists(file_name) == False
@@ -38,22 +38,22 @@ def test_execute_cmd():
         verbose=True,
         check=False,
         shell=False,
-        stderr_log=open('data/error.log', 'a+'),
+        stderr_log=open("data/error.log", "a+"),
         debug=False,
     )
     assert os.path.exists(file_name) == False
 
     f = io.StringIO()
     with redirect_stdout(f):
-        execute_cmd('sleep 1m', split=False, timeout=2)
+        execute_cmd("sleep 1m", split=False, timeout=2)
     out = f.getvalue()
-    assert 'timed-out' in out
+    assert "timed-out" in out
 
 
 def test_utc_to_pst():
     with pytest.raises(ValueError) as error_info:
         utc_to_pst("2021-12-16")
-    assert 'ValueError' in str(error_info)
+    assert "ValueError" in str(error_info)
     assert utc_to_pst("2021-06-19T20:32:18+0000") == "2021-06-19 13:32:18-07:00"
 
 
@@ -61,7 +61,7 @@ def test_ts_to_dt():  # datetime.fromtimestamp() works differently in different 
     timestamp = 1638970909.806089
     assert ts_to_dt(0.0) == str(0.0)
     assert (
-        ts_to_dt(timestamp) == '2021-12-08 13:41:49.806089'
+        ts_to_dt(timestamp) == "2021-12-08 13:41:49.806089"
     )  # "2021-12-08 19:11:49.806089"
 
 
@@ -79,7 +79,7 @@ def test_ts_pair_to_dt():  # datetime.fromtimestamp() works differently in diffe
 
 def test_read_file():
     def filter_message(x):
-        words = ['ORACLE', 'Cloud', 'Infrastructure', 'Welcome to ORACLE']
+        words = ["ORACLE", "Cloud", "Infrastructure", "Welcome to ORACLE"]
         if x in words:
             return True
         else:
@@ -91,47 +91,47 @@ def test_read_file():
     assert "not a file" in str(error_info)
     assert (
         read_file(
-            os.path.join(os.getcwd(), 'data/helloworld'), binary_mode=True, strip=True
+            os.path.join(os.getcwd(), "data/helloworld"), binary_mode=True, strip=True
         )
-        == b'Welcome to ORACLE\noracle cloud infrastructure'
+        == b"Welcome to ORACLE\noracle cloud infrastructure"
     )
     assert read_file(
-        os.path.join(os.getcwd(), 'data/sample.json'), as_json=True, binary_mode=True
-    ) == {'date': '2021-09-21T04:52:51+0000', 'eventKey': 'repo:refs_changed'}
+        os.path.join(os.getcwd(), "data/sample.json"), as_json=True, binary_mode=True
+    ) == {"date": "2021-09-21T04:52:51+0000", "eventKey": "repo:refs_changed"}
     assert read_file(
-        os.path.join(os.getcwd(), 'data/helloworld'),
+        os.path.join(os.getcwd(), "data/helloworld"),
         binary_mode=False,
         by_line=True,
         filter_func=filter_message,
-    ) == ['Welcome to ORACLE']
+    ) == ["Welcome to ORACLE"]
 
 
 def test_write_file():
     name = random_str()
     write_file(
-        os.path.join(cur_dir, 'data/sample'),
-        data='hello',
+        os.path.join(cur_dir, "data/sample"),
+        data="hello",
         as_owner=name,
         as_group=name,
         append=False,
     )
-    assert open(os.path.join(cur_dir, 'data/sample')).read() == 'hello'
+    assert open(os.path.join(cur_dir, "data/sample")).read() == "hello"
     write_file(
-        os.path.join(cur_dir, 'data/sample'),
-        data='hello',
+        os.path.join(cur_dir, "data/sample"),
+        data="hello",
         as_owner=name,
         as_group=name,
         append=True,
     )
-    assert open(os.path.join(cur_dir, 'data/sample')).read() != 'hello'
+    assert open(os.path.join(cur_dir, "data/sample")).read() != "hello"
     write_file(
-        os.path.join(cur_dir, 'data/sample'),
-        data='hello',
+        os.path.join(cur_dir, "data/sample"),
+        data="hello",
         as_owner=name,
         as_group=name,
         append=False,
     )
-    assert open(os.path.join(cur_dir, 'data/sample')).read() == 'hello'
+    assert open(os.path.join(cur_dir, "data/sample")).read() == "hello"
 
 
 def test_ensure_folder():
@@ -143,20 +143,20 @@ def test_download_from_http():
     # Test for IOError
     with pytest.raises(IOError) as error_info:
         download_from_http(
-            uri='https://www.google.com/idontexist',
-            local_file_path=os.path.join(cur_dir, ''),
+            uri="https://www.google.com/idontexist",
+            local_file_path=os.path.join(cur_dir, ""),
         )
         assert "Error" in error_info
 
     # Test for successful download
-    uri_path_ico = 'https://www.google.com/favicon.ico'
+    uri_path_ico = "https://www.google.com/favicon.ico"
     downloaded_ico = download_from_http(
         uri=uri_path_ico,
-        local_file_path=os.path.join(cur_dir, 'data/downloadfromhttp_googleicon.ico'),
+        local_file_path=os.path.join(cur_dir, "data/downloadfromhttp_googleicon.ico"),
         display=False,
     )
     assert (
-        open('data/googleicon.ico', "rb").read() == open(downloaded_ico, "rb").read()
+        open("data/googleicon.ico", "rb").read() == open(downloaded_ico, "rb").read()
     )  # test for icon
 
     # Test for ValueError.
@@ -164,7 +164,7 @@ def test_download_from_http():
         download_from_http(
             uri=uri_path_ico,
             local_file_path=os.path.join(
-                cur_dir, 'data/downloadfromhttp_googleicon.ico'
+                cur_dir, "data/downloadfromhttp_googleicon.ico"
             ),
             display=True,
         )
@@ -174,24 +174,24 @@ def test_download_from_http():
 
     # Test for total_size_in_bytes<=0
     uri_path_empty = (
-        'https://objectstorage.us-ashburn-1.oraclecloud.com/'
-        'p/vtT9R2oK8cD_9m86Q68X7uBNKDKLUGLu9Fvh0FdNT804xhsiVqZqOno8XfjG-GDV/'
-        'n/ax3dvjxgkemg/b/test-download-from-http/o/emptyfile'
+        "https://objectstorage.us-ashburn-1.oraclecloud.com/"
+        "p/vtT9R2oK8cD_9m86Q68X7uBNKDKLUGLu9Fvh0FdNT804xhsiVqZqOno8XfjG-GDV/"
+        "n/ax3dvjxgkemg/b/test-download-from-http/o/emptyfile"
     )
     downloaded_empty = download_from_http(
         uri=uri_path_empty,
-        local_file_path=os.path.join(cur_dir, 'data/downloadfromhttp_empty'),
+        local_file_path=os.path.join(cur_dir, "data/downloadfromhttp_empty"),
         display=True,
     )
-    assert open(downloaded_empty).read() == ''
+    assert open(downloaded_empty).read() == ""
 
     assert (
-        open('data/googleicon.ico', "rb").read()
+        open("data/googleicon.ico", "rb").read()
         == open(
             download_from_http(
                 uri=uri_path_ico,
                 local_file_path=os.path.join(
-                    cur_dir, 'data/downloadfromhttp_googleicon.ico'
+                    cur_dir, "data/downloadfromhttp_googleicon.ico"
                 ),
                 display=True,
             )
@@ -202,16 +202,16 @@ def test_download_from_http():
 def test_random_str():
     assert len(random_str()) == 12
     assert len(random_str(15)) == 15
-    assert type(random_str()) == type('str')
+    assert type(random_str()) == type("str")
 
 
 def test_get_proxies():
     os.environ["http_proxy"] = "154.136.68.91"
     assert get_proxies() == {
-        'http': '154.136.68.91',
-        'https': '',
-        'ftp': '',
-        'no_proxy': '',
+        "http": "154.136.68.91",
+        "https": "",
+        "ftp": "",
+        "no_proxy": "",
     }
 
 
@@ -346,6 +346,7 @@ def test_memoize():
     assert (time_1 >= time_2) and (res_1 == res_2 == 12586269025)
     assert fib(1) == 1
     assert fib(0) == 0
+
 
 def test_gantt_chart():
     # test gantt_chart for tau

@@ -67,19 +67,19 @@ def __gamma_split(s: str, keep_delim=False) -> List[str]:
 
 
 def execute_cmd(
-        command: str,
-        split=True,
-        verbose=True,
-        check=False,
-        shell=False,
-        timeout=600,
-        stderr_log=None,
-        debug=False,
-        keep_delim=False,
-        env=None,
-        error_file=None,
-        append_error=False,
-        runtime_output=False,
+    command: str,
+    split=True,
+    verbose=True,
+    check=False,
+    shell=False,
+    timeout=600,
+    stderr_log=None,
+    debug=False,
+    keep_delim=False,
+    env=None,
+    error_file=None,
+    append_error=False,
+    runtime_output=False,
 ) -> Union[str, List[str], int]:
     """
     If verbose is true, print out input.
@@ -93,19 +93,25 @@ def execute_cmd(
         stderr_log = open(error_file, "w", encoding="utf8")
     try:
         commands = __gamma_split(command, keep_delim)
-        cmd = ' '.join(commands)
+        cmd = " ".join(commands)
         if verbose:
             print(f"🏃‍♂️ command: {cmd}, error_file: {error_file}")
         start = monotonic()
         if runtime_output:
-            proc = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=env if env else {})
+            proc = subprocess.Popen(
+                cmd,
+                shell=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                env=env if env else {},
+            )
             # Loop over the subprocess output and print it immediately
             while True:
                 output = proc.stdout.readline().decode().rstrip()
-                if output == '' and proc.poll() is not None:
+                if output == "" and proc.poll() is not None:
                     break
                 sleep(0.2)
-                if monotonic()-start > timeout:
+                if monotonic() - start > timeout:
                     print(f"Command timeout after {timeout} seconds. command: {cmd}")
                     break
                 print(output)
@@ -137,7 +143,11 @@ def execute_cmd(
             ret = result.stdout.decode("utf-8").strip().split("\n")
         else:
             ret = result.stdout.decode("utf-8").strip()
-        if append_error and os.path.exists(error_file) and os.path.getsize(error_file) > 0:
+        if (
+            append_error
+            and os.path.exists(error_file)
+            and os.path.getsize(error_file) > 0
+        ):
             if isinstance(ret, str):
                 ret += read_file(error_file, by_line=False)
             else:
@@ -197,11 +207,13 @@ def ts_pair_to_dt(t1: float, t2: float) -> str:
 
 def get_time_by_time_zone(time_zone="US/Pacific") -> datetime:
     import pytz
+
     return datetime.now(tz=pytz.utc).astimezone(pytz.timezone(time_zone))
 
 
 def get_time_str_with_tz(time_zone="US/Pacific") -> str:
     import pytz
+
     date_format = "%Y-%m-%d %H:%M:%S.%Z"
     date = datetime.now(tz=pytz.utc)
     date = date.astimezone(pytz.timezone(time_zone))
@@ -213,24 +225,27 @@ def parse_lambda(l):
     try:
         c = inspect.getsource(l).lstrip()
         source_ast = ast.parse(c)
-        n = next((node for node in ast.walk(source_ast) if isinstance(node, ast.Lambda)), None)
+        n = next(
+            (node for node in ast.walk(source_ast) if isinstance(node, ast.Lambda)),
+            None,
+        )
         if n.end_lineno == n.lineno and n.lineno == 1:
-            return c[n.col_offset:n.end_col_offset]
+            return c[n.col_offset : n.end_col_offset]
         else:
             r = []
             start = False
-            s = c.split('\n')
+            s = c.split("\n")
             for i, v in enumerate(s):
                 if start:
                     if n.end_lineno == i + 1:
-                        r.append(s[i][:n.end_col_offset])
+                        r.append(s[i][: n.end_col_offset])
                         break
                     else:
                         r.append(v)
                 elif n.lineno == i + 1:
-                    r.append(s[i][n.col_offset:])
+                    r.append(s[i][n.col_offset :])
                     start = True
-            return '\n'.join(r)
+            return "\n".join(r)
     except OSError:
         return None
 
@@ -240,10 +255,11 @@ def _get_full_argspecs(x) -> Tuple[str, str]:
         return _get_args_spec(inspect.getfullargspec(inspect.unwrap(x)))
     except TypeError:
         import re
+
         docstring = x.__doc__
         match = re.search(r"\(([^)]*)\)", docstring)
-        signature_with_default = str(match.group(1)).replace(', ', ',')
-        signature_without_default = re.sub(r'=[^,]+', '', signature_with_default)
+        signature_with_default = str(match.group(1)).replace(", ", ",")
+        signature_without_default = re.sub(r"=[^,]+", "", signature_with_default)
         return signature_with_default, signature_without_default
 
 
@@ -259,10 +275,15 @@ def _get_args_spec(args_spec) -> Tuple[str, str]:
     z = list(zip(x, y))
     r = list(
         map(
-            lambda e: e[0] if e[1] == "^"
-            else (f"{e[0]}='{e[1]}'" if isinstance(e[1], str)
-                  else f"{e[0]}={parse_lambda(e[1])}" if '<function <lambda> at' in str(e[1])
-            else f"{e[0]}={e[1]}"),
+            lambda e: e[0]
+            if e[1] == "^"
+            else (
+                f"{e[0]}='{e[1]}'"
+                if isinstance(e[1], str)
+                else f"{e[0]}={parse_lambda(e[1])}"
+                if "<function <lambda> at" in str(e[1])
+                else f"{e[0]}={e[1]}"
+            ),
             z,
         )
     )
@@ -276,14 +297,14 @@ def _get_args_spec(args_spec) -> Tuple[str, str]:
 
 
 def read_file(
-        file_path: str,
-        binary_mode: bool = False,
-        by_line: bool = True,
-        filter_func: Callable = None,
-        as_json=False,
-        bytes_as_string=True,
-        raise_=False,
-        strip=False,
+    file_path: str,
+    binary_mode: bool = False,
+    by_line: bool = True,
+    filter_func: Callable = None,
+    as_json=False,
+    bytes_as_string=True,
+    raise_=False,
+    strip=False,
 ) -> Union[List[str], bytes]:
     """A handy function to read file
 
@@ -399,7 +420,7 @@ def ensure_folder(path_str: str):
 
 
 def download_from_http(
-        uri, local_file_path, display=False, enable_proxy=True, auth=None
+    uri, local_file_path, display=False, enable_proxy=True, auth=None
 ) -> str:
     """auth=(user, password)"""
     import requests
@@ -432,7 +453,7 @@ def download_from_http(
             if total_size_in_bytes > 0:
                 block_size = 1024 * 500  # 500 KiB
                 with tqdm(
-                        total=total_size_in_bytes, unit="iB", unit_scale=True
+                    total=total_size_in_bytes, unit="iB", unit_scale=True
                 ) as progress_bar:
                     file_obj = io.BytesIO()
                     for data in response.iter_content(block_size):
@@ -551,7 +572,7 @@ def is_hiqed(fun: Callable, fun_name: str) -> bool:
         full_qualified_name='<function main at 0x7f7f2eaf6040>', fun_name='main'
 
         full_qualified_name='<built-in function read>', fun_name='read'
-        
+
         full_qualified_name="<bound method BaseModel.from_pretrained of <class ..." (static class method)
 
     Args:
@@ -564,10 +585,10 @@ def is_hiqed(fun: Callable, fun_name: str) -> bool:
     full_qualified_name = str(fun)
     # print(f"🐵 {full_qualified_name=}, {fun_name=}")
     return (
-            f"{fun_name} at" not in full_qualified_name
-            and f"<method '{fun_name}' of" not in full_qualified_name
-            and not full_qualified_name.startswith("<built-in function")
-            and not full_qualified_name.startswith("<bound method")
+        f"{fun_name} at" not in full_qualified_name
+        and f"<method '{fun_name}' of" not in full_qualified_name
+        and not full_qualified_name.startswith("<built-in function")
+        and not full_qualified_name.startswith("<bound method")
     )
 
 
@@ -666,7 +687,9 @@ def pretty_time_delta(seconds):
         return "%s%ds" % (sign_string, seconds)
 
 
-def create_gantt_chart_time(data: List[str], fig_path=None, return_as_stream=False, fig_size=(24, 24)):
+def create_gantt_chart_time(
+    data: List[str], fig_path=None, return_as_stream=False, fig_size=(24, 24)
+):
     """Plot Gantt-chart for HiQ Latency Tree"""
     from hiq import tree
     import pandas as pd
@@ -843,7 +866,7 @@ def create_gantt_chart_time(data: List[str], fig_path=None, return_as_stream=Fal
     fig.tight_layout()
     if return_as_stream:
         buf = io.BytesIO()
-        plt.savefig(buf, format='png')
+        plt.savefig(buf, format="png")
         buf.seek(0)
         return buf.read()
     if fig_path is None:
@@ -1067,21 +1090,21 @@ def down_sample(a_list: list, k: int, debug=False):
     return [a_list[i] for i in idx]
 
 
-DEFAULT_IMG_TYPES = ["*.jpg", "*.jpeg", "*.png", "*.bmp", '*.tiff']
+DEFAULT_IMG_TYPES = ["*.jpg", "*.jpeg", "*.png", "*.bmp", "*.tiff"]
 ALL_IMG_DOC_TYPES = DEFAULT_IMG_TYPES + ["*.webp", "*.pdf"]
 
 
 def get_files_by_type(
-        folder_path=os.getcwd(),
-        types=ALL_IMG_DOC_TYPES,
-        include_folder_name=False,
-        sorting=True,
-        sort_by=0,
-        ascending=True,
-        sample_num=None,
-        topk=None,
-        recursive=True,
-        verbose=True,
+    folder_path=os.getcwd(),
+    types=ALL_IMG_DOC_TYPES,
+    include_folder_name=False,
+    sorting=True,
+    sort_by=0,
+    ascending=True,
+    sample_num=None,
+    topk=None,
+    recursive=True,
+    verbose=True,
 ) -> list:
     """Get file dataset as a list of (fsize, file, file_name )
 
@@ -1097,10 +1120,13 @@ def get_files_by_type(
         List[Tuple(str)]: a list of file information tuple
     """
     import glob
+
     files_grabbed = []
     for ts in types:
-        for t in map(''.join, itertools.product(*zip(ts.upper(), ts.lower()))):
-            files_grabbed.extend(glob.glob(f"{folder_path}/**/{t}", recursive=recursive))
+        for t in map("".join, itertools.product(*zip(ts.upper(), ts.lower()))):
+            files_grabbed.extend(
+                glob.glob(f"{folder_path}/**/{t}", recursive=recursive)
+            )
 
     res = []
     for file_path in set(files_grabbed):
@@ -1131,14 +1157,14 @@ HEADERS = {"client-id": "hiq-client", "Content-Type": "application/json"}
 
 
 def __send_http(
-        url,
-        data,
-        auth=None,
-        headers=HEADERS,
-        timeout=60,
-        trust_env=True,
-        enable_proxy=True,
-        method="get",
+    url,
+    data,
+    auth=None,
+    headers=HEADERS,
+    timeout=60,
+    trust_env=True,
+    enable_proxy=True,
+    method="get",
 ):
     try:
         import requests
@@ -1160,16 +1186,16 @@ def __send_http(
 
 
 def post_http(
-        url,
-        data,
-        auth=None,
-        headers=HEADERS,
-        timeout=60,
-        trust_env=True,
-        enable_proxy=True,
+    url,
+    data,
+    auth=None,
+    headers=HEADERS,
+    timeout=60,
+    trust_env=True,
+    enable_proxy=True,
 ):
     return __send_http(
-        url, data, auth, headers, timeout, trust_env, enable_proxy, method='post'
+        url, data, auth, headers, timeout, trust_env, enable_proxy, method="post"
     )
 
 
@@ -1197,8 +1223,9 @@ def get_percentage_loss(a, b):
     return np.abs(np.sum(delta) / np.sum(a))
 
 
-def bfloat16_supported(device_type='cuda'):
+def bfloat16_supported(device_type="cuda"):
     import torch
+
     try:
         with torch.amp.autocast(device_type=device_type, dtype=torch.bfloat16):
             return True
@@ -1217,8 +1244,18 @@ def signature(obj, *, follow_wrapped=True):
     if not isinstance(obj, MethodType):
         return inspect.Signature.from_callable(obj, follow_wrapped=follow_wrapped)
     z_arg = __extract_wrapped(obj)
-    z = None if z_arg is None else inspect.Signature.from_callable(z_arg, follow_wrapped=follow_wrapped)
-    return inspect.Signature.from_callable(inspect.unwrap(obj), follow_wrapped=follow_wrapped) if z is None else z
+    z = (
+        None
+        if z_arg is None
+        else inspect.Signature.from_callable(z_arg, follow_wrapped=follow_wrapped)
+    )
+    return (
+        inspect.Signature.from_callable(
+            inspect.unwrap(obj), follow_wrapped=follow_wrapped
+        )
+        if z is None
+        else z
+    )
 
 
 if __name__ == "__main__":

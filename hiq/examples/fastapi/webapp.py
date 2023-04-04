@@ -13,19 +13,28 @@ model_path = f"{here}/alexnet.onnx"
 def prepare_model(download_path):
     import torch
     import torchvision
+
     print(f"Downloading AlexNet to {download_path} and converting to onnx format ...")
     dummy_input = torch.randn(10, 3, 224, 224)
     model = torchvision.models.alexnet(pretrained=True)
     input_names = ["actual_input_1"] + ["learned_%d" % i for i in range(16)]
     output_names = ["output1"]
-    torch.onnx.export(model, dummy_input, download_path, input_names=input_names, output_names=output_names)
+    torch.onnx.export(
+        model,
+        dummy_input,
+        download_path,
+        input_names=input_names,
+        output_names=output_names,
+    )
     print(f"Model is ready now!")
 
 
 if not os.path.exists(model_path):
     prepare_model(download_path=model_path)
 
-ort_session = ort.InferenceSession(f"{here}/alexnet.onnx", providers=['CPUExecutionProvider'])
+ort_session = ort.InferenceSession(
+    f"{here}/alexnet.onnx", providers=["CPUExecutionProvider"]
+)
 
 # step 2: start model serving
 app = FastAPI()

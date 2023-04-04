@@ -166,18 +166,18 @@ latex_elements = {
 %%%%%%%%%%% Quote for all places except Chapter
 \newcommand{\sectionquote}[2]{{\quote{\textit{``#1''}}{\textbf {\textit{--#2}}}}}
 """,
-    'sphinxsetup': 'VerbatimColor={rgb}{0.95, 1.0, 0.8},verbatimwithframe=true,warningBgColor={rgb}{1, 0.86,0.86},warningborder=2pt,warningBorderColor={rgb}{0.86, 0.08, 0.24},VerbatimBorderColor={rgb}{0.5,0.6,0.0},VerbatimHighlightColor={rgb}{1,1,0.8},hmargin={0.8in,0.8in}, vmargin={1in,1in}, marginpar=0.5in',
-    'fontpkg': r'''
+    "sphinxsetup": "VerbatimColor={rgb}{0.95, 1.0, 0.8},verbatimwithframe=true,warningBgColor={rgb}{1, 0.86,0.86},warningborder=2pt,warningBorderColor={rgb}{0.86, 0.08, 0.24},VerbatimBorderColor={rgb}{0.5,0.6,0.0},VerbatimHighlightColor={rgb}{1,1,0.8},hmargin={0.8in,0.8in}, vmargin={1in,1in}, marginpar=0.5in",
+    "fontpkg": r"""
 \usepackage{fontspec}
 \setmainfont{Symbola}
 \setsansfont{Linux Biolinum O}
 \setmonofont[Color={0019D4}]{DejaVu Sans Mono}
-''',
-    'printindex': r'\footnotesize\raggedright\printindex',
-    'papersize': r'paper=7in:9.2in,pagesize=pdftex,headinclude=on,footinclude=on',
-    'pointsize': r'11pt',
+""",
+    "printindex": r"\footnotesize\raggedright\printindex",
+    "papersize": r"paper=7in:9.2in,pagesize=pdftex,headinclude=on,footinclude=on",
+    "pointsize": r"11pt",
     "fncychap": "\\usepackage[Conny]{fncychap}",
-    'tableofcontents': '''\\begin{center}
+    "tableofcontents": """\\begin{center}
 
 \\includegraphics{hiq.png}
 
@@ -214,7 +214,7 @@ latex_elements = {
 
 \\includegraphics{../../source/img/dove80.png}
 
-Henry Fuheng Wu, Fremont CA, USA 2022\\end{center}\\clearpage\\tableofcontents''',
+Henry Fuheng Wu, Fremont CA, USA 2022\\end{center}\\clearpage\\tableofcontents""",
 }
 
 latex_logo = "_static/hiq.png"
