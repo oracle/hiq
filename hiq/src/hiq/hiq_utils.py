@@ -246,9 +246,12 @@ def __value_to_str(i, depth=1):
         s += f"ndarry{str(i.shape).replace(' ', '')}"
     elif isinstance(i, dict):
         tmp = []
-        for k, v in i.items():
+        for k, v in list(i.items())[:3]:
             tmp.append(__value_to_str(v, depth + 1))
-        s += f"dict(k:{list(i.keys())},v:{tmp})"
+        if len(i.items())>3:
+            s += f"dict(k:{list(i.keys())[:3]}...,v:{tmp}...)"
+        else:
+            s += f"dict(k:{list(i.keys())},v:{tmp})"
     elif isinstance(i, list):
         tmp = []
         for idx, e in enumerate(i):
