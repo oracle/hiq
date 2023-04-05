@@ -68,10 +68,17 @@
 │       └── +bn3 (BatchNorm2d) weight:[2048] bias:[2048]
 └── +fc (Linear) weight:[1000, 2048] bias:[1000]
 """
+import torch
 import torchvision
 from hiq.vis import print_model
 
 
 model = torchvision.models.resnet152()
-print("*" * 80)
-print_model(model)
+model.conv1.weight.requires_grad = False
+model.layer3[1].conv1.weight.requires_grad = False
+model.layer4[0].bn3.bias.requires_grad = False
+model = model.cuda()
+with torch.no_grad():
+    print(model.layer3[2].conv1.weight.requires_grad)
+    print("*" * 80)
+    print_model(model, expand_params=False)

@@ -1,38 +1,269 @@
-"""For PyTorch Model Visualization"""
+"""For PyTorch Model ModelTree"""
 
 import sys
 import re
 import traceback
+import inspect
 from collections import OrderedDict
 from typing import List
 
 import torch.nn as nn
-from rich import print as richprint
+from rich import print as rich_print
 from rich.tree import Tree as RichTree
 
+COLOR_NAMES = [
+    "black",
+    "red",
+    "green",
+    "yellow",
+    "blue",
+    "magenta",
+    "cyan",
+    "white",
+    "bright_black",
+    "bright_red",
+    "bright_green",
+    "bright_yellow",
+    "bright_blue",
+    "bright_magenta",
+    "bright_cyan",
+    "bright_white",
+    "grey0",
+    "navy_blue",
+    "dark_blue",
+    "blue3",
+    "blue1",
+    "dark_green",
+    "deep_sky_blue4",
+    "dodger_blue3",
+    "dodger_blue2",
+    "green4",
+    "spring_green4",
+    "turquoise4",
+    "deep_sky_blue3",
+    "dodger_blue1",
+    "dark_cyan",
+    "light_sea_green",
+    "deep_sky_blue2",
+    "deep_sky_blue1",
+    "green3",
+    "spring_green3",
+    "cyan3",
+    "dark_turquoise",
+    "turquoise2",
+    "green1",
+    "spring_green2",
+    "spring_green1",
+    "medium_spring_green",
+    "cyan2",
+    "cyan1",
+    "purple4",
+    "purple3",
+    "blue_violet",
+    "grey37",
+    "medium_purple4",
+    "slate_blue3",
+    "royal_blue1",
+    "chartreuse4",
+    "pale_turquoise4",
+    "steel_blue",
+    "steel_blue3",
+    "cornflower_blue",
+    "dark_sea_green4",
+    "cadet_blue",
+    "sky_blue3",
+    "chartreuse3",
+    "sea_green3",
+    "aquamarine3",
+    "medium_turquoise",
+    "steel_blue1",
+    "sea_green2",
+    "sea_green1",
+    "dark_slate_gray2",
+    "dark_red",
+    "dark_magenta",
+    "orange4",
+    "light_pink4",
+    "plum4",
+    "medium_purple3",
+    "slate_blue1",
+    "wheat4",
+    "grey53",
+    "light_slate_grey",
+    "medium_purple",
+    "light_slate_blue",
+    "yellow4",
+    "dark_sea_green",
+    "light_sky_blue3",
+    "sky_blue2",
+    "chartreuse2",
+    "pale_green3",
+    "dark_slate_gray3",
+    "sky_blue1",
+    "chartreuse1",
+    "light_green",
+    "aquamarine1",
+    "dark_slate_gray1",
+    "deep_pink4",
+    "medium_violet_red",
+    "dark_violet",
+    "purple",
+    "medium_orchid3",
+    "medium_orchid",
+    "dark_goldenrod",
+    "rosy_brown",
+    "grey63",
+    "medium_purple2",
+    "medium_purple1",
+    "dark_khaki",
+    "navajo_white3",
+    "grey69",
+    "light_steel_blue3",
+    "light_steel_blue",
+    "dark_olive_green3",
+    "dark_sea_green3",
+    "light_cyan3",
+    "light_sky_blue1",
+    "green_yellow",
+    "dark_olive_green2",
+    "pale_green1",
+    "dark_sea_green2",
+    "pale_turquoise1",
+    "red3",
+    "deep_pink3",
+    "magenta3",
+    "dark_orange3",
+    "indian_red",
+    "hot_pink3",
+    "hot_pink2",
+    "orchid",
+    "orange3",
+    "light_salmon3",
+    "light_pink3",
+    "pink3",
+    "plum3",
+    "violet",
+    "gold3",
+    "light_goldenrod3",
+    "tan",
+    "misty_rose3",
+    "thistle3",
+    "plum2",
+    "yellow3",
+    "khaki3",
+    "light_yellow3",
+    "grey84",
+    "light_steel_blue1",
+    "yellow2",
+    "dark_olive_green1",
+    "dark_sea_green1",
+    "honeydew2",
+    "light_cyan1",
+    "red1",
+    "deep_pink2",
+    "deep_pink1",
+    "magenta2",
+    "magenta1",
+    "orange_red1",
+    "indian_red1",
+    "hot_pink",
+    "medium_orchid1",
+    "dark_orange",
+    "salmon1",
+    "light_coral",
+    "pale_violet_red1",
+    "orchid2",
+    "orchid1",
+    "orange1",
+    "sandy_brown",
+    "light_salmon1",
+    "light_pink1",
+    "pink1",
+    "plum1",
+    "gold1",
+    "light_goldenrod2",
+    "navajo_white1",
+    "misty_rose1",
+    "thistle1",
+    "yellow1",
+    "light_goldenrod1",
+    "khaki1",
+    "wheat1",
+    "cornsilk1",
+    "grey100",
+    "grey3",
+    "grey7",
+    "grey11",
+    "grey15",
+    "grey19",
+    "grey23",
+    "grey27",
+    "grey30",
+    "grey35",
+    "grey39",
+    "grey42",
+    "grey46",
+    "grey50",
+    "grey54",
+    "grey58",
+    "grey62",
+    "grey66",
+    "grey70",
+    "grey74",
+    "grey78",
+    "grey82",
+    "grey85",
+    "grey89",
+    "grey93",
+]
 
-class ModelTree(RichTree):
+
+class NodeColor(object):
+    color_type = "green"
+    color_param = "red"
+    color_main = "white"
+
+
+class LayerNode(RichTree):
     def __init__(
         self,
         model_name=None,
-        info=None,
+        mclass=None,
         is_param_node=False,
-        type_color="green",
-        param_color="red",
-        main_color="white",
+        color_type=None,
+        color_param=None,
+        color_main=None,
         style="tree",
         guide_style="tree.line",
         expanded=True,
         highlight=False,
+        add_link=False,
     ):
         self.model_name = model_name
-        self.info = info
+        self.mclass = mclass
         self.is_param_node = is_param_node
-        self.type_color = type_color
-        self.param_color = param_color
-        self.main_color = main_color
+        self.color_type = color_type or NodeColor.color_type
+        self.color_param = color_param or NodeColor.color_param
+        self.color_main = color_main or NodeColor.color_main
+
+        label = (
+            " " if self.model_name is None else f"[{self.color_main}]{self.model_name}"
+        )
+        if self.mclass:
+            if self.is_param_node:
+                label += f"[{self.color_param}]{self.mclass}"
+            else:
+                if add_link and self.mclass in ModelTree.N2L:
+                    lk = ModelTree.N2L[self.mclass]
+                    if lk and lk[0] == "/":
+                        label += f"[link file://{lk}]"
+                    else:
+                        label += f"[link {lk}]"
+                label += f"[{self.color_type}]({self.mclass})"
+        self.label = label
+
         super().__init__(
-            self.set_label(),
+            label,
             style=style,
             guide_style=guide_style,
             expanded=expanded,
@@ -42,23 +273,23 @@ class ModelTree(RichTree):
     def add_node(
         self,
         model_name=None,
-        info=None,
+        mclass=None,
         is_param_node=False,
-        type_color="green",
-        param_color="red",
-        main_color="white",
+        color_type=None,
+        color_param=None,
+        color_main=None,
         style=None,
         guide_style=None,
         expanded=True,
         highlight=False,
     ):
-        node = ModelTree(
+        node = LayerNode(
             model_name,
-            info,
+            mclass,
             is_param_node,
-            type_color,
-            param_color,
-            main_color,
+            color_type or NodeColor.color_type,
+            color_param or NodeColor.color_param,
+            color_main or NodeColor.color_main,
             style=self.style if style is None else style,
             guide_style=self.guide_style if guide_style is None else guide_style,
             expanded=expanded,
@@ -67,256 +298,88 @@ class ModelTree(RichTree):
         self.children.append(node)
         return node
 
-    def set_label(self):
-        label = (
-            "" if self.model_name is None else f"+[{self.main_color}]{self.model_name}"
-        )
-        if self.info is not None:
-            label += (
-                f" [{self.param_color}]{self.info}"
-                if self.is_param_node
-                else f" [{self.type_color}]({self.info})"
-            )
-        self.label = label
-        return label
 
-
-class Visualization(object):
-    r"""Better visualization tool for *BIG* pretrained models.
-
-    - Better repeated block representation
-    - Clearer parameter position
-    - and Visible parameter state.
-
-    Args:
-        model (:obj:`torch.nn.Module`): The pretrained model, actually can be any pytorch module.
-
-    """
+class ModelTree(object):
+    N2L = {"Conv2d": "https://pytorch.org/docs/stable/generated/torch.nn.Conv2d.html"}
 
     def __init__(
         self,
         model: nn.Module,
         root_name="⚫️",
-        expand_params=False,
-        keep_non_params=False,
-        common_structure=False,
-        mapping=None,
-        only_common=False,
+        multi_layer=False,
+        show_buffer=True,
+        only_param=True,
+        color_scheme="night",
+        add_link=False,
     ):
-        """
-        Args:
-            root_name (:obj:`str`) The root node's name.
-            keep_non_params (:obj:`bool`) Display the modules that does not have parameters, such as nn.Dropout
-            expand_params (:obj:`bool`) Display parameter infomation (shape, etc) in seperate lines. "
-            common_structure (:obj:`bool`) Whether convert the structure into a common structure defined in structure_mapping.py. The not common structure will be displayed in grey.
-            only_common (:obj:`bool`) Whether ignore the modules that are not in common structure. This will result in a more compact view. Default to False.
-            mapping (:obj:`dict`) The structure mapping. Must provide if common_structure=True.
-        """
         self.model = model
         self.root_name = root_name
-        self.expand_params = expand_params
-        self.keep_non_params = keep_non_params
-        self.only_common = only_common
-        self.common_structure = common_structure
-        self.mapping = mapping
+        self.multi_layer = multi_layer
+        self.only_param = only_param
 
-        self.type_color = "green"
-        self.param_color = "cyan"
-        self.duplicate_color = "red"
-        self.normal_color = "white"
-        self.virtual_color = "orange"
-        self.not_common_color = "bright_black"
-        self.no_grad_color = "rgb(0,70,100)"
-        self.delta_color = "rgb(175,0,255)"
+        self.color_type = NodeColor.color_type
+        self.color_main = NodeColor.color_main
+
+        self.color_param = "bright_blue"
+        self.color_fold = "yellow"
+        self.color_virtual = "red"
+        self.color_nongrad = "magenta"
+        self.show_buffer = show_buffer
 
         self.root_tree = None
+        self.colorify(color_scheme)
+        self.create_tree(add_link)
 
-    def check_mode(self):
-        if self.keep_non_params and self.common_structure:
-            raise RuntimeError(
-                "keep_non_params can't be used will common_structure. The common structure only contains parameter nodes."
-            )
-        if self.common_structure:
-            if self.mapping is None:
-                raise RuntimeError("Mapping hasn't been given.")
+    def colorify(self, color_scheme):
+        clen = len(COLOR_NAMES)
+        if color_scheme == "disable":
+            for attr_name in dir(self):
+                if not attr_name.startswith("__") and "color" in attr_name:
+                    setattr(self, attr_name, "black")
+            for attr_name in dir(NodeColor):
+                if not attr_name.startswith("__") and "color" in attr_name:
+                    setattr(NodeColor, attr_name, "black")
+        elif color_scheme == "day":
+            count = 90
+            for attr_name in dir(self):
+                if not attr_name.startswith("__") and "color" in attr_name:
+                    setattr(self, attr_name, COLOR_NAMES[count % clen])
+                    count += 5
+            for attr_name in dir(NodeColor):
+                if not attr_name.startswith("__") and "color" in attr_name:
+                    setattr(NodeColor, attr_name, COLOR_NAMES[count % clen])
+                    count += 5
 
-    def build_model_tree(
-        self,
-        print_tree=True,
-    ):
-        r"""Draw the structure graph in command line."""
-
-        self.check_mode()
-        self.root_tree = ModelTree(self.root_name)
-        if self.common_structure:
-            self.build_common_tree(self.model, self.mapping, self.root_tree)
-        else:
-            self.build_tree(self.model, self.root_tree)
-        self.prune_tree(self.root_tree)
-        if not self.expand_params:
+    def create_tree(self, add_link):
+        self.root_tree = LayerNode(self.root_name, add_link)
+        self.build_tree(self.model, self.root_tree)
+        self.compress(self.root_tree)
+        if not self.multi_layer:
             self.fold_param_node(self.root_tree)
-        if print_tree:
-            richprint(self.root_tree)
         return self.root_tree
 
-    def is_leaf_module(self, module):
-        r"""Whether the module is a leaf module"""
-        return len([n for n, _ in module.named_children()]) == 0
+    def print(self):
+        rich_print(self.root_tree)
 
-    def build_tree(self, module: nn.Module, tree: ModelTree = None):
-        r"""build the originial tree structure"""
-        if self.is_leaf_module(module):
+    def build_tree(self, module: nn.Module, tree: LayerNode = None):
+        nm = [(n, m) for n, m in module.named_children()]
+        if not nm:
             return
         else:
-            for n, m in module.named_children():
+            for n, m in nm:
+                self.fill_location(m)
                 type_info = re.search(r"(?<=\').*(?=\')", str(type(m))).group()
                 type_info = type_info.split(".")[-1]
-                newnode = tree.add_node(n, info=type_info, type_color=self.type_color)
-                self.add_param_info_node(m, newnode)
-                self.build_tree(module=m, tree=newnode)
+                nd_ = tree.add_node(n, mclass=type_info, color_type=self.color_type)
+                self.process_pnode(m, nd_)
+                self.build_tree(module=m, tree=nd_)
 
-    def has_parameter(self, module):
-        return len([p for p in module.parameters()]) > 0
-
-    def build_common_tree(
-        self,
-        module: nn.Module,
-        mapping,
-        tree: ModelTree = None,
-        query="",
-        key_to_root="",
-    ):
-        r"""(Unstable) build the common tree structure"""
-        if self.is_leaf_module(module):
-            if len(query) > 0:  # the field is not in mapping
-                if self.has_parameter(module):
-                    # from IPython import embed
-                    # embed(header = "in leaf")
-                    print(
-                        f"Parameter node {query} not found under tree {tree.model_name} and module {module}. Is your mapping correct?"
-                    )  # WARNING
-            return
-        else:
-            for n, m in module.named_children():
-                new_query = query + n
-                type_info = re.search(r"(?<=\').*(?=\')", str(type(m))).group()
-                type_info = type_info.split(".")[-1]
-                if new_query in mapping or "$" in mapping:
-                    # print("query",new_query)
-                    # from IPython import embed
-                    # embed()
-                    if new_query in mapping:
-                        new_mapping = mapping[new_query]
-                        name = new_mapping["__name__"]
-                        if (
-                            len(name.split(".")) > 1
-                        ):  # new key contains a hierarchy , then unfold the hierarchy.
-                            # insert virtual node
-                            hierachical_name = name.split(".")
-                            temp_tree = self.find_or_insert(tree, hierachical_name)
-                            newnode = temp_tree.add_node(
-                                hierachical_name[-1],
-                                info=type_info,
-                                type_color=self.type_color,
-                            )
-                        elif name == "":  # the key not in a predefined common structure
-                            if self.only_common:
-                                continue
-                            else:  # add_node the originial name into the tree
-                                newnode = tree.add_node(
-                                    new_query,
-                                    info=type_info,
-                                    main_color=self.not_common_color,
-                                    type_color=self.not_common_color,
-                                )
-                        else:  # a single new key
-                            newnode = self.find_not_insert(
-                                tree, [name, ""]
-                            )  # try to find the node
-                            if newnode is not None:
-                                newnode.info = type_info
-                                newnode.type_color = self.type_color
-                                newnode.set_label()
-                            else:
-                                newnode = tree.add_node(
-                                    name, info=type_info, type_color=self.type_color
-                                )
-                    elif "$" in mapping:  # match any thing in the field.
-                        new_mapping = mapping["$"]
-                        newnode = tree.add_node(
-                            n, info=type_info, type_color=self.type_color
-                        )
-                    self.add_param_info_node(m, newnode)
-                    self.build_common_tree(
-                        module=m,
-                        tree=newnode,
-                        mapping=new_mapping,
-                        key_to_root=key_to_root + "." + new_query,
-                    )
-                else:
-                    # try to find from root
-                    # trsf_key = transform(key_to_root.strip("."), self.mapping)
-                    # parent_node = self.find_not_insert(self.root_tree, trsf_key.split(".")+[""])
-                    # if parent_node is not None:
-                    #     new_mapping = mapping[new_query]
-                    #     newnode = parent_node.add_node(name, info=type_info, type_color=self.type_color)
-                    #     self.build_common_tree(module=m, tree=parent_node, mapping )
-                    # print("notin query",new_query)
-                    # if new_query == "dense":
-                    #     from IPython import embed
-                    #     embed()
-                    # print(f"::{query},,{new_query}, {list(mapping.keys())}")
-                    new_query += "."
-                    self.build_common_tree(
-                        module=m,
-                        tree=tree,
-                        mapping=mapping,
-                        query=new_query,
-                        key_to_root=key_to_root,
-                    )
-
-    def find_or_insert(self, tree: ModelTree, hierachical_name: List[str]):
-        r"""Find the node, if not find, insert a virtual node"""
-        if len(hierachical_name) == 1:
-            return tree
-        names = [x.model_name for x in tree.children]
-        if hierachical_name[0] not in names:
-            new_node = tree.add_node(
-                hierachical_name[0], info="Virtual", type_color=self.virtual_color
-            )
-        else:
-            for x in tree.children:
-                if x.model_name == hierachical_name[0]:
-                    new_node = x
-                    break
-        return self.find_or_insert(new_node, hierachical_name=hierachical_name[1:])
-
-    def find_not_insert(self, tree: ModelTree, hierachical_name: List[str]):
-        r"""Find the node but not insert"""
-        if len(hierachical_name) == 1:
-            return tree
-        names = [x.model_name for x in tree.children]
-        if hierachical_name[0] not in names:
-            return None
-        else:
-            for x in tree.children:
-                if x.model_name == hierachical_name[0]:
-                    new_node = x
-                    break
-        return self.find_not_insert(new_node, hierachical_name=hierachical_name[1:])
-
-    def fold_param_node(self, t: ModelTree, p: ModelTree = None):
-        r"""place the parameters' infomation node right after the module that contains the parameters.
-        E.g. w1 (Linear)
-             -- weight: [32128, 1024]
-        =>
-             w1 (Linear) weight: [32128, 1024]
-        """
+    def fold_param_node(self, t: LayerNode, p: LayerNode = None):
         if hasattr(t, "is_param_node") and t.is_param_node:
             p.label += t.label
             return True  # indicate whether should be removed
         elif len(t.children) == 0:
-            return not self.keep_non_params
+            return self.only_param
         else:
             rm_idx = []
             for idx, c in enumerate(t.children):
@@ -327,58 +390,59 @@ class Visualization(object):
             ]
             return False
 
-    def prune_tree(self, t: ModelTree):
-        r"""Calculate the _finger_print of a module as the _finger_print of all child node plus the _finger_print of itself.
-        The leaf node will have the _finger_print == label.
-        Merge the different node that as the same _finger_print into a single node.
-        """
+    def compress(self, t: LayerNode):
         if len(t.children) == 0:
-            setattr(t, "_finger_print", t.label)
+            setattr(t, "_xyz", t.label)
             return
 
         for _, sub_tree in enumerate(t.children):
-            self.prune_tree(sub_tree)
+            self.compress(sub_tree)
 
-        t_finger_print = (
-            t.label + "::" + ";".join([x._finger_print for x in t.children])
-        )
-        setattr(t, "_finger_print", t_finger_print)
+        t_xyz = t.label + "::" + ";".join([x._xyz for x in t.children])
+        setattr(t, "_xyz", t_xyz)
 
-        nohead_finger_print_dict = OrderedDict()
+        nohead_xyz_dict = OrderedDict()
         for child_id, sub_tree in enumerate(t.children):
-            fname_list = sub_tree._finger_print.split("::")
+            fname_list = sub_tree._xyz.split("::")
             if len(fname_list) == 1:
                 fname = fname_list[0]
             else:
                 fname = "::".join(fname_list[1:])
-            if fname not in nohead_finger_print_dict:
-                nohead_finger_print_dict[fname] = [child_id]
+            if fname not in nohead_xyz_dict:
+                nohead_xyz_dict[fname] = [child_id]
             else:
-                nohead_finger_print_dict[fname].append(child_id)
+                nohead_xyz_dict[fname].append(child_id)
 
         new_childrens = []
-        for groupname in nohead_finger_print_dict:
-            representative_id = nohead_finger_print_dict[groupname][0]
-            representative = t.children[representative_id]
-            group_node = [
-                t.children[idx] for idx in nohead_finger_print_dict[groupname]
-            ]
+        for groupname in nohead_xyz_dict:
+            representative_id = nohead_xyz_dict[groupname][0]
+            rep = t.children[representative_id]
+            group_node = [t.children[idx] for idx in nohead_xyz_dict[groupname]]
 
-            representative = self.extract_common_and_join(group_node)
-            new_childrens.append(representative)
+            rep = self.merge_layer(group_node)
+            new_childrens.append(rep)
         t.children = new_childrens
 
-    def extract_common_and_join(self, l: List[ModelTree]):
-        r"""Some modules that have the same info (e.g., are all "Linear") have different names (e.g., w1,w2)
-        Merge them.
-        E.g. tree1.model_name = "w1", tree1.info = "Linear"; tree2.model_name = "w1", tree2.info = "Linear"
-        -> representive.model_name = "w1,w2", representive.info = "Linear"
-        """
-        representative = l[0]
+    def merge_layer(self, l: List[LayerNode]):
+        def neat_expr(l: List[str]):
+            def _rng(nums: List[int]):
+                nums = sorted(set(nums))
+                gaps = [[s, e] for s, e in zip(nums, nums[1:]) if s + 1 < e]
+                edges = iter(nums[:1] + sum(gaps, []) + nums[-1:])
+                return list(zip(edges, edges))
+
+            try:
+                s = _rng([int(x.strip()) for x in l])
+                s = [str(x) + "-" + str(y) for x, y in s]
+                return ",".join(s)
+            except Exception as e:
+                return ",".join(l)
+
+        rep = l[0]
         if len(l) == 1:
-            return representative
+            return rep
         name_list = [x.model_name for x in l]
-        info_list = [x.info for x in l]
+        info_list = [x.mclass for x in l]
         type_hint_dict = OrderedDict()
         for x, y in zip(name_list, info_list):
             if y not in type_hint_dict:
@@ -391,65 +455,65 @@ class Visualization(object):
         typeinfos = ""
         for t in type_hint_dict:
             group_components = type_hint_dict[t]
-            group_components = self.neat_expr(group_components)
+            group_components = neat_expr(group_components)
             names += group_components + ","
             typeinfos += t + ","
-            s += f"[{self.duplicate_color}]{group_components}[{self.type_color}]({t}),"
-        names = names[:-1]
-        s = s[:-1]
+            link_str = f"{t}" if str(t) not in ModelTree.N2L else ModelTree.N2L[str(t)]
+            s += f"+[link {link_str}][bold {self.color_fold}]{group_components}[/][{self.color_type}]({t}),"
         typeinfos = typeinfos[:-1]
-        representative.model_name = names
-        representative.type_info = typeinfos
-        representative.label = s
-        return representative
+        rep.model_name = names[:-1]
+        rep.type_info = typeinfos
+        rep.label = s[:-1]
+        return rep
 
-    def neat_expr(self, l: List[str]):
-        r"""A small tool function to arrange the consecutive number into interval display.
-        E.g., ["1","2","3","5","6","9","10","11","12"] -> ["1-3","5-6","9-12"]
-        """
+    def get_named_params(self, m):
+        res = [(n, m) for n, m in m.named_parameters()]
+        if self.show_buffer:
+            res += [(n, m) for n, m in m.named_buffers()]
+        return res
+
+    def fill_location(self, m):
+        m_name = m._get_name()
+        if m_name not in self.N2L:
+            im = inspect.getmodule(type(m))
+            if hasattr(im, "__file__"):
+                ModelTree.N2L[m_name] = im.__file__
+
+    def process_pnode(self, m: nn.Module, tree: LayerNode, record_grad_state=True):
+        known_module = {n: c for n, c in m.named_children()}
         try:
-            s = self.ranges([int(x.strip()) for x in l])
-            s = [str(x) + "-" + str(y) for x, y in s]
-            return ",".join(s)
-        except Exception as e:
-            return ",".join(l)
-
-    def ranges(self, nums: List[int]):
-        r"""A small tool function to arrange the consecutive number into interval display.
-        E.g., [1,2,3,5,6,9,10,11,12] -> [[1,3],[5,6],[9,12]]
-        """
-        nums = sorted(set(nums))
-        gaps = [[s, e] for s, e in zip(nums, nums[1:]) if s + 1 < e]
-        edges = iter(nums[:1] + sum(gaps, []) + nums[-1:])
-        return list(zip(edges, edges))
-
-    def add_param_info_node(
-        self, m: nn.Module, tree: ModelTree, record_grad_state=True, record_delta=True
-    ):
-        r"""Add parameter infomation of the module. The parameters that are not inside a module (i.e., created using nn.Parameter) will be added in this function."""
-        known_module = [n for n, c in m.named_children()]
-        try:
-            for n, p in m.named_parameters():
+            for n, p in self.get_named_params(m):
                 if n.split(".")[0] not in known_module:
                     if len(n.split(".")) > 1:
                         raise RuntimeError(
                             f"The name field {n} should be a parameter since it doesn't appear in named_children, but it contains '.'"
                         )
-                    info = f"{n}:{list(p.shape)}"
+                    p_shape = list(p.shape)
+                    if len(p_shape) == 0:
+                        continue
+                    mclass = f"{n}{p_shape}"
+                    if str(p.dtype) != "torch.float32":
+                        mclass += "(" + str(p.dtype).split(".")[-1] + ")"
+                    if str(p.device) != "cpu":
+                        mclass += f"({str(p.device)})"
+                    if hasattr(p, "grad") and p.grad:
+                        mclass += "(📈)"
+                    mclass = (
+                        mclass.replace(" ", "")
+                        .replace("(float", "(fp")
+                        .replace("(int", "(i")
+                    )
 
                     if record_grad_state:
                         if not p.requires_grad:
-                            color = self.no_grad_color
+                            color = self.color_nongrad
+                            mclass += "❄️ "
                         else:
-                            color = self.param_color
+                            color = self.color_param
                     else:
-                        color = self.param_color
+                        color = self.color_param
 
-                    if record_delta:
-                        if hasattr(p, "_is_delta") and getattr(p, "_is_delta"):
-                            color = self.delta_color
-
-                    tree.add_node(info=info, is_param_node=True, param_color=color)
+                    tree.add_node(mclass=mclass, is_param_node=True, color_param=color)
         except Exception as e:
             traceback.print_exc(file=sys.stdout)
 
@@ -457,18 +521,19 @@ class Visualization(object):
 def print_model(
     model,
     root_name="🔵",
-    keep_non_params=False,
-    expand_params=False,
-    common_structure=False,
-    only_common=False,
-    mapping=None,
+    only_param=True,
+    multi_layer=False,
+    color_scheme="night",
+    add_link=False,
+    show_buffer=False,
 ):
-    Visualization(
+    v = ModelTree(
         model,
         root_name=root_name,
-        keep_non_params=keep_non_params,
-        expand_params=expand_params,
-        common_structure=common_structure,
-        only_common=only_common,
-        mapping=mapping,
-    ).build_model_tree()
+        only_param=only_param,
+        multi_layer=multi_layer,
+        color_scheme=color_scheme,
+        add_link=add_link,
+        show_buffer=show_buffer,
+    )
+    v.print()
