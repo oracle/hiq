@@ -1,7 +1,7 @@
 # HiQ version 1.1
 #
 # Copyright (c) 2022, Oracle and/or its affiliates.
-# Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl/ 
+# Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl/
 #
 
 __author__ = None
@@ -50,39 +50,53 @@ def parse_lib(lib_name, res=[]):
     md = hiq.mod(lib_name)
     if md is None:
         return None
-    p = [lib_name, '', '', '']
-    l = [i for i in dir(md) if not i.startswith('_') or i == '__call__']
+    p = [lib_name, "", "", ""]
+    l = [i for i in dir(md) if not i.startswith("_") or i == "__call__"]
     for i in l:
         try:
             st = f"__m=type(md.{i})"
             itree.exe(st, locals())
-            if locals()['__m'] == types.FunctionType or locals()['__m'] == types.MethodType:
+            if (
+                locals()["__m"] == types.FunctionType
+                or locals()["__m"] == types.MethodType
+            ):
                 itree.exe(f"__m_len =len(inspect.getsourcelines(md.{i})[0])", locals())
-                if locals()['__m_len'] < 10: continue
+                if locals()["__m_len"] < 10:
+                    continue
                 p[2], p[3] = i, i
                 res.append(list(p))
                 if len(res) > 100:
                     return res
-            elif locals()['__m'] == type:
+            elif locals()["__m"] == type:
                 p[1] = i
                 itree.exe(f"__dir_list=dir(md.{i})", locals())
-                fs = [i for i in locals()['__dir_list'] if not i.startswith('_') or i == '__call__']
+                fs = [
+                    i
+                    for i in locals()["__dir_list"]
+                    if not i.startswith("_") or i == "__call__"
+                ]
                 for j in fs:
                     st = f"__m2=type(md.{i}.{j})"
                     itree.exe(st, locals())
-                    if locals()['__m2'] == types.FunctionType:
-                        itree.exe(f"__m_len =len(inspect.getsourcelines(md.{i}.{j})[0])", locals())
-                        if locals()['__m_len'] < 10: continue
+                    if locals()["__m2"] == types.FunctionType:
+                        itree.exe(
+                            f"__m_len =len(inspect.getsourcelines(md.{i}.{j})[0])",
+                            locals(),
+                        )
+                        if locals()["__m_len"] < 10:
+                            continue
                         p[2], p[3] = j, j
                         res.append(list(p))
-                p[1] = ''
-            elif locals()['__m'] == types.ModuleType or "<class 'abc.ABCMeta'>" == str(locals()['__m']):
+                p[1] = ""
+            elif locals()["__m"] == types.ModuleType or "<class 'abc.ABCMeta'>" == str(
+                locals()["__m"]
+            ):
                 r = parse_lib(f"{lib_name}.{i}", res)
                 if r is not None:
                     res += r
                     if len(res) > 100:
                         return res[:100]
-                print(st, ", mtype:", locals()['__m'])
+                print(st, ", mtype:", locals()["__m"])
 
         except AttributeError:
             continue
@@ -99,24 +113,24 @@ class HiQBase(itree.ForestStats, LogMonkeyKing):
     __slots__ = ()
 
     def __init__(
-            sf,
-            hiq_table_or_path: Union[str, List[Iterable[str]]] = [],
-            metric_funcs: List[Callable] = [time.time],
-            hiq_id_func: Callable = get_tau_id,
-            func_args_handler: Callable = func_args_handler,
-            target_path=None,
-            max_hiq_size=30,
-            verbose=False,
-            fast_fail=True,
-            tpl=None,
-            extra_hiq_table: List[str] = [],
-            attach_timestamp=False,
-            extra_metrics: Set[ExtraMetrics] = set(),  # EXTRA_METRIC_FILE
-            lmk_path=None,
-            lmk_handler=None,
-            lmk_logger=None,
-            *args,
-            **kwargs,
+        sf,
+        hiq_table_or_path: Union[str, List[Iterable[str]]] = [],
+        metric_funcs: List[Callable] = [time.time],
+        hiq_id_func: Callable = get_tau_id,
+        func_args_handler: Callable = func_args_handler,
+        target_path=None,
+        max_hiq_size=30,
+        verbose=False,
+        fast_fail=True,
+        tpl=None,
+        extra_hiq_table: List[str] = [],
+        attach_timestamp=False,
+        extra_metrics: Set[ExtraMetrics] = set(),  # EXTRA_METRIC_FILE
+        lmk_path=None,
+        lmk_handler=None,
+        lmk_logger=None,
+        *args,
+        **kwargs,
     ):
         """constructor of ABC HiQBase
 
@@ -347,8 +361,8 @@ class HiQBase(itree.ForestStats, LogMonkeyKing):
                 tmp = s.get_tree(func)  # TODO: we can add exception here
                 if func.__name__ == KEY_LATENCY and tmp.just_before_ending_root():
                     tmp.extra["overhead"] = (
-                                                    s.overhead_us - tmp.extra["overhead_start"]
-                                            ) / len(s.metric_funcs)
+                        s.overhead_us - tmp.extra["overhead_start"]
+                    ) / len(s.metric_funcs)
                 tmp.end(f_name, func(), extra=deepcopy(node_extra))
             raise e
 
@@ -501,17 +515,19 @@ class HiQBase(itree.ForestStats, LogMonkeyKing):
                 spec_with_default, spec_wo_default = _get_full_argspecs(locals()["m_"])
 
                 if inspect.ismethod(locals()["m_"]):
-                    spec_with_default = spec_with_default[spec_with_default.find(',') + 1:]
-                    spec_wo_default = spec_wo_default[spec_wo_default.find(',') + 1:]
+                    spec_with_default = spec_with_default[
+                        spec_with_default.find(",") + 1 :
+                    ]
+                    spec_wo_default = spec_wo_default[spec_wo_default.find(",") + 1 :]
                     # spec_with_default += ",*args,**kwargs"
                     # spec_wo_default += ",*args,**kwargs"
 
                 assert (
-                        re.match(r"^[\w\.]+$", tag)
-                        and ";" not in spec_with_default
-                        and ";" not in spec_wo_default
-                        and ";" not in module_name
-                        and ";" not in class_func
+                    re.match(r"^[\w\.]+$", tag)
+                    and ";" not in spec_with_default
+                    and ";" not in spec_wo_default
+                    and ";" not in module_name
+                    and ";" not in class_func
                 ), "no hacker"
                 signature = spec_with_default
                 if spec_with_default:
@@ -702,22 +718,22 @@ class HiQLatency(HiQBase, Jack):
     """
 
     def __init__(
-            sf,
-            hiq_table_or_path: Union[str, list] = [],
-            metric_funcs: List[Callable] = [time.time],
-            hiq_id_func: Callable = get_tau_id,
-            func_args_handler: Callable = func_args_handler,
-            target_path=None,
-            max_hiq_size=30,
-            verbose=False,
-            fast_fail=True,
-            tpl=None,
-            extra_hiq_table=[],
-            attach_timestamp=False,
-            extra_metrics=set(),
-            lmk_path=None,
-            lmk_handler=None,
-            lmk_logger=None,
+        sf,
+        hiq_table_or_path: Union[str, list] = [],
+        metric_funcs: List[Callable] = [time.time],
+        hiq_id_func: Callable = get_tau_id,
+        func_args_handler: Callable = func_args_handler,
+        target_path=None,
+        max_hiq_size=30,
+        verbose=False,
+        fast_fail=True,
+        tpl=None,
+        extra_hiq_table=[],
+        attach_timestamp=False,
+        extra_metrics=set(),
+        lmk_path=None,
+        lmk_handler=None,
+        lmk_logger=None,
     ):
         HiQBase.__init__(
             sf,
@@ -776,22 +792,22 @@ class HiQMemory(HiQBase, Jack):
     """
 
     def __init__(
-            sf,
-            hiq_table_or_path: Union[str, list] = [],
-            metric_funcs: List[Callable] = [time.time, get_memory_mb],
-            hiq_id_func: Callable = get_tau_id,
-            func_args_handler: Callable = func_args_handler,
-            target_path=None,
-            max_hiq_size=30,
-            verbose=False,
-            fast_fail=True,
-            tpl=None,
-            extra_hiq_table=[],
-            attach_timestamp=False,
-            extra_metrics=set(),  # EXTRA_METRIC_FILE
-            lmk_path=None,
-            lmk_handler=None,
-            lmk_logger=None,
+        sf,
+        hiq_table_or_path: Union[str, list] = [],
+        metric_funcs: List[Callable] = [time.time, get_memory_mb],
+        hiq_id_func: Callable = get_tau_id,
+        func_args_handler: Callable = func_args_handler,
+        target_path=None,
+        max_hiq_size=30,
+        verbose=False,
+        fast_fail=True,
+        tpl=None,
+        extra_hiq_table=[],
+        attach_timestamp=False,
+        extra_metrics=set(),  # EXTRA_METRIC_FILE
+        lmk_path=None,
+        lmk_handler=None,
+        lmk_logger=None,
     ):
         HiQBase.__init__(
             sf,
@@ -826,14 +842,12 @@ if __name__ == "__main__":
     import pickle
     from multiprocessing import Process, Queue, Lock
 
-
     def get_tau_id_():
         return 1
 
-
     h1 = HiQLatency(fast_fail=1, hiq_id_func=get_tau_id_)
-    h1.tau[0] = {"hello": Tree(extra={}, tid='simon', queue_lmk=Queue())}
-    h1.tau[1] = {"hello": Tree(extra={}, tid='simon', queue_lmk=None)}
+    h1.tau[0] = {"hello": Tree(extra={}, tid="simon", queue_lmk=Queue())}
+    h1.tau[1] = {"hello": Tree(extra={}, tid="simon", queue_lmk=None)}
     h1.tau[2] = {"hello": 123}
 
     d = pickle.dumps(h1)
@@ -846,8 +860,8 @@ if __name__ == "__main__":
     # print(h1.tau)
     print(type(h2))
     print(h2.tau)
-    print(type(h1.tau[0]['hello']))
-    print(type(h2.tau[0]['hello']))
-    print(h1.tau[0]['hello'].queue_lmk)
-    print(h2.tau[0]['hello'].queue_lmk)
+    print(type(h1.tau[0]["hello"]))
+    print(type(h2.tau[0]["hello"]))
+    print(h1.tau[0]["hello"].queue_lmk)
+    print(h2.tau[0]["hello"].queue_lmk)
     h2.show()
