@@ -541,7 +541,6 @@ def print_model(
 def demo():
     import torch
     from transformers import BertModel
-    from hiq.vis import print_model
 
     model = BertModel.from_pretrained("bert-base-uncased")
     model.embeddings.word_embeddings.requires_grad = False

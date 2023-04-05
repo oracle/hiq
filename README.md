@@ -5,13 +5,9 @@
 [![Github release][release-img]][release]
 [![lic][license-img]][license]
 
-> 🔥 HiQ now supports GPU tracing, and supports DNN libraries like pyTorch, `transformers`, LAVIS, and LLM like T5 and GPT2 in addition to Onnxruntime, FastAPI and Flask.
+> 🔥 HiQ now supports GPU profiling, DNN model visualization and tracing for DNN libraries like pyTorch, `transformers`, LAVIS, and LLMs like LLaMA, OPT, Bloom, T5 and GPT2 in addition to Onnxruntime, FastAPI and Flask.
 
-HiQ is a `declarative`, `non-intrusive`, `dynamic` and `transparent` tracking system for both **monolithic** application and **distributed** system. It brings the runtime information tracking and optimization to a new level without compromising with speed and system performance, or hiding any tracking overhead information. HiQ applies for both I/O bound and CPU bound applications.
-
-To explain the four features, **declarative** means you can declare the things you want to track in a text file, which could be a json, yaml or even csv,and no need to change program code. **Non-intrusive** means HiQ doesn't requires to modify original python code. **Dynamic** means HiQ supports tracing metrics featuring at run time, which can be used for adaptive tracing. **Transparent** means HiQ provides the tracing overhead and doesn't hide it no matter it is huge or tiny.
-
-In addition to latency tracking, HiQ provides memory, disk I/O and Network I/O tracking out of the box. The output can be saved in form of normal line by line log file, or HiQ tree, or span graph.
+HiQ is a `declarative`, `non-intrusive`, `dynamic` and `transparent` tracking system for both **monolithic** application and **distributed** system. It brings the runtime information tracking and optimization to a new level without compromising with speed and system performance, or hiding any tracking overhead information. HiQ applies for both I/O bound and CPU bound applications. In addition to latency tracking, HiQ provides memory, disk I/O and Network I/O tracking out of the box. The output can be saved in form of normal line by line log file, or HiQ tree, or span graph.
 
 HiQ's philosophy is to **decouple `observability logic` from `business logic`**. We don't have to enter the black hole to observe it. Do you like the idea? Leave a ⭐ if you enjoy the project and welcome to say Hi to us on [Slack 👋](https://join.slack.com/t/hiq-myo2317/shared_invite/zt-17ejh6ybo-51IX6G1lHMXgLbq2HKIO_Q)
 
@@ -86,16 +82,6 @@ From the screenshot we can see the timestamp and the latency of each function:
 
 HiQ just traced the `main.py` file running without touching one line of its code.
 
-### HiQ UI
-
-- Main Page
-
-![HiQ UI Main Page](https://github.com/oracle/hiq/raw/main/hiq/docs/source/img/hiq-ui-1.png)
-
-- Latency Details
-
-![HiQ UI Latency Details](https://github.com/oracle/hiq/raw/main/hiq/docs/source/img/hiq-ui-2.png)
-
 ## Documentation
 
 **HTML**: [🔗 HiQ Online Documents](https://hiq.readthedocs.io/en/latest/index.html)  | **PDF**: Please check [🔗 HiQ User Guide](https://github.com/oracle/hiq/blob/main/hiq/docs/hiq.pdf).
@@ -130,6 +116,16 @@ The graph is self-explantory. There are several conventions:
 - `+`, bold font, and underscored dotted line mean the displayed layer is a folded version of multiple layers with the same structure.
 
 What you need to do is just calling `print_model(model)` in your code. Refer to: [here](https://github.com/henrywoo/hiq/tree/main/hiq/examples/vis) for how to use it.
+
+## HiQ Web UI
+
+- Main Page
+
+![HiQ UI Main Page](https://github.com/oracle/hiq/raw/main/hiq/docs/source/img/hiq-ui-1.png)
+
+- Latency Details
+
+![HiQ UI Latency Details](https://github.com/oracle/hiq/raw/main/hiq/docs/source/img/hiq-ui-2.png)
 
 ## Jupyter NoteBook
 
@@ -181,7 +177,7 @@ Copyright (c) 2022 Oracle and/or its affiliates. Released under the Universal Pe
 [cov-img]: https://codecov.io/gh/uber/athenadriver/branch/master/graph/badge.svg
 [cov]: https://hiq.readthedocs.io/en/latest/index.html
 
-[release-img]: https://img.shields.io/badge/release-v1.1.9-red
+[release-img]: https://img.shields.io/badge/release-v1.1.11-red
 [release]: https://github.com/oracle-samples/hiq
 
 [license-img]: https://img.shields.io/badge/License-UPL--1.0-red
