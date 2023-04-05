@@ -121,7 +121,7 @@ HiQ can visualize DNN model. To get the following BERT model's structure, you ca
 python -m hiq.vis
 ```
 
-![BERT](hiq/docs/medium/vis_bert.png)
+![BERT](https://raw.githubusercontent.com/henrywoo/hiq/main/hiq/docs/medium/vis_bert.png)
 
 The graph is self-explantory. There are several conventions:
 
@@ -129,7 +129,7 @@ The graph is self-explantory. There are several conventions:
 - 📈 means gradient exists for that model parameter, which usually happens after backpopulation.
 - `+`, bold font, and underscored dotted line mean the displayed layer is a folded version of multiple layers with the same structure.
 
-What you need to do is just calling `print_model(model)` in your code.
+What you need to do is just calling `print_model(model)` in your code. Refer to: [here](https://github.com/henrywoo/hiq/tree/main/hiq/examples/vis) for how to use it.
 
 ## Jupyter NoteBook
 
