@@ -3,7 +3,6 @@ from hiq.framework.onnxruntime import OrtHiQLatency
 
 
 class MyFastAPI(hiq.HiQFastAPILatencyMixin, OrtHiQLatency):
-
     def __init__(self):
         super().__init__(extra_metrics={hiq.ExtraMetrics.ARGS})
 
@@ -23,5 +22,3 @@ class MyFastAPI(hiq.HiQFastAPILatencyMixin, OrtHiQLatency):
 
 
 hiq.run_fastapi(driver=MyFastAPI(), app=hiq.mod("webapp").app)
-
-

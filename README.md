@@ -1,4 +1,4 @@
-![](docs/../hiq/docs/source/_static/hiq.png) 🦉  A Modern Observability System
+![](docs/../hiq/docs/source/_static/hiq.png) 🦉  Observability And Optimization In Modern AI Era
 ----
 [![Documentation Status](https://readthedocs.org/projects/hiq/badge/?version=latest)](https://hiq.readthedocs.io/en/latest/?badge=latest)
 [![CodeCov][cov-img]][cov]
@@ -113,6 +113,23 @@ Metrics:
 Streaming:  
 - Kafka: https://hiq.readthedocs.io/en/latest/7_integration.html#oci-streaming 
 
+## DNN Model Observability & Visualization
+
+HiQ can visualize DNN model. To get the following BERT model's structure, you can just run:
+
+```
+python -m hiq.vis
+```
+
+![BERT](hiq/docs/medium/vis_bert.png)
+
+The graph is self-explantory. There are several conventions:
+
+- ❄️ means frozen layer, where `requires_grad` is false.
+- 📈 means gradient exists for that model parameter, which usually happens after backpopulation.
+- `+`, bold font, and underscored dotted line mean the displayed layer is a folded version of multiple layers with the same structure.
+
+What you need to do is just calling `print_model(model)` in your code.
 
 ## Jupyter NoteBook
 

@@ -1,7 +1,7 @@
 # HiQ version 1.1
 #
 # Copyright (c) 2022, Oracle and/or its affiliates.
-# Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl/ 
+# Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl/
 #
 
 import contextvars
@@ -208,6 +208,7 @@ def _is_callable(a_: str):
 def silent_import(module_name: str):
     try:
         import importlib
+
         return importlib.import_module(module_name)
     except:
         return None
@@ -248,7 +249,7 @@ def __value_to_str(i, depth=1):
         tmp = []
         for k, v in list(i.items())[:3]:
             tmp.append(__value_to_str(v, depth + 1))
-        if len(i.items())>3:
+        if len(i.items()) > 3:
             s += f"dict(k:{list(i.keys())[:3]}...,v:{tmp}...)"
         else:
             s += f"dict(k:{list(i.keys())},v:{tmp})"
@@ -257,7 +258,7 @@ def __value_to_str(i, depth=1):
         for idx, e in enumerate(i):
             tmp.append(__value_to_str(e, depth + 1))
             if idx == 10:
-                tmp.append('...')
+                tmp.append("...")
                 break
         s += f"list({len(i)},{','.join(tmp)})"
     elif torch and isinstance(i, torch.Tensor):
@@ -331,8 +332,8 @@ def call_decorated(f: Callable, args=None, kwargs=None, tracing_type=TRACING_TYP
         from py_zipkin.zipkin import zipkin_span
 
         with zipkin_span(
-                service_name=os.environ.get("SERVICE_NAME", "hiq"),
-                span_name=f.__name__,
+            service_name=os.environ.get("SERVICE_NAME", "hiq"),
+            span_name=f.__name__,
         ):
             return f(*args, **kwargs)
     elif tracing_type == TRACING_TYPE_OTM:
@@ -395,7 +396,7 @@ class FlaskReqIdGenerator(object):
         return (
             request.environ.get("HTTP_X_REQUEST_ID")
             if has_request_context()
-            else 'flask-req'
+            else "flask-req"
         )
 
 

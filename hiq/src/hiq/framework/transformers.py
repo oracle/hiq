@@ -24,6 +24,7 @@ class TransformerMixin(object):
 class HiQTransformerMemory(TransformerMixin, hiq.HiQMemory):
     pass
 
+
 class HiQTransformerGPUMemory(TransformerMixin, hiq.HiQMemory):
     def __init__(
         sf,
@@ -47,7 +48,7 @@ class HiQTransformerGPUMemory(TransformerMixin, hiq.HiQMemory):
             sf,
             hiq_table_or_path=hiq_table_or_path,
             metric_funcs=metric_funcs,
-            hiq_id_func=hiq_id_func, 
+            hiq_id_func=hiq_id_func,
             func_args_handler=func_args_handler,
             target_path=target_path,
             max_hiq_size=max_hiq_size,
@@ -61,7 +62,7 @@ class HiQTransformerGPUMemory(TransformerMixin, hiq.HiQMemory):
             lmk_handler=lmk_handler,
             lmk_logger=lmk_logger,
         )
-        
+
 
 class HiQTransformerFullMemory(TransformerMixin, hiq.HiQMemory):
     def __init__(
@@ -100,7 +101,6 @@ class HiQTransformerFullMemory(TransformerMixin, hiq.HiQMemory):
             lmk_handler=lmk_handler,
             lmk_logger=lmk_logger,
         )
-        
 
 
 class HiQTransformerLatency(TransformerMixin, hiq.HiQLatency):

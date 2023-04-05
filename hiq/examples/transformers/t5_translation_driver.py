@@ -16,7 +16,7 @@ def run_translate():
         attach_timestamp=True,
         max_hiq_size=1,
         extra_metrics={hiq.ExtraMetrics.ARGS},
-        #extra_hiq_table=[TAU_TABLE_DIO_RD],
+        # extra_hiq_table=[TAU_TABLE_DIO_RD],
     )
     hiq.mod("t5_translation").translate()
     driver.show()
