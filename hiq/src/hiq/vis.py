@@ -305,7 +305,7 @@ class ModelTree(object):
     def __init__(
         self,
         model: nn.Module,
-        root_name="⚫️",
+        model_name="⚫️",
         multi_layer=False,
         show_buffer=True,
         only_param=True,
@@ -313,7 +313,7 @@ class ModelTree(object):
         add_link=False,
     ):
         self.model = model
-        self.root_name = root_name
+        self.model_name = model_name
         self.multi_layer = multi_layer
         self.only_param = only_param
 
@@ -351,7 +351,7 @@ class ModelTree(object):
                     count += 5
 
     def create_tree(self, add_link):
-        self.root_tree = LayerNode(self.root_name, add_link)
+        self.root_tree = LayerNode(self.model_name, add_link)
         self.build_tree(self.model, self.root_tree)
         self.compress(self.root_tree)
         if not self.multi_layer:
@@ -496,8 +496,8 @@ class ModelTree(object):
                         mclass += "(" + str(p.dtype).split(".")[-1] + ")"
                     if str(p.device) != "cpu":
                         mclass += f"({str(p.device)})"
-                    if hasattr(p, "grad") and p.grad:
-                        mclass += "(📈)"
+                    if hasattr(p, "grad") and p.grad is not None:
+                            mclass += "(📈)"
                     mclass = (
                         mclass.replace(" ", "")
                         .replace("(float", "(fp")
@@ -520,7 +520,7 @@ class ModelTree(object):
 
 def print_model(
     model,
-    root_name="🔵",
+    model_name=None,
     only_param=True,
     multi_layer=False,
     color_scheme="night",
@@ -529,7 +529,7 @@ def print_model(
 ):
     v = ModelTree(
         model,
-        root_name=root_name,
+        model_name= "🌳 " + (model_name or model._get_name()),
         only_param=only_param,
         multi_layer=multi_layer,
         color_scheme=color_scheme,
@@ -537,3 +537,19 @@ def print_model(
         show_buffer=show_buffer,
     )
     v.print()
+
+def demo():
+    import torch
+    from transformers import BertModel
+    from hiq.vis import print_model
+
+    model = BertModel.from_pretrained("bert-base-uncased")
+    model.embeddings.word_embeddings.requires_grad = False
+    model.encoder.layer[0].attention.self.query.weight.requires_grad = False
+    model.encoder.layer[0].attention.output.dense.weight.requires_grad = False
+    model.encoder.layer[0].attention.output.LayerNorm.weight.grad = torch.ones(768)
+    model.encoder = model.encoder.cuda()
+    print_model(model)
+
+if __name__ == "__main__":
+    demo()
