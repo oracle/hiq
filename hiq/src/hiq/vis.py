@@ -222,7 +222,7 @@ COLOR_NAMES = [
 class NodeColor(object):
     color_type = "green"
     color_param = "red"
-    color_main = "white"
+    color_main = "bright_blue"
 
 
 class LayerNode(RichTree):
