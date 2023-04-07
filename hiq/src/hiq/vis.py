@@ -529,9 +529,10 @@ def print_model(
     show_buffer=False,
 ):
     trainable_params, all_params, pct = model_parameters_stats(model)
+    tree_info = f"({trainable_params},{all_params},{pct}%)" if trainable_params is not None else ""
     v = ModelTree(
         model,
-        model_name= "🌳 " + (model_name or model._get_name()) + f"({trainable_params},{all_params},{pct}%)",
+        model_name= "🌳 " + (model_name or model._get_name()) + tree_info,
         only_param=only_param,
         multi_layer=multi_layer,
         color_scheme=color_scheme,
