@@ -10,6 +10,7 @@ from typing import List
 import torch.nn as nn
 from rich import print as rich_print
 from rich.tree import Tree as RichTree
+from hiq.torch import model_parameters_stats
 
 COLOR_NAMES = [
     "black",
@@ -527,9 +528,10 @@ def print_model(
     add_link=False,
     show_buffer=False,
 ):
+    trainable_params, all_params, pct = model_parameters_stats(model)
     v = ModelTree(
         model,
-        model_name= "🌳 " + (model_name or model._get_name()),
+        model_name= "🌳 " + (model_name or model._get_name()) + f"({trainable_params},{all_params},{pct}%)",
         only_param=only_param,
         multi_layer=multi_layer,
         color_scheme=color_scheme,
