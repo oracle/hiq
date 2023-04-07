@@ -1,7 +1,7 @@
 """For PyTorch"""
 
 def model_parameters_stats(model):
-    if hasattr(model, "named_parameters"):
+    if not hasattr(model, "named_parameters"):
         return None, None, None
     trainable_params = 0
     all_params = 0
