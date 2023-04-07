@@ -518,6 +518,10 @@ class ModelTree(object):
         except Exception as e:
             traceback.print_exc(file=sys.stdout)
 
+def get_model_name(m):
+    if hasattr(m, '_get_name'):
+        return m._get_name()
+    return str(type(m))
 
 def print_model(
     model,
@@ -532,7 +536,7 @@ def print_model(
     tree_info = f"({all_params},{trainable_params},{pct:8.5f}%)" if trainable_params is not None else ""
     v = ModelTree(
         model,
-        model_name= "🌳 " + (model_name or model._get_name()) + tree_info,
+        model_name= "🌳 " + (model_name or get_model_name(model)) + tree_info,
         only_param=only_param,
         multi_layer=multi_layer,
         color_scheme=color_scheme,
