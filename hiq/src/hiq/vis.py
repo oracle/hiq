@@ -7,10 +7,10 @@ import inspect
 from collections import OrderedDict
 from typing import List
 
-import torch.nn as nn
+import torch
 from rich import print as rich_print
-from rich.tree import Tree as RichTree
-from hiq.torch import model_parameters_stats
+from rich.tree import Tree
+from hiq.torch import model_parameters_stats, model_parameters_str
 
 COLOR_NAMES = [
     "black",
@@ -225,34 +225,36 @@ class NodeColor(object):
     color_main = "bright_blue"
 
 
-class LayerNode(RichTree):
+class LayerNode(Tree):
     def __init__(
         self,
         model_name=None,
         mclass=None,
-        is_param_node=False,
+        param_node=False,
         color_type=None,
         color_param=None,
         color_main=None,
         style="tree",
-        guide_style="tree.line",
+        guide_style="light_sea_green",
         expanded=True,
         highlight=False,
         add_link=False,
+        ref=None,
+        nid="0",
     ):
         self.model_name = model_name
         self.mclass = mclass
-        self.is_param_node = is_param_node
+        self.param_node = param_node
         self.color_type = color_type or NodeColor.color_type
         self.color_param = color_param or NodeColor.color_param
         self.color_main = color_main or NodeColor.color_main
+        self.ref = ref
+        self.nid = nid
 
-        label = (
-            " " if self.model_name is None else f"[{self.color_main}]{self.model_name}"
-        )
+        label = ""
         if self.mclass:
-            if self.is_param_node:
-                label += f"[{self.color_param}]{self.mclass}"
+            if self.param_node:
+                label += f"|[{self.color_param}]{self.mclass}"
             else:
                 if add_link and self.mclass in ModelTree.N2L:
                     lk = ModelTree.N2L[self.mclass]
@@ -260,7 +262,16 @@ class LayerNode(RichTree):
                         label += f"[link file://{lk}]"
                     else:
                         label += f"[link {lk}]"
-                label += f"[{self.color_type}]({self.mclass})"
+                label += f"[{self.color_type}]{self.mclass}"
+        if model_name and model_name.startswith("🌳"):
+            label += f"[{self.color_main}]{self.model_name}"
+        else:
+            label += (
+                " "
+                if self.model_name is None
+                else f"[{self.color_main}]({self.model_name})"
+            )
+        label = label.strip()
         self.label = label
 
         super().__init__(
@@ -275,7 +286,7 @@ class LayerNode(RichTree):
         self,
         model_name=None,
         mclass=None,
-        is_param_node=False,
+        param_node=False,
         color_type=None,
         color_param=None,
         color_main=None,
@@ -283,11 +294,13 @@ class LayerNode(RichTree):
         guide_style=None,
         expanded=True,
         highlight=False,
+        ref=None,
+        nid="0",
     ):
         node = LayerNode(
             model_name,
             mclass,
-            is_param_node,
+            param_node,
             color_type or NodeColor.color_type,
             color_param or NodeColor.color_param,
             color_main or NodeColor.color_main,
@@ -295,9 +308,17 @@ class LayerNode(RichTree):
             guide_style=self.guide_style if guide_style is None else guide_style,
             expanded=expanded,
             highlight=self.highlight if highlight is None else highlight,
+            ref=ref,
+            nid=nid,
         )
         self.children.append(node)
         return node
+
+    def clamp(self):
+        a = LayerNode("...")
+        b = LayerNode("...")
+        self.children.append(b)
+        self.children.insert(0, a)
 
 
 class ModelTree(object):
@@ -305,13 +326,18 @@ class ModelTree(object):
 
     def __init__(
         self,
-        model: nn.Module,
+        model: torch.nn.Module,
         model_name="⚫️",
         multi_layer=False,
         show_buffer=True,
         only_param=True,
         color_scheme="night",
         add_link=False,
+        max_depth=1000,
+        only_names=None,
+        only_types=None,
+        show_nid=False,
+        only_nid=None,
     ):
         self.model = model
         self.model_name = model_name
@@ -322,12 +348,17 @@ class ModelTree(object):
         self.color_main = NodeColor.color_main
 
         self.color_param = "bright_blue"
-        self.color_fold = "yellow"
-        self.color_virtual = "red"
-        self.color_nongrad = "magenta"
+        self.color_fold = "magenta1"
+        self.color_nongrad = "purple"
         self.show_buffer = show_buffer
+        self.show_nid = show_nid
+        self.only_nid = only_nid
 
+        self.max_depth = max_depth
+        self.only_names = only_names
+        self.only_types = only_types
         self.root_tree = None
+        self.tid = "."
         self.colorify(color_scheme)
         self.create_tree(add_link)
 
@@ -353,30 +384,51 @@ class ModelTree(object):
 
     def create_tree(self, add_link):
         self.root_tree = LayerNode(self.model_name, add_link)
-        self.build_tree(self.model, self.root_tree)
+        self.build_tree(self.model, self.root_tree, nid="0")
         self.compress(self.root_tree)
         if not self.multi_layer:
             self.fold_param_node(self.root_tree)
+        if self.only_nid and self.only_nid != "0":
+            self.root_tree.clamp()
         return self.root_tree
 
     def print(self):
         rich_print(self.root_tree)
 
-    def build_tree(self, module: nn.Module, tree: LayerNode = None):
+    def build_tree(
+        self, module: torch.nn.Module, tree: LayerNode = None, lid=0, nid=""
+    ):
         nm = [(n, m) for n, m in module.named_children()]
-        if not nm:
+        lid = lid + 1
+        if not nm or lid > self.max_depth:
             return
         else:
+            count = 0
             for n, m in nm:
+                count += 1
+                if self.only_names is not None:
+                    if n not in self.only_names:
+                        continue
                 self.fill_location(m)
                 type_info = re.search(r"(?<=\').*(?=\')", str(type(m))).group()
-                type_info = type_info.split(".")[-1]
-                nd_ = tree.add_node(n, mclass=type_info, color_type=self.color_type)
-                self.process_pnode(m, nd_)
-                self.build_tree(module=m, tree=nd_)
+                type_info = type_info.rsplit(".", maxsplit=1)[-1]
+                if self.only_types is not None:
+                    if type_info not in self.only_types:
+                        continue
+                nid_ = nid + f".{count}"
+                nd_ = tree.add_node(
+                    n,
+                    mclass=type_info,
+                    color_type=self.color_type,
+                    expanded=True,
+                    ref=m,
+                    nid=nid_,
+                )
+                self.process_pnode(m, nd_, lid=lid, nid=nid_)
+                self.build_tree(module=m, tree=nd_, lid=lid, nid=nid_)
 
     def fold_param_node(self, t: LayerNode, p: LayerNode = None):
-        if hasattr(t, "is_param_node") and t.is_param_node:
+        if hasattr(t, "param_node") and t.param_node:
             p.label += t.label
             return True  # indicate whether should be removed
         elif len(t.children) == 0:
@@ -391,13 +443,15 @@ class ModelTree(object):
             ]
             return False
 
-    def compress(self, t: LayerNode):
+    def compress(self, t: LayerNode, dep=0):
+        # if dep==0 and self.only_nid and self.only_nid!='0' and self.only_nid!='0.1':
+        #    t.add_node('***')
         if len(t.children) == 0:
             setattr(t, "_xyz", t.label)
             return
 
         for _, sub_tree in enumerate(t.children):
-            self.compress(sub_tree)
+            self.compress(sub_tree, dep=dep + 1)
 
         t_xyz = t.label + "::" + ";".join([x._xyz for x in t.children])
         setattr(t, "_xyz", t_xyz)
@@ -415,13 +469,15 @@ class ModelTree(object):
                 nohead_xyz_dict[fname].append(child_id)
 
         new_childrens = []
-        for groupname in nohead_xyz_dict:
-            representative_id = nohead_xyz_dict[groupname][0]
-            rep = t.children[representative_id]
-            group_node = [t.children[idx] for idx in nohead_xyz_dict[groupname]]
-
-            rep = self.merge_layer(group_node)
-            new_childrens.append(rep)
+        for gn in nohead_xyz_dict:
+            representative_id = nohead_xyz_dict[gn][0]
+            node_ = t.children[representative_id]
+            group_node = [t.children[idx] for idx in nohead_xyz_dict[gn]]
+            node_ = self.merge_layer(group_node)
+            if self.only_nid is not None:
+                if not node_.nid.startswith(self.only_nid):
+                    continue
+            new_childrens.append(node_)
         t.children = new_childrens
 
     def merge_layer(self, l: List[LayerNode]):
@@ -439,33 +495,41 @@ class ModelTree(object):
             except Exception as e:
                 return ",".join(l)
 
-        rep = l[0]
+        node_ = l[0]
         if len(l) == 1:
-            return rep
+            if not node_.param_node and self.show_nid:
+                node_.label = node_.nid + "-" + node_.label
+            return node_
         name_list = [x.model_name for x in l]
         info_list = [x.mclass for x in l]
-        type_hint_dict = OrderedDict()
+        h_ = OrderedDict()
         for x, y in zip(name_list, info_list):
-            if y not in type_hint_dict:
-                type_hint_dict[y] = [x]
+            if y not in h_:
+                h_[y] = [x]
             else:
-                type_hint_dict[y].append(x)
+                h_[y].append(x)
 
-        s = ""
-        names = ""
-        typeinfos = ""
-        for t in type_hint_dict:
-            group_components = type_hint_dict[t]
-            group_components = neat_expr(group_components)
-            names += group_components + ","
-            typeinfos += t + ","
+        s, names, tinfo_ = "", "", ""
+        for t in h_:
+            g_ = neat_expr(h_[t])
+            names += g_ + ","
+            tinfo_ += t + ","
             link_str = f"{t}" if str(t) not in ModelTree.N2L else ModelTree.N2L[str(t)]
-            s += f"+[link {link_str}][bold {self.color_fold}]{group_components}[/][{self.color_type}]({t}),"
-        typeinfos = typeinfos[:-1]
-        rep.model_name = names[:-1]
-        rep.type_info = typeinfos
-        rep.label = s[:-1]
-        return rep
+            s += f"💠 [link {link_str}][bold {self.color_fold}]{t}[/][{self.color_type}]({g_}),"
+        tinfo_ = tinfo_[:-1]
+        node_.model_name = names[:-1]
+        node_.type_info = tinfo_
+        if s[0] == "💠":
+            node_.guide_style = f"bold {self.color_fold}"
+            node_.highlight = True
+            s = s[:-1] + f"<P:{model_parameters_str(node_.ref)}x{len(l)}>"
+        else:
+            s = s[:-1]
+        if self.show_nid:
+            node_.label = node_.nid + "-" + s
+        else:
+            node_.label = s
+        return node_
 
     def get_named_params(self, m):
         res = [(n, m) for n, m in m.named_parameters()]
@@ -480,7 +544,9 @@ class ModelTree(object):
             if hasattr(im, "__file__"):
                 ModelTree.N2L[m_name] = im.__file__
 
-    def process_pnode(self, m: nn.Module, tree: LayerNode, record_grad_state=True):
+    def process_pnode(
+        self, m: torch.nn.Module, tree: LayerNode, record_grad_state=True, lid=0, nid=""
+    ):
         known_module = {n: c for n, c in m.named_children()}
         try:
             for n, p in self.get_named_params(m):
@@ -494,15 +560,15 @@ class ModelTree(object):
                         continue
                     mclass = f"{n}{p_shape}"
                     if str(p.dtype) != "torch.float32":
-                        mclass += "(" + str(p.dtype).split(".")[-1] + ")"
+                        mclass += "<" + str(p.dtype).rsplit(".", maxsplit=1)[-1] + ">"
                     if str(p.device) != "cpu":
-                        mclass += f"({str(p.device)})"
+                        mclass += f"<{str(p.device)}>"
                     if hasattr(p, "grad") and p.grad is not None:
-                            mclass += "(📈)"
+                        mclass += "<📈>"
                     mclass = (
                         mclass.replace(" ", "")
-                        .replace("(float", "(fp")
-                        .replace("(int", "(i")
+                        .replace("<float", "<f")
+                        .replace("<int", "<i")
                     )
 
                     if record_grad_state:
@@ -513,15 +579,18 @@ class ModelTree(object):
                             color = self.color_param
                     else:
                         color = self.color_param
-
-                    tree.add_node(mclass=mclass, is_param_node=True, color_param=color)
+                    tree.add_node(
+                        mclass=mclass, param_node=True, color_param=color, nid=nid
+                    )
         except Exception as e:
             traceback.print_exc(file=sys.stdout)
 
+
 def get_model_name(m):
-    if hasattr(m, '_get_name'):
+    if hasattr(m, "_get_name"):
         return m._get_name()
     return str(type(m))
+
 
 def print_model(
     model,
@@ -531,19 +600,39 @@ def print_model(
     color_scheme="night",
     add_link=False,
     show_buffer=False,
+    max_depth=1000,
+    only_names=None,
+    only_types=None,
+    show_nid=False,
+    only_nid=None,
 ):
     trainable_params, all_params, pct = model_parameters_stats(model)
-    tree_info = f"({all_params},{trainable_params},{pct:8.5f}%)" if trainable_params is not None else ""
+    if trainable_params == all_params:
+        tree_info = (
+            f"<all params:{trainable_params}>" if trainable_params is not None else ""
+        )
+    else:
+        tree_info = (
+            f"<trainable_params:{all_params},all params:{trainable_params},percentage:{pct:.5f}%>"
+            if trainable_params is not None
+            else ""
+        )
     v = ModelTree(
         model,
-        model_name= "🌳 " + (model_name or get_model_name(model)) + tree_info,
+        model_name="🌳 " + (model_name or get_model_name(model)) + tree_info,
         only_param=only_param,
         multi_layer=multi_layer,
         color_scheme=color_scheme,
         add_link=add_link,
         show_buffer=show_buffer,
+        max_depth=max_depth,
+        only_names=only_names,
+        only_types=only_types,
+        show_nid=show_nid,
+        only_nid=only_nid,
     )
     v.print()
+
 
 def demo():
     import torch
@@ -556,6 +645,7 @@ def demo():
     model.encoder.layer[0].attention.output.LayerNorm.weight.grad = torch.ones(768)
     model.encoder = model.encoder.cuda()
     print_model(model)
+
 
 if __name__ == "__main__":
     demo()

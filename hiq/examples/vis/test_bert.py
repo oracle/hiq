@@ -74,4 +74,4 @@ model.encoder.layer[0].attention.self.query.weight.requires_grad = False
 model.encoder.layer[0].attention.output.dense.weight.requires_grad = False
 model.encoder.layer[0].attention.output.LayerNorm.weight.grad = torch.ones(768)
 model = model.cuda()
-print_model(model)
+print_model(model, show_buffer=True, multi_layer=False, only_nid="0.1")

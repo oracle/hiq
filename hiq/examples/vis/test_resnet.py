@@ -81,4 +81,7 @@ model = model.cuda()
 with torch.no_grad():
     print(model.layer3[2].conv1.weight.requires_grad)
     print("*" * 80)
-    print_model(model, expand_params=False)
+    print_model(model)
+    #print_model(model, max_depth=3)
+    #print_model(model, only_types=("Conv2d","Linear",'Bottleneck','Sequential'))
+    #print_model(model, only_names=('layer1','0','bn3','conv1'))
