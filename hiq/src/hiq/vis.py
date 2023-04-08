@@ -522,7 +522,7 @@ class ModelTree(object):
         if s[0] == "💠":
             node_.guide_style = f"bold {self.color_fold}"
             node_.highlight = True
-            s = s[:-1] + f"<P:{model_parameters_str(node_.ref)}x{len(l)}>"
+            s = s[:-1] + f"<🦜:{model_parameters_str(node_.ref)}x{len(l)}>"
         else:
             s = s[:-1]
         if self.show_nid:
@@ -605,6 +605,7 @@ def print_model(
     only_types=None,
     show_nid=False,
     only_nid=None,
+    legend=False
 ):
     trainable_params, all_params, pct = model_parameters_stats(model)
     if trainable_params == all_params:
@@ -613,7 +614,7 @@ def print_model(
         )
     else:
         tree_info = (
-            f"<trainable_params:{all_params},all params:{trainable_params},percentage:{pct:.5f}%>"
+            f"<trainable_params:{all_params},all_params:{trainable_params},percentage:{pct:.5f}%>"
             if trainable_params is not None
             else ""
         )
@@ -632,7 +633,15 @@ def print_model(
         only_nid=only_nid,
     )
     v.print()
+    if legend:
+        vis_help()
 
+def vis_help():
+    print("(🌳:Root of the Model, "
+          "💠:Folded layers, "
+          "📈:With gradient, "
+          "❄️:Frozen Layer, "
+          "🦜:Parameter information)")
 
 def demo():
     import torch
@@ -648,4 +657,5 @@ def demo():
 
 
 if __name__ == "__main__":
+    vis_help()
     demo()

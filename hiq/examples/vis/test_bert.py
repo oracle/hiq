@@ -65,8 +65,7 @@ from transformers import BertModel
 from hiq.vis import print_model
 
 model = BertModel.from_pretrained("bert-base-uncased")
-
-print_model(model)
+print_model(model, legend=True)
 
 print("*" * 80)
 model.embeddings.word_embeddings.requires_grad = False
