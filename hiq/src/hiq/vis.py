@@ -637,11 +637,11 @@ def print_model(
         vis_help()
 
 def vis_help():
-    print("(🌳:Root of the Model, "
-          "💠:Folded layers, "
-          "📈:With gradient, "
-          "❄️:Frozen Layer, "
-          "🦜:Parameter information with format `<trainable_params,all_params>`)")
+    print("(🌳:Model root,"
+          "💠:Folded layers,"
+          "📈:With gradient,"
+          "❄️:Frozen Layer,"
+          "🦜:Parameter info as `<trainable,all params x layner_number>`)")
 
 def demo():
     import torch
