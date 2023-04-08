@@ -614,7 +614,7 @@ def print_model(
         )
     else:
         tree_info = (
-            f"<trainable_params:{all_params},all_params:{trainable_params},percentage:{pct:.5f}%>"
+            f"<trainable_params:{trainable_params},all_params:{all_params},percentage:{pct:.5f}%>"
             if trainable_params is not None
             else ""
         )
@@ -641,7 +641,7 @@ def vis_help():
           "💠:Folded layers, "
           "📈:With gradient, "
           "❄️:Frozen Layer, "
-          "🦜:Parameter information)")
+          "🦜:Parameter information with format `<trainable_params,all_params>`)")
 
 def demo():
     import torch
