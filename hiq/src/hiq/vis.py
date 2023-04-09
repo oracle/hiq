@@ -415,6 +415,8 @@ class ModelTree(object):
                 if self.only_types is not None:
                     if type_info not in self.only_types:
                         continue
+                if hasattr(m, "bits"):
+                    type_info += f'-{m.bits}b'
                 nid_ = nid + f".{count}"
                 nd_ = tree.add_node(
                     n,
