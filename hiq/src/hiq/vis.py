@@ -254,7 +254,7 @@ class LayerNode(Tree):
         label = ""
         if self.mclass:
             if self.param_node:
-                label += f"|[{self.color_param}]{self.mclass}"
+                label += f" |[{self.color_param}]{self.mclass}"
             else:
                 if add_link and self.mclass in ModelTree.N2L:
                     lk = ModelTree.N2L[self.mclass]
@@ -642,6 +642,7 @@ def vis_help():
           "📈:With gradient,"
           "❄️:Frozen Layer,"
           "🦜:Parameter info as `<trainable,all params x layner_number>`)")
+    print("For more details, please visit: https://github.com/oracle/hiq")
 
 def demo():
     import torch
