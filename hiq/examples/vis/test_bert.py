@@ -63,6 +63,10 @@ import torch
 
 from transformers import BertModel
 from hiq.vis import print_model
+import logging
+
+
+logging.getLogger("transformers").setLevel(logging.ERROR)
 
 model = BertModel.from_pretrained("bert-base-uncased")
 print_model(model, legend=True)

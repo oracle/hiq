@@ -222,7 +222,7 @@ COLOR_NAMES = [
 class NodeColor(object):
     color_type = "green"
     color_param = "red"
-    color_main = "bright_blue"
+    color_main = "yellow"
 
 
 class LayerNode(Tree):
@@ -639,11 +639,11 @@ def print_model(
         vis_help()
 
 def vis_help():
-    print("(🌳:Model root,"
-          "💠:Folded layers,"
-          "📈:With gradient,"
-          "❄️:Frozen Layer,"
-          "🦜:Parameter info as `<trainable,all params x layner_number>`)")
+    print("(🌳 : Model root, "
+          "💠 : Folded layers, "
+          "📈 : With gradient, "
+          "❄️ : Frozen Layer, "
+          "🦜 : Parameter info as `<trainable,all params x layner_number>`)")
     print("For more details, please visit: https://github.com/oracle/hiq")
 
 def demo():

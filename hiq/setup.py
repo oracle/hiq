@@ -5,7 +5,7 @@ here = os.path.dirname(os.path.realpath(__file__))
 HAS_CUDA = os.system("nvidia-smi > /dev/null 2>&1") == 0
 
 VERSION = (
-    "1.1.11"
+    "1.1.12"
     if "PKG_VERSION" not in os.environ or not os.environ["PKG_VERSION"]
     else os.environ["PKG_VERSION"]
 )
