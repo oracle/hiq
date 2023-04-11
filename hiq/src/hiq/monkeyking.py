@@ -1,7 +1,7 @@
 # HiQ version 1.1
 #
 # Copyright (c) 2022, Oracle and/or its affiliates.
-# Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl/ 
+# Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl/
 #
 
 from hiq.utils import ts_to_dt, get_env_bool, lmk_data_handler
@@ -52,7 +52,7 @@ class LogMonkeyKing(object):
 
     @staticmethod
     def consumer_func(log_queue, lock, lmk_path, lmk_handler, logger):
-        if os.cpu_count() >= 2 and os.uname().sysname=='Linux':
+        if os.cpu_count() >= 2 and os.uname().sysname == "Linux":
             affinity_list = list(os.sched_getaffinity(0))
             os.sched_setaffinity(0, set(affinity_list[len(affinity_list) // 2 :]))
         # Synchronize access to the console
@@ -96,14 +96,14 @@ class LogMonkeyKing(object):
 
     def __del__(sf):
         sleep_count = 0
-        if hasattr(sf, 'queue_lmk'):
+        if hasattr(sf, "queue_lmk"):
             while sf.queue_lmk and sf.queue_lmk.qsize() and sleep_count < 1:
                 time.sleep(2)
                 sleep_count += 1
         else:
             # TODO
             pass
-        if hasattr(sf, 'consumer'):
+        if hasattr(sf, "consumer"):
             if sf.consumer:
                 print(sf.consumer)
                 sf.consumer.join()

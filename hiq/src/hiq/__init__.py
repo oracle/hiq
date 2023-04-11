@@ -1,20 +1,22 @@
 # HiQ version 1.1
 #
 # Copyright (c) 2022, Oracle and/or its affiliates.
-# Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl/ 
+# Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl/
 #
 
 __author__ = "Fuheng Wu<fuheng.wu@oralce.com>"
 __date__ = "2023-03-23"
 __doc__ = "HiQ is a declarative, non-intrusive, dynamic and transparent tracking and optimization system"
-__version__ = "1.1.10"
+__version__ = "1.1.12"
 __credits__ = "Henry Wu, Ivan Davchev, Jun Qian"
 
 import sys
 
 vinfo = sys.version_info
 if vinfo.major < 3 or (vinfo.major == 3 and vinfo.minor < 8):
-    print(f"HiQ supports Python version 3.8 and higher. Your version is {vinfo.major}.{vinfo.minor}.")
+    print(
+        f"HiQ supports Python version 3.8 and higher. Your version is {vinfo.major}.{vinfo.minor}."
+    )
     sys.exit(1)
 
 from .hiq_utils import (
@@ -52,13 +54,9 @@ from .utils import (
     get_percentage_loss,
     get_time_str_with_tz,
     down_sample,
-    bfloat16_supported
+    bfloat16_supported,
 )
-from .tree import (
-    get_duration_from_hiq_string,
-    get_graph_from_string,
-    Tree
-)
+from .tree import get_duration_from_hiq_string, get_graph_from_string, Tree
 
 try:
     from .memory import (
@@ -67,14 +65,24 @@ try:
         get_memory_kb,
         get_memory_b,
         get_system_peak_memory,
-        get_system_memory_usage
+        get_system_memory_usage,
     )
 except ImportError:
     pass
 from .base import HiQLatency, HiQSimple, HiQMemory
 from .server_flask import HiQFlaskLatency, HiQFlaskMemory, HiQFlaskLatencyOtel
-from hiq.framework.fastapi import HiQFastAPILatency, HiQFastAPILatencyMixin, HiQFastAPIMemory, run_fastapi
-from hiq.framework.transformers import HiQTransformerMemory, HiQTransformerLatency, HiQTransformerGPUMemory, HiQTransformerFullMemory
+from hiq.framework.fastapi import (
+    HiQFastAPILatency,
+    HiQFastAPILatencyMixin,
+    HiQFastAPIMemory,
+    run_fastapi,
+)
+from hiq.framework.transformers import (
+    HiQTransformerMemory,
+    HiQTransformerLatency,
+    HiQTransformerGPUMemory,
+    HiQTransformerFullMemory,
+)
 from .constants import *
 from .ddict import *
 
@@ -94,7 +102,7 @@ __all__ = [
     "HiQTransformerLatency",
     "HiQTransformerMemory",
     "HiQTransformerGPUMemory",
-    "HiQTransformerFullMemory"
+    "HiQTransformerFullMemory",
     "run_fastapi",
     "HiQSimple",
     "HiQMemory",
@@ -135,5 +143,5 @@ __all__ = [
     "get_average_loss",
     "get_percentage_loss",
     "get_time_str_with_tz",
-    "down_sample"
+    "down_sample",
 ]

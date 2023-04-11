@@ -1,5 +1,6 @@
 import hiq
 
+
 def run_main():
     hiq_quadruple = [
         ["transformers.pipelines.base", "", "infer_framework_load_model", "f1"],
@@ -8,7 +9,10 @@ def run_main():
     ]
 
     driver = hiq.HiQTransformerGPUMemory(
-        hiq_table_or_path=hiq_quadruple, attach_timestamp=True, max_hiq_size=1, extra_metrics={hiq.ExtraMetrics.ARGS}
+        hiq_table_or_path=hiq_quadruple,
+        attach_timestamp=True,
+        max_hiq_size=1,
+        extra_metrics={hiq.ExtraMetrics.ARGS},
     )
     hiq.mod("main").main()
     driver.show()

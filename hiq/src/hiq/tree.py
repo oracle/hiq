@@ -1,7 +1,7 @@
 # HiQ version 1.1
 #
 # Copyright (c) 2022, Oracle and/or its affiliates.
-# Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl/ 
+# Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl/
 #
 
 import os
@@ -73,11 +73,14 @@ Tree = type(
 
 
 def get_graph_from_string(
-    s: str, time_format=FORMAT_TIMESTAMP, whole_node_name="__predict", with_ordered_node=True
+    s: str,
+    time_format=FORMAT_TIMESTAMP,
+    whole_node_name="__predict",
+    with_ordered_node=True,
 ) -> str:
     """deserialize a string back into a HiQ tree and return the graph representation and ordered duration to the caller
-    
-    
+
+
     >>> m = "t1^get_memory_mb,,0,54,5,0,1e-07,0#%n1*[None,inf,inf,0$0#[__predict,9942.6796875,10064.375,0$0#[__pdf,9942.6796875,10013.578125,0$0#][__txt,10013.578125,10175.28515625,0$0#[__det,10013.578125,10174.68359375,0$0#[__ort,10228.8984375,10357.7421875,0$0#]][__det,10174.68359375,10175.28515625,0$0#[__ort,10174.68359375,10175.28515625,0$0#]]][_ort_sess,10175.28515625,10255.44921875,0$0#]]]"
     >>> print(get_graph_from_string(m))
     [      9942.680 -      10064.375]  [100.00%] 🟢_root_get_memory_mb(121.6953)
@@ -127,11 +130,13 @@ def get_duration_from_hiq_string(s: str, key: str) -> float:
 if __name__ == "__main__":
     m = "t1^get_memory_mb,,0,54,5,0,1e-07,0#%n1*[None,inf,inf,0$0#[__predict,9942.6796875,10064.375,0$0#[__pdf,9942.6796875,10013.578125,0$0#][__txt,10013.578125,10175.28515625,0$0#[__det,10013.578125,10174.68359375,0$0#[__ort,10228.8984375,10357.7421875,0$0#]][__det,10174.68359375,10175.28515625,0$0#[__ort,10174.68359375,10175.28515625,0$0#]]][_ort_sess,10175.28515625,10255.44921875,0$0#]]]"
     print(get_graph_from_string(m, with_ordered_node=False))
-    
-    print(get_graph_from_string(m, time_format=FORMAT_DATETIME, whole_node_name='__txt'))
-    
+
+    print(
+        get_graph_from_string(m, time_format=FORMAT_DATETIME, whole_node_name="__txt")
+    )
+
     print(get_duration_from_hiq_string(m, "__ort"))
-    
+
     import pickle
 
     a = Tree("", "tid_123", {})

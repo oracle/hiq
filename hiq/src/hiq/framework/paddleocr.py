@@ -13,8 +13,8 @@ here = os.path.dirname(os.path.realpath(__file__))
 
 HIQ_PADDLEOCR_CONF = hiq.hiq_utils.read_csv_to_list(f"{here}/paddleocr.conf")
 
+
 class PaddleOcrHiQLatency(hiq.HiQSimple):
-  
     def __init__(
         sf,
         hiq_table_or_path: Union[str, list] = [],
@@ -52,18 +52,18 @@ class PaddleOcrHiQLatency(hiq.HiQSimple):
             lmk_handler=lmk_handler,
             lmk_logger=lmk_logger,
         )
-  
+
     def custom(s):
-        s.o_paddle_run = hiq.mod('paddle.fluid.core_avx').PaddleInferPredictor.run
+        s.o_paddle_run = hiq.mod("paddle.fluid.core_avx").PaddleInferPredictor.run
 
         @s.inserter
         def paddle_run(self) -> bool:
             return s.o_paddle_run(self)
 
-        hiq.mod('paddle.fluid.core_avx').PaddleInferPredictor.run = paddle_run
+        hiq.mod("paddle.fluid.core_avx").PaddleInferPredictor.run = paddle_run
 
     def custom_disable(s):
-        hiq.mod('paddle.fluid.core_avx').PaddleInferPredictor.run = s.o_paddle_run
+        hiq.mod("paddle.fluid.core_avx").PaddleInferPredictor.run = s.o_paddle_run
 
 
 class PaddleOcrHiQMemory(hiq.HiQMemory):
@@ -106,13 +106,13 @@ class PaddleOcrHiQMemory(hiq.HiQMemory):
         )
 
     def custom(s):
-        s.o_paddle_run = hiq.mod('paddle.fluid.core_avx').PaddleInferPredictor.run
+        s.o_paddle_run = hiq.mod("paddle.fluid.core_avx").PaddleInferPredictor.run
 
         @s.inserter
         def paddle_run(self) -> bool:
             return s.o_paddle_run(self)
 
-        hiq.mod('paddle.fluid.core_avx').PaddleInferPredictor.run = paddle_run
+        hiq.mod("paddle.fluid.core_avx").PaddleInferPredictor.run = paddle_run
 
     def custom_disable(s):
-        hiq.mod('paddle.fluid.core_avx').PaddleInferPredictor.run = s.o_paddle_run
+        hiq.mod("paddle.fluid.core_avx").PaddleInferPredictor.run = s.o_paddle_run

@@ -6,6 +6,7 @@ psutil
 py-itree
 urllib3
 requests
+rich
 
 # basic libs
 ###############################################

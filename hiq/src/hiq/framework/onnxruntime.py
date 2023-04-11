@@ -40,13 +40,19 @@ TAU_TBL_ORT = [
     (TAU_ORT, "Session", "__init__", "sess_init"),
     (TAU_ORT, "Session", "run_with_ort_values", "run_with_ort_values"),
     (TAU_ORT, "Session", "run_with_iobinding", "run_with_iobinding"),
-    (TAU_ORT, "InferenceSession", "_create_inference_session", "create_inference_session"),
+    (
+        TAU_ORT,
+        "InferenceSession",
+        "_create_inference_session",
+        "create_inference_session",
+    ),
     (TAU_ORT, "InferenceSession", "_reset_session", "reset_session"),
 ]
 
 
 def get_ort_session(sess_options):
     import onnxruntime as ort
+
     sess_options = sess_options or ort.SessionOptions()
     if "HIQ_ORT_INTRA_OPS_THREAD" in os.environ:
         sess_options.intra_op_num_threads = get_env_int("HIQ_ORT_INTRA_OPS_THREAD")
@@ -58,24 +64,23 @@ def get_ort_session(sess_options):
 
 
 class OrtHiQLatency(hiq.HiQSimple):
-
     def __init__(
-            sf,
-            hiq_table_or_path: Union[str, list] = [],
-            metric_funcs: List[Callable] = [time.time],
-            hiq_id_func: Callable = get_tau_id,
-            func_args_handler: Callable = func_args_handler,
-            target_path=None,
-            max_hiq_size=30,
-            verbose=False,
-            fast_fail=True,
-            tpl=None,
-            extra_hiq_table=[],
-            attach_timestamp=False,
-            extra_metrics=set(),
-            lmk_path=None,
-            lmk_handler=None,
-            lmk_logger=None,
+        sf,
+        hiq_table_or_path: Union[str, list] = [],
+        metric_funcs: List[Callable] = [time.time],
+        hiq_id_func: Callable = get_tau_id,
+        func_args_handler: Callable = func_args_handler,
+        target_path=None,
+        max_hiq_size=30,
+        verbose=False,
+        fast_fail=True,
+        tpl=None,
+        extra_hiq_table=[],
+        attach_timestamp=False,
+        extra_metrics=set(),
+        lmk_path=None,
+        lmk_handler=None,
+        lmk_logger=None,
     ):
         extra_hiq_table += TAU_TBL_ORT
         hiq.HiQSimple.__init__(
@@ -101,13 +106,19 @@ class OrtHiQLatency(hiq.HiQSimple):
         s.o_ort_session = hiq.mod(TAU_ORT).InferenceSession.__init__
 
         @s.inserter
-        def ort_session(self,
-                        path_or_bytes,
-                        sess_options=None,
-                        providers=None,
-                        provider_options=None):
+        def ort_session(
+            self,
+            path_or_bytes,
+            sess_options=None,
+            providers=None,
+            provider_options=None,
+        ):
             return s.o_ort_session(
-                self, path_or_bytes, get_ort_session(sess_options), providers, provider_options
+                self,
+                path_or_bytes,
+                get_ort_session(sess_options),
+                providers,
+                provider_options,
             )
 
         hiq.mod(TAU_ORT).InferenceSession.__init__ = ort_session
@@ -117,24 +128,23 @@ class OrtHiQLatency(hiq.HiQSimple):
 
 
 class OrtHiQMemory(hiq.HiQMemory):
-
     def __init__(
-            sf,
-            hiq_table_or_path: Union[str, list] = [],
-            metric_funcs: List[Callable] = [time.time, get_memory_mb],
-            hiq_id_func: Callable = get_tau_id,
-            func_args_handler: Callable = func_args_handler,
-            target_path=None,
-            max_hiq_size=30,
-            verbose=False,
-            fast_fail=True,
-            tpl=None,
-            extra_hiq_table=[],
-            attach_timestamp=False,
-            extra_metrics=set(),
-            lmk_path=None,
-            lmk_handler=None,
-            lmk_logger=None,
+        sf,
+        hiq_table_or_path: Union[str, list] = [],
+        metric_funcs: List[Callable] = [time.time, get_memory_mb],
+        hiq_id_func: Callable = get_tau_id,
+        func_args_handler: Callable = func_args_handler,
+        target_path=None,
+        max_hiq_size=30,
+        verbose=False,
+        fast_fail=True,
+        tpl=None,
+        extra_hiq_table=[],
+        attach_timestamp=False,
+        extra_metrics=set(),
+        lmk_path=None,
+        lmk_handler=None,
+        lmk_logger=None,
     ):
         extra_hiq_table += TAU_TBL_ORT
         hiq.HiQSimple.__init__(
@@ -160,13 +170,19 @@ class OrtHiQMemory(hiq.HiQMemory):
         s.o_ort_session = hiq.mod(TAU_ORT).InferenceSession.__init__
 
         @s.inserter
-        def ort_session(self,
-                        path_or_bytes,
-                        sess_options=None,
-                        providers=None,
-                        provider_options=None):
+        def ort_session(
+            self,
+            path_or_bytes,
+            sess_options=None,
+            providers=None,
+            provider_options=None,
+        ):
             return s.o_ort_session(
-                self, path_or_bytes, get_ort_session(sess_options), providers, provider_options
+                self,
+                path_or_bytes,
+                get_ort_session(sess_options),
+                providers,
+                provider_options,
             )
 
         hiq.mod(TAU_ORT).InferenceSession.__init__ = ort_session
@@ -213,6 +229,7 @@ def get_qtype_from_onnx_path(onnx_path):
     if None, it means this is not an onnx file
     """
     import re
+
     onnx_path = onnx_path.lower()
     print(f"model onnx_path: {onnx_path}")
     matches = re.finditer(MODEL_NAME_PATTERN_ONNX, onnx_path, re.MULTILINE)
@@ -228,7 +245,9 @@ def get_qtype_from_onnx_path(onnx_path):
     return None
 
 
-def plot_ort_profile(prof_file, model_path='', debug=False, style="ggplot", overwrite=True, topk=5) -> List[List[str]]:
+def plot_ort_profile(
+    prof_file, model_path="", debug=False, style="ggplot", overwrite=True, topk=5
+) -> List[List[str]]:
     import pandas as pd
 
     if os.path.exists(prof_file):
@@ -247,9 +266,11 @@ def plot_ort_profile(prof_file, model_path='', debug=False, style="ggplot", over
 
         total_latency = df[df.cat == "Node"][LATENCY].sum()
         if model_path:
-            model_name = get_model_name_from_path(model_path) if model_path else 'Model'
+            model_name = get_model_name_from_path(model_path) if model_path else "Model"
             qtype = get_qtype_from_onnx_path(model_path) if model_path else "NA"
-            fsize_str = file_size_fmt(os.path.getsize(model_path)) if model_path else "NA"
+            fsize_str = (
+                file_size_fmt(os.path.getsize(model_path)) if model_path else "NA"
+            )
             title = f"Model: {model_name} ({qtype.upper()},{fsize_str}, node latency:{total_latency}us)"
         else:
             title = f"Model (node latency:{total_latency}us)"
@@ -273,7 +294,7 @@ def process_onnx_profiling_output(js: dict) -> List[str]:
 
 # TODO: put this onnx profiling to ir utils package
 def draw_onnx_profiling(
-        df, fig_name, duration_lower_bound=50, style="ggplot", title=None, topk=5
+    df, fig_name, duration_lower_bound=50, style="ggplot", title=None, topk=5
 ) -> List[List[str]]:
     if OPERATOR not in df.columns.to_list():
         return ""
@@ -324,6 +345,6 @@ def draw_onnx_profiling(
     return [fig_names, top_ops]
 
 
-if __name__ == '__main__':
-    p = '/media/henry/wendy/git.repo/onnxruntime/gme_play/onnxruntime_profile__2023-01-05_16-10-58.json'
+if __name__ == "__main__":
+    p = "/media/henry/wendy/git.repo/onnxruntime/gme_play/onnxruntime_profile__2023-01-05_16-10-58.json"
     plot_ort_profile(p)
