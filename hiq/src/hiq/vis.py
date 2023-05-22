@@ -572,7 +572,13 @@ class ModelTree(object):
                         .replace("<float", "<f")
                         .replace("<int", "<i")
                     )
-
+                    if str(m).startswith('Conv2d'):
+                        if m.groups>1:
+                            mclass+=f'🇬 -{m.groups}'
+                        if str(m.stride)!='(1, 1)':
+                            mclass+=f"🇸 -{m.stride}"
+                        if str(m.dilation)!='(1, 1)':
+                            mclass+=f"🇩 -{m.dilation}"
                     if record_grad_state:
                         if not p.requires_grad:
                             color = self.color_nongrad

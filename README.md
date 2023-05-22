@@ -4,12 +4,15 @@
 [![CodeCov][cov-img]][cov]
 [![Github release][release-img]][release]
 [![lic][license-img]][license]
+[![arXiv](https://img.shields.io/badge/arXiv-2304.13302-red.svg)](https://arxiv.org/abs/2304.13302)
 
 > 🔥 HiQ now supports GPU profiling, DNN model visualization and tracing for DNN libraries like pyTorch, `transformers`, LAVIS, and LLMs like LLaMA, OPT, Bloom, T5 and GPT2 in addition to Onnxruntime, FastAPI and Flask.
 
 HiQ is a `declarative`, `non-intrusive`, `dynamic` and `transparent` tracking system for both **monolithic** application and **distributed** system. It brings the runtime information tracking and optimization to a new level without compromising with speed and system performance, or hiding any tracking overhead information. HiQ applies for both I/O bound and CPU bound applications. In addition to latency tracking, HiQ provides memory, disk I/O and Network I/O tracking out of the box. The output can be saved in form of normal line by line log file, or HiQ tree, or span graph.
 
 HiQ's philosophy is to **decouple `observability logic` from `business logic`**. We don't have to enter the black hole to observe it. Do you like the idea? Leave a ⭐ if you enjoy the project and welcome to say Hi to us on [Slack 👋](https://join.slack.com/t/hiq-myo2317/shared_invite/zt-17ejh6ybo-51IX6G1lHMXgLbq2HKIO_Q)
+
+[📜HiQ Pape: A Declarative, Non-intrusive, Dynamic and Transparent Observability and Optimization System](https://arxiv.org/abs/2304.13302)
 
 ![Observability of DNN Model](https://raw.githubusercontent.com/henrywoo/hiq/main/hiq/docs/medium/all.png)
 
