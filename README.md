@@ -4,6 +4,7 @@
 [![CodeCov][cov-img]][cov]
 [![Github release][release-img]][release]
 [![lic][license-img]][license]
+[![arXiv](https://img.shields.io/badge/arXiv-2304.13302-red.svg)](https://arxiv.org/abs/2304.13302)
 
 > 🔥 HiQ now supports GPU profiling, DNN model visualization and tracing for DNN libraries like pyTorch, `transformers`, LAVIS, and LLMs like LLaMA, OPT, Bloom, T5 and GPT2 in addition to Onnxruntime, FastAPI and Flask.
 
@@ -11,8 +12,9 @@ HiQ is a `declarative`, `non-intrusive`, `dynamic` and `transparent` tracking sy
 
 HiQ's philosophy is to **decouple `observability logic` from `business logic`**. We don't have to enter the black hole to observe it. Do you like the idea? Leave a ⭐ if you enjoy the project and welcome to say Hi to us on [Slack 👋](https://join.slack.com/t/hiq-myo2317/shared_invite/zt-17ejh6ybo-51IX6G1lHMXgLbq2HKIO_Q)
 
-![Observability of DNN Model](https://raw.githubusercontent.com/henrywoo/hiq/main/hiq/docs/medium/all.png)
+[📜HiQ Pape: A Declarative, Non-intrusive, Dynamic and Transparent Observability and Optimization System](https://arxiv.org/abs/2304.13302)
 
+![Observability of DNN Model](https://raw.githubusercontent.com/henrywoo/hiq/main/hiq/docs/medium/all.png)
 
 ## Installation
 
@@ -31,7 +33,6 @@ pip install hiq-python[lavis]   # To support Salesforce LAVIS Vision Language mo
 pip install hiq-python[transformers] # To support tracing Hugging Face's transformers library
 pip install hiq-python[full]         # To support all the cases, and this will install all the dependency libraries
 ```
-
 
 ## Get Started
 
@@ -149,26 +150,21 @@ HiQ was originally developed to find Onnxruntime performance bottleneck in DNN i
 - [Latency](https://github.com/oracle-samples/hiq/blob/main/hiq/examples/onnxruntime/demo.ipynb)
 - [Intrusive](https://github.com/oracle-samples/hiq/blob/main/hiq/examples/onnxruntime/demo_intrusive.ipynb)
 
-
 ## Examples
 
 Please check [🔗 examples](https://github.com/oracle/hiq/blob/main/hiq/examples) for usage examples.
 
 ## Contributing
 
-
-HiQ welcomes contributions from the community. Before submitting a pull request, please [review our 🔗 contribution guide](https://github.com/oracle/hiq/blob/main/CONTRIBUTING.md).
-
-
+HiQ welcomes contributions from the community. Before submitting a pull request, please review our contribution guide](./CONTRIBUTING.md).
 
 ## Security
 
 Please consult the [🔗 security guide](https://github.com/oracle/hiq/blob/main/SECURITY.md) for our responsible security vulnerability disclosure process.
 
-
 ## License
 
-Copyright (c) 2022 Oracle and/or its affiliates. Released under the Universal Permissive License v1.0 as shown at <https://oss.oracle.com/licenses/upl/>.
+Copyright (c) 2022, 2023 Oracle and/or its affiliates. Released under the Universal Permissive License v1.0 as shown at <https://oss.oracle.com/licenses/upl/>.
 
 ## Presentation and Demos
 
