@@ -10,7 +10,17 @@ from typing import List
 import torch
 from rich import print as rich_print
 from rich.tree import Tree
-from hiq.torch import model_parameters_stats, model_parameters_str
+
+import hiq.model_params
+from hiq.model_params import model_parameters_stats, model_parameters_str
+
+def is_paddle(model):
+    try:
+        from paddle import nn as paddle_nn
+    except:
+        return False
+    return isinstance(model, paddle_nn.Layer)
+
 
 COLOR_NAMES = [
     "black",
@@ -227,20 +237,20 @@ class NodeColor(object):
 
 class LayerNode(Tree):
     def __init__(
-        self,
-        model_name=None,
-        mclass=None,
-        param_node=False,
-        color_type=None,
-        color_param=None,
-        color_main=None,
-        style="tree",
-        guide_style="light_sea_green",
-        expanded=True,
-        highlight=False,
-        add_link=False,
-        ref=None,
-        nid="0",
+            self,
+            model_name=None,
+            mclass=None,
+            param_node=False,
+            color_type=None,
+            color_param=None,
+            color_main=None,
+            style="tree",
+            guide_style="light_sea_green",
+            expanded=True,
+            highlight=False,
+            add_link=False,
+            ref=None,
+            nid="0",
     ):
         self.model_name = model_name
         self.mclass = mclass
@@ -283,19 +293,19 @@ class LayerNode(Tree):
         )
 
     def add_node(
-        self,
-        model_name=None,
-        mclass=None,
-        param_node=False,
-        color_type=None,
-        color_param=None,
-        color_main=None,
-        style=None,
-        guide_style=None,
-        expanded=True,
-        highlight=False,
-        ref=None,
-        nid="0",
+            self,
+            model_name=None,
+            mclass=None,
+            param_node=False,
+            color_type=None,
+            color_param=None,
+            color_main=None,
+            style=None,
+            guide_style=None,
+            expanded=True,
+            highlight=False,
+            ref=None,
+            nid="0",
     ):
         node = LayerNode(
             model_name,
@@ -325,19 +335,19 @@ class ModelTree(object):
     N2L = {"Conv2d": "https://pytorch.org/docs/stable/generated/torch.nn.Conv2d.html"}
 
     def __init__(
-        self,
-        model: torch.nn.Module,
-        model_name="⚫️",
-        multi_layer=False,
-        show_buffer=True,
-        only_param=True,
-        color_scheme="night",
-        add_link=False,
-        max_depth=1000,
-        only_names=None,
-        only_types=None,
-        show_nid=False,
-        only_nid=None,
+            self,
+            model: torch.nn.Module,
+            model_name="⚫️",
+            multi_layer=False,
+            show_buffer=True,
+            only_param=True,
+            color_scheme="night",
+            add_link=False,
+            max_depth=1000,
+            only_names=None,
+            only_types=None,
+            show_nid=False,
+            only_nid=None,
     ):
         self.model = model
         self.model_name = model_name
@@ -396,7 +406,7 @@ class ModelTree(object):
         rich_print(self.root_tree)
 
     def build_tree(
-        self, module: torch.nn.Module, tree: LayerNode = None, lid=0, nid=""
+            self, module: torch.nn.Module, tree: LayerNode = None, lid=0, nid=""
     ):
         nm = [(n, m) for n, m in module.named_children()]
         lid = lid + 1
@@ -540,15 +550,16 @@ class ModelTree(object):
         return res
 
     def fill_location(self, m):
-        m_name = m._get_name()
+        m_name = get_model_name(m)
         if m_name not in self.N2L:
             im = inspect.getmodule(type(m))
             if hasattr(im, "__file__"):
                 ModelTree.N2L[m_name] = im.__file__
 
     def process_pnode(
-        self, m: torch.nn.Module, tree: LayerNode, record_grad_state=True, lid=0, nid=""
+            self, m: torch.nn.Module, tree: LayerNode, record_grad_state=True, lid=0, nid=""
     ):
+        import os
         known_module = {n: c for n, c in m.named_children()}
         try:
             for n, p in self.get_named_params(m):
@@ -561,10 +572,14 @@ class ModelTree(object):
                     if len(p_shape) == 0:
                         continue
                     mclass = f"{n}{p_shape}"
-                    if str(p.dtype) != "torch.float32":
+                    if not str(p.dtype).endswith("float32"):
                         mclass += "<" + str(p.dtype).rsplit(".", maxsplit=1)[-1] + ">"
-                    if str(p.device) != "cpu":
-                        mclass += f"<{str(p.device)}>"
+                    if 'HIQ_VIS_GPU' in os.environ and str(os.environ['HIQ_VIS_GPU']) == '1':
+                        if hasattr(p, "device"):
+                            if str(p.device) != "cpu":
+                                mclass += f"<{str(p.device)}>"
+                        elif hasattr(p, "place") and p.place.is_gpu_place():
+                            mclass += f'<{str(p.place).replace("Place(", "").replace(")", "")}>'
                     if hasattr(p, "grad") and p.grad is not None:
                         mclass += "<📈>"
                     mclass = (
@@ -573,14 +588,14 @@ class ModelTree(object):
                         .replace("<int", "<i")
                     )
                     if str(m).startswith('Conv2d'):
-                        if m.groups>1:
-                            mclass+=f'🇬 -{m.groups}'
-                        if str(m.stride)!='(1, 1)':
-                            mclass+=f"🇸 -{m.stride}"
-                        if str(m.dilation)!='(1, 1)':
-                            mclass+=f"🇩 -{m.dilation}"
+                        if m.groups > 1:
+                            mclass += f'🇬 -{m.groups}'
+                        if str(m.stride) != '(1, 1)':
+                            mclass += f"🇸 -{m.stride}"
+                        if str(m.dilation) != '(1, 1)':
+                            mclass += f"🇩 -{m.dilation}"
                     if record_grad_state:
-                        if not p.requires_grad:
+                        if hasattr(p, "requires_grad") and not p.requires_grad:
                             color = self.color_nongrad
                             mclass += "❄️ "
                         else:
@@ -597,24 +612,31 @@ class ModelTree(object):
 def get_model_name(m):
     if hasattr(m, "_get_name"):
         return m._get_name()
+    if hasattr(m, "_full_name"):  # paddle
+        return m._full_name
     return str(type(m))
 
 
 def print_model(
-    model,
-    model_name=None,
-    only_param=True,
-    multi_layer=False,
-    color_scheme="night",
-    add_link=False,
-    show_buffer=False,
-    max_depth=1000,
-    only_names=None,
-    only_types=None,
-    show_nid=False,
-    only_nid=None,
-    legend=False
+        model,
+        model_name=None,
+        only_param=True,
+        multi_layer=False,
+        color_scheme="night",
+        add_link=False,
+        show_buffer=False,
+        max_depth=1000,
+        only_names=None,
+        only_types=None,
+        show_nid=False,
+        only_nid=None,
+        legend=False
 ):
+    if is_paddle(model):
+        global model_parameters_stats, model_parameters_str
+        model_parameters_stats = hiq.model_params.model_parameters_stats_paddle
+        model_parameters_str = hiq.model_params.model_parameters_str_paddle
+
     trainable_params, all_params, pct = model_parameters_stats(model)
     if trainable_params == all_params:
         tree_info = (
@@ -644,6 +666,7 @@ def print_model(
     if legend:
         vis_help()
 
+
 def vis_help():
     print("(🌳 : Model root, "
           "💠 : Folded layers, "
@@ -651,6 +674,7 @@ def vis_help():
           "❄️ : Frozen Layer, "
           "🦜 : Parameter info as `<trainable,all params x layner_number>`)")
     print("For more details, please visit: https://github.com/oracle/hiq")
+
 
 def demo():
     import torch
