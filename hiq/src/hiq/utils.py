@@ -397,7 +397,10 @@ def write_file(file_path, data, as_owner=None, as_group=None, append=False, mod_
     if append:
         execute_cmd(f"touch {file_path}")
     with open(file_path, "ab" if append else "wb") as file:
-        file.write(data.encode("utf-8"))
+        if isinstance(data, bytes):
+            file.write(data)
+        else:
+            file.write(data.encode("utf-8"))
         if as_owner:
             execute_cmd(f"sudo chown {as_owner} {file_path}", timeout=10, debug=True)
         if as_group:

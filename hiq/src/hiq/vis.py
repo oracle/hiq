@@ -5,7 +5,7 @@ import re
 import traceback
 import inspect
 from collections import OrderedDict
-from typing import List
+from typing import Any, List, Optional, Union
 
 import torch
 from rich import print as rich_print
@@ -618,53 +618,55 @@ def get_model_name(m):
 
 
 def print_model(
-        model,
-        model_name=None,
-        only_param=True,
-        multi_layer=False,
-        color_scheme="night",
-        add_link=False,
-        show_buffer=False,
-        max_depth=1000,
-        only_names=None,
-        only_types=None,
-        show_nid=False,
-        only_nid=None,
-        legend=False
-):
-    if is_paddle(model):
-        global model_parameters_stats, model_parameters_str
-        model_parameters_stats = hiq.model_params.model_parameters_stats_paddle
-        model_parameters_str = hiq.model_params.model_parameters_str_paddle
-
-    trainable_params, all_params, pct = model_parameters_stats(model)
-    if trainable_params == all_params:
-        tree_info = (
-            f"<all params:{trainable_params}>" if trainable_params is not None else ""
+        model: Any,
+        model_name: Optional[str] = None,
+        only_param: bool = True,
+        multi_layer: bool = False,
+        color_scheme: str = "night",
+        add_link: bool = False,
+        show_buffer: bool = False,
+        max_depth: int = 1000,
+        only_names: Optional[List[str]] = None,
+        only_types: Optional[List[str]] = None,
+        show_nid: bool = False,
+        only_nid: Optional[Union[str, int]] = None,
+        legend: bool = False
+) -> None:
+    try:
+        if is_paddle(model):
+            global model_parameters_stats, model_parameters_str
+            model_parameters_stats = hiq.model_params.model_parameters_stats_paddle
+            model_parameters_str = hiq.model_params.model_parameters_str_paddle
+        trainable_params, all_params, pct = model_parameters_stats(model)
+        if trainable_params == all_params:
+            tree_info = (
+                f"<all params:{trainable_params}>" if trainable_params is not None else ""
+            )
+        else:
+            tree_info = (
+                f"<trainable_params:{trainable_params},all_params:{all_params},percentage:{pct:.5f}%>"
+                if trainable_params is not None
+                else ""
+            )
+        v = ModelTree(
+            model,
+            model_name="🌳 " + (model_name or get_model_name(model)) + tree_info,
+            only_param=only_param,
+            multi_layer=multi_layer,
+            color_scheme=color_scheme,
+            add_link=add_link,
+            show_buffer=show_buffer,
+            max_depth=max_depth,
+            only_names=only_names,
+            only_types=only_types,
+            show_nid=show_nid,
+            only_nid=only_nid,
         )
-    else:
-        tree_info = (
-            f"<trainable_params:{trainable_params},all_params:{all_params},percentage:{pct:.5f}%>"
-            if trainable_params is not None
-            else ""
-        )
-    v = ModelTree(
-        model,
-        model_name="🌳 " + (model_name or get_model_name(model)) + tree_info,
-        only_param=only_param,
-        multi_layer=multi_layer,
-        color_scheme=color_scheme,
-        add_link=add_link,
-        show_buffer=show_buffer,
-        max_depth=max_depth,
-        only_names=only_names,
-        only_types=only_types,
-        show_nid=show_nid,
-        only_nid=only_nid,
-    )
-    v.print()
-    if legend:
-        vis_help()
+        v.print()
+        if legend:
+            vis_help()
+    except AttributeError as e:
+        print(f"WARNING: {str(e)}")
 
 
 def vis_help():
