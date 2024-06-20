@@ -55,7 +55,12 @@ from .utils import (
     get_time_str_with_tz,
     down_sample,
     bfloat16_supported,
+    draw_image,
+    set_seed,
+    str_to_filename,
+    random_port
 )
+from .vis import print_model, vis_help
 from .tree import get_duration_from_hiq_string, get_graph_from_string, Tree
 
 try:
