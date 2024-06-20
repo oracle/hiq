@@ -1320,21 +1320,20 @@ def draw_image(image_np, format='CHW', normalize=True, save=True, axis='on', fol
         plt.show(block=True)
 
 def set_seed(seed=42, has_tf=False, has_torch=False):
-    import sys
     import random
     random.seed(seed)
     try:
         import numpy as np
         np.random.seed(seed)
     except ImportError as e:
-        print(f"Warning: importing numpy: {e}", file=sys.stderr)
+        pass
 
     if has_tf:
         try:
             import tensorflow as tf
             tf.random.set_seed(seed)
         except ImportError as e:
-            print(f"Warning: importing tensorflow: {e}", file=sys.stderr)
+            pass
 
     if has_torch:
         try:
@@ -1347,7 +1346,7 @@ def set_seed(seed=42, has_tf=False, has_torch=False):
                 torch.backends.cudnn.benchmark = False
                 torch.backends.cudnn.deterministic = True
         except ImportError as e:
-            print(f"Warning: importing torch: {e}", file=sys.stderr)
+            pass
 
 
 def str_to_filename(s, repl='_', suffix=None):
