@@ -7,7 +7,7 @@
 __author__ = "Fuheng Wu<fuheng.wu@oralce.com>"
 __date__ = "2023-03-23"
 __doc__ = "HiQ is a declarative, non-intrusive, dynamic and transparent tracking and optimization system"
-__version__ = "1.1.12"
+__version__ = "1.1.13"
 __credits__ = "Henry Wu, Ivan Davchev, Jun Qian"
 
 import sys
@@ -55,7 +55,12 @@ from .utils import (
     get_time_str_with_tz,
     down_sample,
     bfloat16_supported,
+    draw_image,
+    set_seed,
+    str_to_filename,
+    random_port
 )
+from .vis import print_model, vis_help
 from .tree import get_duration_from_hiq_string, get_graph_from_string, Tree
 
 try:

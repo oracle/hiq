@@ -31,7 +31,7 @@ class Singleton(type):
         return cls._instances[cls]
 
 
-def __gamma_split(s: str, keep_delim=False) -> List[str]:
+def __gamma_split(s: str, keep_delim=False, delim="'") -> List[str]:
     results = []
     word = ""
     x = 0
@@ -39,15 +39,15 @@ def __gamma_split(s: str, keep_delim=False) -> List[str]:
         if x == 0:
             if c in ("\t", "\n"):
                 continue
-        if c == "'":
+        if c == delim:
             if x == 0:
                 x = 1
                 if keep_delim:
-                    word += "'"
+                    word += delim
                 continue
             elif x == 1:
                 if keep_delim:
-                    word += "'"
+                    word += delim
                 results.append(word)
                 word = ""
                 x = 0
@@ -92,32 +92,37 @@ def execute_cmd(
     if stderr_log is None:
         stderr_log = open(error_file, "w", encoding="utf8")
     try:
-        commands = __gamma_split(command, keep_delim)
+        commands = __gamma_split(command, keep_delim, delim='"')
+        commands = [i.replace('"','') for i in commands]
         cmd = " ".join(commands)
         if verbose:
             print(f"🏃‍♂️ command: {cmd}, error_file: {error_file}")
         start = monotonic()
         if runtime_output:
-            proc = subprocess.Popen(
-                cmd,
-                shell=True,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                env=env if env else {},
-            )
-            # Loop over the subprocess output and print it immediately
-            while True:
-                output = proc.stdout.readline().decode().rstrip()
-                if output == "" and proc.poll() is not None:
-                    break
-                sleep(0.2)
-                if monotonic() - start > timeout:
-                    print(f"Command timeout after {timeout} seconds. command: {cmd}")
-                    break
-                print(output)
-            # Wait for the subprocess to complete and get the return code
-            ret = proc.wait()
-            return ret
+            ret = 0
+            if timeout>0:
+                proc = subprocess.Popen(
+                    cmd,
+                    shell=True,
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.PIPE,
+                    env=env if env else {},
+                )
+                # Loop over the subprocess output and print it immediately
+                while True:
+                    output = proc.stdout.readline().decode().rstrip()
+                    if output == "" and proc.poll() is not None:
+                        break
+                    sleep(0.2)
+                    if monotonic() - start > timeout:
+                        print(f"Command timeout after {timeout} seconds. command: {cmd}")
+                        break
+                    print(output)
+                ret = proc.wait()
+                return ret
+            else:
+                subprocess.run(commands)
+                return ret
         elif env is None:
             result = subprocess.run(
                 commands,
@@ -397,7 +402,10 @@ def write_file(file_path, data, as_owner=None, as_group=None, append=False, mod_
     if append:
         execute_cmd(f"touch {file_path}")
     with open(file_path, "ab" if append else "wb") as file:
-        file.write(data.encode("utf-8"))
+        if isinstance(data, bytes):
+            file.write(data)
+        else:
+            file.write(data.encode("utf-8"))
         if as_owner:
             execute_cmd(f"sudo chown {as_owner} {file_path}", timeout=10, debug=True)
         if as_group:
@@ -411,7 +419,7 @@ def ensure_folder(path_str: str):
     try:
         if not os.path.isdir(path_str):
             path_str = os.path.dirname(path_str)
-        if not os.path.exists(path_str):
+        if path_str and not os.path.exists(path_str):
             os.makedirs(path_str)
         return path_str
     except PermissionError as e:
@@ -487,6 +495,22 @@ def random_str(length_of_string=12):
         random_string += random.choice(letters_and_digits)
     return random_string
 
+
+def random_port(start_port=1024, end_port=65535):
+    """
+    Returns a random port number within the specified range.
+
+    :param start_port: The starting port number of the range (inclusive).
+    :param end_port: The ending port number of the range (inclusive).
+    :return: A random port number within the specified range.
+    """
+    import random
+    if not (1024 <= start_port <= 65535 and 1024 <= end_port <= 65535):
+        raise ValueError("Port numbers must be in the range 1024-65535")
+    if start_port > end_port:
+        raise ValueError("start_port must be less than or equal to end_port")
+
+    return random.randint(start_port, end_port)
 
 class SilencePrint(object):
     def __enter__(self):
@@ -1120,6 +1144,9 @@ def get_files_by_type(
         List[Tuple(str)]: a list of file information tuple
     """
     import glob
+    
+    if isinstance(types, str):
+        types = [types]
 
     files_grabbed = []
     for ts in types:
@@ -1257,6 +1284,81 @@ def signature(obj, *, follow_wrapped=True):
         else z
     )
 
+def draw_image(image_np, format='CHW', normalize=True, save=True, axis='on', folder="hiq_vis", prefix=""):
+    """image_np is a numpy array with CHW format"""
+    import matplotlib.pyplot as plt
+    import numpy as np
+    import hiq
+    import time
+    
+    if not isinstance(image_np, np.ndarray):
+        image_np = image_np.numpy()
+    if len(image_np.shape) == 4:
+        image_np = image_np[0]
+    cmap = None
+    if format == "CHW":
+        # CHW => HWC
+        image_np = np.transpose(image_np, (1, 2, 0))
+        if image_np.shape[2] > 3:
+            image_np = image_np[:, :, 0]
+            cmap = "gray"
+    if normalize:
+        image_np = (image_np - image_np.min()) / (image_np.max() - image_np.min())
+    if cmap is None:
+        plt.imshow(image_np)
+    else:
+        plt.imshow(image_np, cmap=cmap)
+    plt.axis(axis)
+    if save:
+        if prefix!="" and not prefix.endswith("_"):
+            prefix += "_"
+        img_path = f"{folder}/{prefix}{int(time.time())}_{hiq.random_str()}.png"
+        ensure_folder(img_path)
+        plt.savefig(img_path, bbox_inches='tight', pad_inches=0, dpi=300)
+        plt.close()
+    else:
+        plt.show(block=True)
+
+def set_seed(seed=42, has_tf=False, has_torch=False):
+    import random
+    random.seed(seed)
+    try:
+        import numpy as np
+        np.random.seed(seed)
+    except ImportError as e:
+        pass
+
+    if has_tf:
+        try:
+            import tensorflow as tf
+            tf.random.set_seed(seed)
+        except ImportError as e:
+            pass
+
+    if has_torch:
+        try:
+            import torch
+            torch.manual_seed(seed)
+            if torch.cuda.is_available():
+                torch.cuda.manual_seed(seed)
+                torch.cuda.manual_seed_all(seed)
+                torch.backends.cudnn.enable = False
+                torch.backends.cudnn.benchmark = False
+                torch.backends.cudnn.deterministic = True
+        except ImportError as e:
+            pass
+
+
+def str_to_filename(s, repl='_', suffix=None):
+    import re
+    s = re.sub(r'[^a-zA-Z0-9]', repl, s)
+    s = re.sub(r'__+', repl, s)
+    s = s.strip(repl)
+    if not s:
+        s = random_str()
+    if suffix is not None:
+        s = s + "." + suffix
+    return s
 
 if __name__ == "__main__":
     import requests
