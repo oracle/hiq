@@ -7,7 +7,10 @@ import inspect
 from collections import OrderedDict
 from typing import Any, List, Optional, Union
 
-import torch
+try:
+  import torch
+except:
+  pass
 from rich import print as rich_print
 from rich.tree import Tree
 
@@ -336,7 +339,7 @@ class ModelTree(object):
 
     def __init__(
             self,
-            model: torch.nn.Module,
+            model,
             model_name="⚫️",
             multi_layer=False,
             show_buffer=True,
@@ -406,7 +409,7 @@ class ModelTree(object):
         rich_print(self.root_tree)
 
     def build_tree(
-            self, module: torch.nn.Module, tree: LayerNode = None, lid=0, nid=""
+            self, module, tree: LayerNode = None, lid=0, nid=""
     ):
         nm = [(n, m) for n, m in module.named_children()]
         lid = lid + 1
@@ -557,7 +560,7 @@ class ModelTree(object):
                 ModelTree.N2L[m_name] = im.__file__
 
     def process_pnode(
-            self, m: torch.nn.Module, tree: LayerNode, record_grad_state=True, lid=0, nid=""
+            self, m, tree: LayerNode, record_grad_state=True, lid=0, nid=""
     ):
         import os
         known_module = {n: c for n, c in m.named_children()}
