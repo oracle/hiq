@@ -12,7 +12,7 @@ def model_parameters_stats(model):
         all_params += num_params
         if param.requires_grad:
             trainable_params += num_params
-    return trainable_params, all_params, 100 * trainable_params / all_params
+    return trainable_params, all_params, 100 * trainable_params / all_params if all_params!=0 else -1
 
 def model_parameters_stats_paddle(model):
     if not hasattr(model, "named_parameters"):

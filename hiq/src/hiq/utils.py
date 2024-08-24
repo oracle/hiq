@@ -1319,7 +1319,7 @@ def draw_image(image_np, format='CHW', normalize=True, save=True, axis='on', fol
     else:
         plt.show(block=True)
 
-def set_seed(seed=42, has_tf=False, has_torch=False, has_jax=False):
+def set_seed(seed=42, has_tf=False, has_torch=False, has_jax=False, has_pl=False):
     import random
     random.seed(seed)
     try:
@@ -1339,6 +1339,13 @@ def set_seed(seed=42, has_tf=False, has_torch=False, has_jax=False):
         try:
             import tensorflow as tf
             tf.random.set_seed(seed)
+        except ImportError as e:
+            pass
+
+    if has_pl:
+        try:
+            import pytorch_lightning as pl
+            pl.seed_everything(seed)
         except ImportError as e:
             pass
 
